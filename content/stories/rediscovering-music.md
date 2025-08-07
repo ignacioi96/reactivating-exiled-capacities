@@ -1,10 +1,15 @@
 ---
-title: "Rediscovering Music After Decades of Silence"
+title: "Example Story #1"
 date: 2024-01-15
-author: "Sarah M."
-description: "How a chance encounter with an old piano brought back a musical capacity I thought I had lost forever."
-tags: ["music", "creativity", "piano", "rediscovery"]
-featured_image: "/images/piano-hands.jpg"
+author: Author B.
+description: How a chance encounter with an old piano brought back a musical
+  capacity I thought I had lost forever.
+tags:
+  - music
+  - creativity
+  - piano
+  - rediscovery
+featured_image: /images/piano-hands.jpg
 ---
 
 For twenty-three years, I didn't touch a piano. 
