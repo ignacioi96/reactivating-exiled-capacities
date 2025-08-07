@@ -1,0 +1,31 @@
+backend:
+  name: git-gateway
+  branch: main # or master, depending on your default branch
+
+media_folder: "static/images"
+public_folder: "/images"
+
+collections:
+  - name: "stories"
+    label: "Stories"
+    folder: "content/stories"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Date", name: "date", widget: "datetime"}
+      - {label: "Summary", name: "summary", widget: "text", required: false}
+      - {label: "Author", name: "author", widget: "string", required: false}
+      - {label: "Featured Image", name: "image", widget: "image", required: false}
+      - {label: "Tags", name: "tags", widget: "list", required: false}
+      - {label: "Story Content", name: "body", widget: "markdown"}
+      
+  - name: "pages"
+    label: "Pages"
+    files:
+      - label: "About"
+        name: "about"
+        file: "content/about/_index.md"
+        fields:
+          - {label: "Title", name: "title", widget: "string"}
+          - {label: "Content", name: "body", widget: "markdown"}

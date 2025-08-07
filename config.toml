@@ -1,3 +1,38 @@
-baseURL = 'http://example.org/'
+baseURL = 'https://exiledcapacities.com/'
 languageCode = 'en-us'
-title = 'My New Hugo Site'
+title = 'Reactivating Exiled Capacities'
+theme = 'capacities-theme'
+
+# Site parameters
+[params]
+  description = "Stories of rediscovering lost abilities and talents"
+  author = "Exiled Capacities Team"
+
+# Menu configuration
+[menu]
+  [[menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 10
+  [[menu.main]]
+    name = "About"
+    url = "/about/"
+    weight = 20
+  [[menu.main]]
+    name = "Stories"
+    url = "/stories/"
+    weight = 30
+
+# Content configuration
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+# Disable taxonomies for now (fixes the warnings)
+disableKinds = ["taxonomy", "term"]
+
+# Alternative: Enable specific taxonomies if you want them later
+# [taxonomies]
+#   tag = "tags"
+#   category = "categories"

@@ -1,0 +1,26 @@
+{{ define "main" }}
+<section style="text-align: center; padding: 4rem 0; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+    <h1 style="font-size: 3rem; margin-bottom: 1rem; color: #2c3e50;">{{ .Title }}</h1>
+    {{ if .Params.subtitle }}
+    <p style="font-size: 1.2rem; color: #7f8c8d; margin-bottom: 2rem;">{{ .Params.subtitle }}</p>
+    {{ end }}
+    
+    <div style="max-width: 800px; margin: 0 auto;">
+        {{ .Content }}
+    </div>
+    
+    <a href="/stories/" class="btn">Explore Stories</a>
+</section>
+
+<section style="padding: 4rem 0;">
+    <h2 style="text-align: center; margin-bottom: 3rem;">Recent Stories</h2>
+    
+    {{ range first 3 (where .Site.RegularPages "Type" "stories") }}
+    <div style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
+        <h3><a href="{{ .Permalink }}" style="color: #333; text-decoration: none;">{{ .Title }}</a></h3>
+        <p style="color: #666; margin: 1rem 0;">{{ .Summary }}</p>
+        <a href="{{ .Permalink }}" class="btn">Read Story</a>
+    </div>
+    {{ end }}
+</section>
+{{ end }}

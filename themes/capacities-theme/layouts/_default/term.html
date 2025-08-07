@@ -1,0 +1,22 @@
+{{ define "main" }}
+<section class="term-pages">
+    <header>
+        <h1>{{ .Title }}</h1>
+        <p>Stories tagged with "{{ .Title }}"</p>
+    </header>
+    
+    <div class="tagged-items">
+        {{ range .Pages }}
+        <article class="item-preview">
+            <h2><a href="{{ .Permalink }}">{{ .Title }}</a></h2>
+            {{ if .Params.summary }}
+            <p>{{ .Params.summary }}</p>
+            {{ else }}
+            <p>{{ .Summary }}</p>
+            {{ end }}
+            <time>{{ .Date.Format "January 2, 2006" }}</time>
+        </article>
+        {{ end }}
+    </div>
+</section>
+{{ end }}

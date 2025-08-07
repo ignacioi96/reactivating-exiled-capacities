@@ -1,0 +1,54 @@
+baseURL = 'https://exiledcapacities.com'
+languageCode = 'en-us'
+title = 'Reactivating Exiled Capacities'
+theme = 'capacities-theme'
+
+# Content settings
+paginate = 10
+enableRobotsTXT = true
+enableGitInfo = true
+
+# Markup settings
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    style = 'github'
+    lineNos = true
+
+# Menu configuration
+[menu]
+  [[menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 1
+  
+  [[menu.main]]
+    name = "About"
+    url = "/about/"
+    weight = 2
+    
+  [[menu.main]]
+    name = "Stories"
+    url = "/stories/"
+    weight = 3
+
+# Site parameters
+[params]
+  description = "Reclaiming lost potential and awakening dormant abilities through shared stories and experiences"
+  author = "Reactivating Exiled Capacities Team"
+  
+  # Social media (update these later)
+  email = "contact@exiledcapacities.com"
+  
+  # Theme settings
+  featured_image = "/images/hero-bg.jpg"
+  show_reading_time = true
+  show_sharing_buttons = true
+
+# Taxonomies for organizing content
+[taxonomies]
+  tag = "tags"
+  category = "categories"
+  author = "authors"

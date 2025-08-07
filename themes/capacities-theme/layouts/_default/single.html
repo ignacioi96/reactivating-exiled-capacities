@@ -1,0 +1,14 @@
+{{ define "main" }}
+<article>
+    <header style="margin-bottom: 3rem;">
+        <h1>{{ .Title }}</h1>
+        {{ if .Params.description }}
+        <p style="color: #666;">{{ .Params.description }}</p>
+        {{ end }}
+    </header>
+    
+    <div class="content">
+        {{ .Content }}
+    </div>
+</article>
+{{ end }}
