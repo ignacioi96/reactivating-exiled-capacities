@@ -12,6 +12,9 @@
     <meta name="description" content="{{ .Site.Params.description }}">
     {{ end }}
     
+    <!-- Netlify Identity Widget -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    
     <!-- Basic CSS -->
     <style>
         * {
@@ -133,6 +136,19 @@
     </main>
     
     {{ partial "footer.html" . }}
+    
+    <!-- Netlify Identity Script -->
+    <script>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", user => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
+            });
+          }
+        });
+      }
+    </script>
     
     {{ block "scripts" . }}{{ end }}
 </body>
