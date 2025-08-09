@@ -1,4 +1,5 @@
-baseURL = 'https://exiledcapacities.com'
+# baseURL = 'https://exiledcapacities.com'
+baseURL = 'https://temp-rec.netlify.app/'
 languageCode = 'en-us'
 title = 'Reactivating Exiled Capacities'
 theme = 'capacities-theme'
