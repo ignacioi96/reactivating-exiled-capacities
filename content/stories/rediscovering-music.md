@@ -1,13 +1,22 @@
 ---
-title: "Rediscovering Music After Decades of Silence"
+title: "Example Story #1"
 date: 2024-01-15
-author: "Sarah M."
-description: "How a chance encounter with an old piano brought back a musical capacity I thought I had lost forever."
-tags: ["music", "creativity", "piano", "rediscovery"]
-featured_image: "/images/piano-hands.jpg"
+author: Author B.
+description: How a chance encounter with an old piano brought back a musical
+  capacity I thought I had lost forever.
+tags:
+  - music
+  - creativity
+  - piano
+  - rediscovery
+featured_image: /images/piano-hands.jpg
+image: /images/img_0345.png
 ---
+For twenty-three years, I didn't touch a pian
 
-For twenty-three years, I didn't touch a piano. 
+![]()
+
+o. 
 
 What had once been the center of my world—hours spent at the keys, composing melodies that seemed to flow from somewhere beyond myself—had become a source of pain. A harsh critique from a music teacher during my college years had effectively silenced not just my playing, but my belief that I had any musical capacity worth nurturing.
 
@@ -55,6 +64,6 @@ The musical capacity that was exiled for over two decades has not just returned�
 
 Sometimes I wonder about other capacities that might be waiting in exile, ready to be reactivated when the time is right. But for now, I'm content to sit at my piano each evening, fingers moving across keys that feel like coming home, grateful for the reminder that it's never too late to reclaim the parts of ourselves we thought were lost forever.
 
----
+- - -
 
 *If you have a story of reactivating an exiled capacity, we'd love to hear from you. Every story shared helps light the way for others on their own journey of rediscovery.*
