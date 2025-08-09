@@ -108,6 +108,118 @@
         ]
     </script>
 
+    <style>
+        /* Enhanced Floating Thumbnails */
+        .floating-thumbnail {
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            border: 3px solid rgba(139, 92, 246, 0.4);
+            box-shadow: 
+                0 0 30px rgba(139, 92, 246, 0.3),
+                0 10px 40px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(5px);
+        }
+
+        .floating-thumbnail:hover {
+            transform: scale(1.15);
+            border-color: rgba(139, 92, 246, 0.8);
+            box-shadow: 
+                0 0 50px rgba(139, 92, 246, 0.5),
+                0 20px 60px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .floating-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.4s ease;
+        }
+
+        .floating-thumbnail:hover img {
+            transform: scale(1.1);
+        }
+
+        .thumbnail-fallback {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, 
+                rgba(139, 92, 246, 0.8), 
+                rgba(168, 85, 247, 0.6), 
+                rgba(124, 58, 237, 0.8));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            padding: 20px;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .thumbnail-fallback::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.1), 
+                transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        /* Ensure proper layout */
+        .content-area {
+            margin-left: 20%;
+            width: 80%;
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .thumbnails-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .content-area {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .floating-thumbnail {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .thumbnail-fallback {
+                font-size: 0.85rem;
+                padding: 15px;
+            }
+        }
+    </style>
+
     <script>
         // Load data from embedded script tag
         let clustersData = [];
@@ -119,12 +231,9 @@
                 
                 // Clean up any malformed image URLs
                 clustersData = clustersData.map(cluster => {
-                    // Fix image URL if it has extra quotes
                     if (cluster.image && typeof cluster.image === 'string') {
                         cluster.image = cluster.image.replace(/^["']|["']$/g, '');
-                        // Also handle any URL encoding issues
                         cluster.image = decodeURIComponent(cluster.image);
-                        // Clean up any remaining quotes
                         cluster.image = cluster.image.replace(/['"]/g, '');
                     }
                     return cluster;
@@ -203,33 +312,68 @@
                 const container = document.getElementById('thumbnails-container');
                 container.innerHTML = '';
                 
+                // Get actual container dimensions
+                const containerRect = container.getBoundingClientRect();
+                const containerWidth = containerRect.width - 40; // Account for padding
+                const containerHeight = containerRect.height - 40;
+                const thumbnailSize = 160; // Size of each thumbnail
+                
+                console.log('Container dimensions:', containerWidth, 'x', containerHeight);
+                
                 clustersData.forEach((cluster, index) => {
                     const thumbnail = document.createElement('div');
                     thumbnail.className = 'floating-thumbnail';
                     thumbnail.dataset.clusterId = index;
                     
-                    // Use position from data or random
-                    const containerWidth = container.clientWidth || window.innerWidth * 0.8;
-                    const containerHeight = container.clientHeight || window.innerHeight;
+                    // Better positioning logic - ensure thumbnails stay within visible area
+                    let x, y;
                     
-                    const x = cluster.position_x ? 
-                        cluster.position_x * containerWidth : 
-                        Math.random() * (containerWidth - 120);
-                    const y = cluster.position_y ? 
-                        cluster.position_y * containerHeight + 100 :
-                        Math.random() * (containerHeight - 200) + 100;
+                    if (cluster.position_x !== undefined && cluster.position_y !== undefined) {
+                        // Use specified positions but clamp to visible area
+                        x = Math.max(thumbnailSize/2, Math.min(
+                            cluster.position_x * containerWidth, 
+                            containerWidth - thumbnailSize/2
+                        ));
+                        y = Math.max(thumbnailSize/2 + 100, Math.min(
+                            cluster.position_y * containerHeight + 100,
+                            containerHeight - thumbnailSize/2
+                        ));
+                    } else {
+                        // Generate positions in a more organized pattern
+                        const cols = 3;
+                        const rows = Math.ceil(clustersData.length / cols);
+                        const col = index % cols;
+                        const row = Math.floor(index / cols);
+                        
+                        const cellWidth = containerWidth / cols;
+                        const cellHeight = (containerHeight - 200) / rows; // Leave space at top/bottom
+                        
+                        x = (col * cellWidth) + (cellWidth / 2);
+                        y = (row * cellHeight) + (cellHeight / 2) + 150; // Offset from top
+                        
+                        // Add some randomness but keep within bounds
+                        x += (Math.random() - 0.5) * (cellWidth * 0.3);
+                        y += (Math.random() - 0.5) * (cellHeight * 0.3);
+                        
+                        // Clamp to container bounds
+                        x = Math.max(thumbnailSize/2, Math.min(x, containerWidth - thumbnailSize/2));
+                        y = Math.max(thumbnailSize/2 + 100, Math.min(y, containerHeight - thumbnailSize/2));
+                    }
                     
-                    thumbnail.style.left = Math.max(0, x) + 'px';
-                    thumbnail.style.top = Math.max(100, y) + 'px';
+                    // Position relative to container, accounting for thumbnail size
+                    thumbnail.style.left = (x - thumbnailSize/2) + 'px';
+                    thumbnail.style.top = (y - thumbnailSize/2) + 'px';
                     
-                    // Better image handling
+                    console.log(`Positioning ${cluster.title} at (${x}, ${y})`);
+                    
+                    // Handle images or fallbacks
                     if (cluster.image && cluster.image.trim() !== '' && !cluster.image.includes('""')) {
                         console.log('Loading image for cluster:', cluster.title, 'Image path:', cluster.image);
                         const img = document.createElement('img');
                         img.src = cluster.image;
                         img.alt = cluster.title;
                         img.onerror = () => {
-                            console.log('Image failed to load for:', cluster.title, 'Path:', cluster.image);
+                            console.log('Image failed to load for:', cluster.title, 'Using fallback');
                             thumbnail.innerHTML = `<div class="thumbnail-fallback">${cluster.title}</div>`;
                         };
                         img.onload = () => {
@@ -237,7 +381,7 @@
                         };
                         thumbnail.appendChild(img);
                     } else {
-                        console.log('Using fallback for cluster:', cluster.title, 'Image value:', cluster.image);
+                        console.log('Using fallback for cluster:', cluster.title);
                         const fallback = document.createElement('div');
                         fallback.className = 'thumbnail-fallback';
                         fallback.textContent = cluster.title;
@@ -256,8 +400,8 @@
                 const thumbnails = document.querySelectorAll('.floating-thumbnail');
                 
                 thumbnails.forEach((thumbnail, index) => {
-                    const duration = 20000 + (index * 5000);
-                    const delay = index * 2000;
+                    const duration = 15000 + (index * 3000); // Varied durations
+                    const delay = index * 1000; // Staggered start
                     thumbnail.style.animation = `float ${duration}ms ${delay}ms infinite ease-in-out`;
                 });
 
@@ -267,10 +411,22 @@
                     style.id = 'float-animation';
                     style.textContent = `
                         @keyframes float {
-                            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.8; }
-                            25% { transform: translateY(-20px) rotate(2deg); opacity: 0.9; }
-                            50% { transform: translateY(0px) rotate(0deg); opacity: 1; }
-                            75% { transform: translateY(-15px) rotate(-2deg); opacity: 0.9; }
+                            0%, 100% { 
+                                transform: translateY(0px) rotate(0deg); 
+                                opacity: 0.9;
+                            }
+                            25% { 
+                                transform: translateY(-15px) rotate(1deg); 
+                                opacity: 1;
+                            }
+                            50% { 
+                                transform: translateY(0px) rotate(0deg); 
+                                opacity: 0.95;
+                            }
+                            75% { 
+                                transform: translateY(-10px) rotate(-1deg); 
+                                opacity: 1;
+                            }
                         }
                     `;
                     document.head.appendChild(style);
@@ -318,12 +474,17 @@
                     }
                 });
 
-                // Window resize
+                // Window resize - reposition thumbnails
                 window.addEventListener('resize', () => {
                     if (this.currentCluster !== null) {
                         this.updateNetworkDimensions();
                         this.drawNetwork();
                     }
+                    // Recreate thumbnails on resize for better positioning
+                    setTimeout(() => {
+                        this.createFloatingThumbnails();
+                        this.startFloatingAnimation();
+                    }, 100);
                 });
             }
 
