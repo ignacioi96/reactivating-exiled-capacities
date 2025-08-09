@@ -9,7 +9,7 @@ theme = 'capacities-theme'
   description = "Stories of rediscovering lost abilities and talents"
   author = "Exiled Capacities Team"
 
-# Menu configuration
+# UPDATED Menu configuration - Stories changed to Mapping Capacities
 [menu]
   [[menu.main]]
     name = "Home"
@@ -20,8 +20,8 @@ theme = 'capacities-theme'
     url = "/about/"
     weight = 20
   [[menu.main]]
-    name = "Stories"
-    url = "/stories/"
+    name = "Mapping Capacities"
+    url = "/mapping-capacities/"
     weight = 30
 
 # Content configuration
@@ -29,6 +29,10 @@ theme = 'capacities-theme'
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
+
+# Output formats for JSON data (needed for clusters visualization)
+[outputs]
+  home = ["HTML", "JSON"]
 
 # Disable taxonomies for now (fixes the warnings)
 disableKinds = ["taxonomy", "term"]
