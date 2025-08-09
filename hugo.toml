@@ -38,9 +38,7 @@ theme = 'capacities-theme'
 
 [outputs]
   home = ["HTML", "JSON"]
-  section = ["HTML", "JSON"]
 
-# Media and Outputformats
 [mediaTypes]
   [mediaTypes."application/json"]
     suffixes = ["json"]
