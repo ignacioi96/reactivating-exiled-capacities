@@ -1,26 +1,842 @@
-{{ define "main" }}
-<section style="text-align: center; padding: 4rem 0; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
-    <h1 style="font-size: 3rem; margin-bottom: 1rem; color: #2c3e50;">{{ .Title }}</h1>
-    {{ if .Params.subtitle }}
-    <p style="font-size: 1.2rem; color: #7f8c8d; margin-bottom: 2rem;">{{ .Params.subtitle }}</p>
-    {{ end }}
-    
-    <div style="max-width: 800px; margin: 0 auto;">
-        {{ .Content }}
-    </div>
-    
-    <a href="/stories/" class="btn">Explore Stories</a>
-</section>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Site.Title }}</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<section style="padding: 4rem 0;">
-    <h2 style="text-align: center; margin-bottom: 3rem;">Recent Stories</h2>
-    
-    {{ range first 3 (where .Site.RegularPages "Type" "stories") }}
-    <div style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
-        <h3><a href="{{ .Permalink }}" style="color: #333; text-decoration: none;">{{ .Title }}</a></h3>
-        <p style="color: #666; margin: 1rem 0;">{{ .Summary }}</p>
-        <a href="{{ .Permalink }}" class="btn">Read Story</a>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: radial-gradient(ellipse at center, #0f0f23 0%, #050510 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            background: rgba(15, 15, 35, 0.8);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        nav a {
+            color: #e2e8f0;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: #a855f7;
+            transform: translateY(-2px);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #8b5cf6, #a855f7);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Main Layout */
+        main {
+            display: flex;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        /* Left Sidebar */
+        .clusters-sidebar {
+            width: 20%;
+            padding: 40px 20px;
+            background: rgba(15, 15, 35, 0.6);
+            border-right: 1px solid rgba(139, 92, 246, 0.2);
+            backdrop-filter: blur(5px);
+            position: fixed;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .clusters-sidebar h2 {
+            color: #a855f7;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .cluster-list {
+            list-style: none;
+        }
+
+        .cluster-item {
+            margin-bottom: 20px;
+        }
+
+        .cluster-link {
+            display: block;
+            padding: 15px 20px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+            color: #e2e8f0;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .cluster-link:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.5);
+            transform: translateX(5px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+        }
+
+        .cluster-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .cluster-description {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            line-height: 1.3;
+        }
+
+        /* Right Content Area */
+        .content-area {
+            margin-left: 20%;
+            width: 80%;
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Floating Thumbnails */
+        .thumbnails-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .floating-thumbnail {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(139, 92, 246, 0.4);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+        }
+
+        .floating-thumbnail:hover {
+            transform: scale(1.1);
+            border-color: rgba(139, 92, 246, 0.8);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
+        }
+
+        .floating-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .thumbnail-fallback {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 10px;
+        }
+
+        /* Cluster Visualization Modal */
+        .cluster-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cluster-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            width: 90%;
+            height: 90%;
+            background: rgba(15, 15, 35, 0.95);
+            border-radius: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 30px;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            text-align: center;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            color: #a855f7;
+            margin-bottom: 10px;
+        }
+
+        .modal-description {
+            color: #cbd5e1;
+            font-size: 1.1rem;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: none;
+            border: none;
+            color: #e2e8f0;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: #a855f7;
+        }
+
+        /* Network Visualization */
+        .network-container {
+            flex: 1;
+            position: relative;
+        }
+
+        .network-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Capacity Detail Panel */
+        .capacity-detail {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(15, 15, 35, 0.95);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            display: none;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .capacity-detail.active {
+            display: block;
+        }
+
+        .capacity-detail h3 {
+            color: #a855f7;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .capacity-detail .subtitle {
+            color: #cbd5e1;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+        }
+
+        .detail-section h4 {
+            color: #e2e8f0;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .detail-section p {
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .distortions-list {
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        .distortion-item {
+            background: rgba(139, 92, 246, 0.1);
+            border-left: 3px solid rgba(139, 92, 246, 0.5);
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .distortion-name {
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 5px;
+        }
+
+        .distortion-description {
+            color: #cbd5e1;
+            font-size: 0.9rem;
+        }
+
+        .close-detail {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #e2e8f0;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-detail:hover {
+            color: #a855f7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .clusters-sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 20px;
+            }
+
+            .content-area {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            main {
+                flex-direction: column;
+            }
+
+            .floating-thumbnail {
+                width: 80px;
+                height: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="/stories">Stories</a>
+        </nav>
+    </header>
+
+    <main>
+        <aside class="clusters-sidebar">
+            <h2>Clusters</h2>
+            <ul class="cluster-list" id="cluster-list">
+                <!-- Clusters will be populated by JavaScript -->
+            </ul>
+        </aside>
+
+        <div class="content-area">
+            <div class="thumbnails-container" id="thumbnails-container">
+                <!-- Floating thumbnails will be generated by JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Cluster Visualization Modal -->
+    <div class="cluster-modal" id="cluster-modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-modal">&times;</button>
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title"></h2>
+                <p class="modal-description" id="modal-description"></p>
+            </div>
+            <div class="network-container">
+                <svg class="network-svg" id="network-svg"></svg>
+            </div>
+        </div>
+        
+        <!-- Capacity Detail Panel -->
+        <div class="capacity-detail" id="capacity-detail">
+            <button class="close-detail" id="close-detail">&times;</button>
+            <h3 id="capacity-title"></h3>
+            <p class="subtitle" id="capacity-subtitle"></p>
+            <div class="detail-section">
+                <h4>What it is</h4>
+                <p id="capacity-what-it-is"></p>
+            </div>
+            <div class="detail-section">
+                <h4>Why it's been exiled</h4>
+                <p id="capacity-why-exiled"></p>
+            </div>
+            <div class="detail-section">
+                <h4>What it makes possible</h4>
+                <p id="capacity-what-possible"></p>
+            </div>
+            <div class="detail-section">
+                <h4>Distortions</h4>
+                <ul class="distortions-list" id="capacity-distortions"></ul>
+            </div>
+        </div>
     </div>
-    {{ end }}
-</section>
-{{ end }}
+
+    <script>
+        // Sample cluster data - this would be populated from Hugo's data
+        const clustersData = [
+            {
+                title: "Regenerative Regulation",
+                description: "The Metabolic Core - Nervous system as web, bridge, and compost heap.",
+                why_matters: "Modernity trains nervous systems to interpret complexity as danger, causing narrow boundary response: binary thinking, reactive behavior, simplified identity defense, and disconnection from relational context. This cluster supports staying with complex, layered realities without defensive collapse. The pathway: self-regulation → co-regulation → meta-regulation.",
+                image: "/images/regenerative-regulation.jpg",
+                position_x: 0.2,
+                position_y: 0.3,
+                capacities: [
+                    {
+                        title: "Self-Regulation",
+                        subtitle: "Attuning to Presence",
+                        what_it_is: "Capacity to shift from reactive states into curious presence, grounding the nervous system while allowing contradiction and uncertainty to coexist",
+                        why_exiled: "Reduced to personal optimization product, isolated from collective/ecological context",
+                        what_possible: "Softens narrow boundary conditions, creates inner spaciousness for non-binary thinking",
+                        distortions: [
+                            { name: "Collapse anxiety", description: "overwhelm misread as apathy" },
+                            { name: "Identity-protective regulation", description: "defensive maintenance of social standing" }
+                        ],
+                        color: "#8b5cf6",
+                        position_x: -0.4,
+                        position_y: -0.2
+                    },
+                    {
+                        title: "Co-Regulation",
+                        subtitle: "Entering the Shared Field",
+                        what_it_is: "Resonating with others without merging/fixing/disappearing, metabolic calibration of field-based relation",
+                        why_exiled: "Instrumentalized for false harmony, often limited to in-groups reinforcing exclusion",
+                        what_possible: "Attunement inside tension, plural and reciprocal connection",
+                        distortions: [
+                            { name: "Savior urgency", description: "fixing others' emotional fields" },
+                            { name: "Superficial attunement", description: "performative empathy without deeper repair" }
+                        ],
+                        color: "#a855f7",
+                        position_x: 0.4,
+                        position_y: 0.2
+                    }
+                ]
+            }
+        ];
+
+        class CapacitiesVisualization {
+            constructor() {
+                this.currentCluster = null;
+                this.svg = d3.select('#network-svg');
+                this.width = 0;
+                this.height = 0;
+                this.simulation = null;
+                
+                this.init();
+            }
+
+            init() {
+                this.populateClusterList();
+                this.createFloatingThumbnails();
+                this.setupEventListeners();
+                this.startFloatingAnimation();
+            }
+
+            populateClusterList() {
+                const clusterList = document.getElementById('cluster-list');
+                
+                clustersData.forEach((cluster, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'cluster-item';
+                    
+                    const link = document.createElement('a');
+                    link.className = 'cluster-link';
+                    link.href = '#';
+                    link.dataset.clusterId = index;
+                    
+                    link.innerHTML = `
+                        <div class="cluster-title">${cluster.title}</div>
+                        <div class="cluster-description">${cluster.description}</div>
+                    `;
+                    
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.openClusterModal(index);
+                    });
+                    
+                    li.appendChild(link);
+                    clusterList.appendChild(li);
+                });
+            }
+
+            createFloatingThumbnails() {
+                const container = document.getElementById('thumbnails-container');
+                
+                clustersData.forEach((cluster, index) => {
+                    const thumbnail = document.createElement('div');
+                    thumbnail.className = 'floating-thumbnail';
+                    thumbnail.dataset.clusterId = index;
+                    
+                    // Random position
+                    const x = Math.random() * (window.innerWidth * 0.6);
+                    const y = Math.random() * (window.innerHeight * 0.6) + 100;
+                    
+                    thumbnail.style.left = x + 'px';
+                    thumbnail.style.top = y + 'px';
+                    
+                    if (cluster.image && cluster.image !== '') {
+                        const img = document.createElement('img');
+                        img.src = cluster.image;
+                        img.alt = cluster.title;
+                        thumbnail.appendChild(img);
+                    } else {
+                        const fallback = document.createElement('div');
+                        fallback.className = 'thumbnail-fallback';
+                        fallback.textContent = cluster.title;
+                        thumbnail.appendChild(fallback);
+                    }
+                    
+                    thumbnail.addEventListener('click', () => {
+                        this.openClusterModal(index);
+                    });
+                    
+                    container.appendChild(thumbnail);
+                });
+            }
+
+            startFloatingAnimation() {
+                const thumbnails = document.querySelectorAll('.floating-thumbnail');
+                
+                thumbnails.forEach((thumbnail, index) => {
+                    const duration = 20000 + (index * 5000); // Different speeds
+                    const delay = index * 2000;
+                    
+                    thumbnail.style.animation = `float ${duration}ms ${delay}ms infinite ease-in-out`;
+                });
+
+                // Add CSS animation
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes float {
+                        0%, 100% { transform: translateY(0px) rotate(0deg); }
+                        25% { transform: translateY(-20px) rotate(2deg); }
+                        50% { transform: translateY(0px) rotate(0deg); }
+                        75% { transform: translateY(-15px) rotate(-2deg); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            setupEventListeners() {
+                // Close modal
+                document.getElementById('close-modal').addEventListener('click', () => {
+                    this.closeClusterModal();
+                });
+
+                // Close capacity detail
+                document.getElementById('close-detail').addEventListener('click', () => {
+                    this.closeCapacityDetail();
+                });
+
+                // Close on outside click
+                document.getElementById('cluster-modal').addEventListener('click', (e) => {
+                    if (e.target.id === 'cluster-modal') {
+                        this.closeClusterModal();
+                    }
+                });
+
+                // Window resize
+                window.addEventListener('resize', () => {
+                    if (this.currentCluster !== null) {
+                        this.updateNetworkDimensions();
+                        this.drawNetwork();
+                    }
+                });
+            }
+
+            openClusterModal(clusterId) {
+                this.currentCluster = clusterId;
+                const cluster = clustersData[clusterId];
+                
+                document.getElementById('modal-title').textContent = cluster.title;
+                document.getElementById('modal-description').textContent = cluster.description;
+                document.getElementById('cluster-modal').classList.add('active');
+                
+                // Small delay to ensure modal is visible before drawing
+                setTimeout(() => {
+                    this.updateNetworkDimensions();
+                    this.drawNetwork();
+                }, 100);
+            }
+
+            closeClusterModal() {
+                document.getElementById('cluster-modal').classList.remove('active');
+                this.closeCapacityDetail();
+                this.currentCluster = null;
+                if (this.simulation) {
+                    this.simulation.stop();
+                }
+                this.svg.selectAll("*").remove();
+            }
+
+            updateNetworkDimensions() {
+                const container = document.querySelector('.network-container');
+                this.width = container.clientWidth;
+                this.height = container.clientHeight - 120; // Account for header
+                this.svg.attr('width', this.width).attr('height', this.height);
+            }
+
+            drawNetwork() {
+                if (this.currentCluster === null) return;
+                
+                const cluster = clustersData[this.currentCluster];
+                this.svg.selectAll("*").remove();
+
+                // Prepare data for D3
+                const nodes = [
+                    {
+                        id: 'center',
+                        title: cluster.title,
+                        type: 'cluster',
+                        x: this.width / 2,
+                        y: this.height / 2,
+                        fx: this.width / 2,
+                        fy: this.height / 2
+                    }
+                ];
+
+                const links = [];
+
+                cluster.capacities.forEach((capacity, index) => {
+                    const nodeId = `capacity-${index}`;
+                    nodes.push({
+                        id: nodeId,
+                        title: capacity.title,
+                        subtitle: capacity.subtitle,
+                        type: 'capacity',
+                        capacity: capacity,
+                        color: capacity.color
+                    });
+
+                    links.push({
+                        source: 'center',
+                        target: nodeId
+                    });
+                });
+
+                // Create force simulation
+                this.simulation = d3.forceSimulation(nodes)
+                    .force('link', d3.forceLink(links).id(d => d.id).distance(150))
+                    .force('charge', d3.forceManyBody().strength(-300))
+                    .force('center', d3.forceCenter(this.width / 2, this.height / 2))
+                    .force('collision', d3.forceCollide().radius(60));
+
+                // Draw links
+                const link = this.svg.append('g')
+                    .selectAll('line')
+                    .data(links)
+                    .enter().append('line')
+                    .attr('stroke', '#8b5cf6')
+                    .attr('stroke-width', 2)
+                    .attr('opacity', 0.6);
+
+                // Draw nodes
+                const node = this.svg.append('g')
+                    .selectAll('g')
+                    .data(nodes)
+                    .enter().append('g')
+                    .call(d3.drag()
+                        .on('start', this.dragstarted.bind(this))
+                        .on('drag', this.dragged.bind(this))
+                        .on('end', this.dragended.bind(this)));
+
+                // Define gradients
+                const defs = this.svg.append('defs');
+                
+                const centralGradient = defs.append('radialGradient')
+                    .attr('id', 'centralGradient');
+                centralGradient.append('stop')
+                    .attr('offset', '0%')
+                    .attr('stop-color', '#a855f7')
+                    .attr('stop-opacity', 0.8);
+                centralGradient.append('stop')
+                    .attr('offset', '100%')
+                    .attr('stop-color', '#1e293b')
+                    .attr('stop-opacity', 0.9);
+
+                // Center node (cluster)
+                node.filter(d => d.type === 'cluster')
+                    .append('circle')
+                    .attr('r', 50)
+                    .attr('fill', 'url(#centralGradient)')
+                    .attr('stroke', '#a855f7')
+                    .attr('stroke-width', 3);
+
+                // Center node text
+                node.filter(d => d.type === 'cluster')
+                    .append('text')
+                    .attr('text-anchor', 'middle')
+                    .attr('dy', '.35em')
+                    .attr('fill', '#ffffff')
+                    .attr('font-weight', 'bold')
+                    .attr('font-size', '14px')
+                    .text(d => d.title.length > 20 ? d.title.substring(0, 20) + '...' : d.title);
+
+                // Capacity nodes
+                const capacityNodes = node.filter(d => d.type === 'capacity');
+
+                capacityNodes.append('circle')
+                    .attr('r', 35)
+                    .attr('fill', d => d.color)
+                    .attr('stroke', '#ffffff')
+                    .attr('stroke-width', 2)
+                    .attr('opacity', 0.8)
+                    .style('cursor', 'pointer');
+
+                capacityNodes.append('text')
+                    .attr('text-anchor', 'middle')
+                    .attr('dy', '-5')
+                    .attr('fill', '#ffffff')
+                    .attr('font-weight', 'bold')
+                    .attr('font-size', '12px')
+                    .style('cursor', 'pointer')
+                    .text(d => d.title.length > 15 ? d.title.substring(0, 15) + '...' : d.title);
+
+                capacityNodes.append('text')
+                    .attr('text-anchor', 'middle')
+                    .attr('dy', '10')
+                    .attr('fill', '#ffffff')
+                    .attr('font-size', '10px')
+                    .attr('opacity', 0.8)
+                    .style('cursor', 'pointer')
+                    .text(d => d.subtitle.length > 20 ? d.subtitle.substring(0, 20) + '...' : d.subtitle);
+
+                // Add click handlers to capacity nodes
+                capacityNodes.on('click', (event, d) => {
+                    if (d.type === 'capacity') {
+                        this.openCapacityDetail(d.capacity);
+                    }
+                });
+
+                // Update positions on simulation tick
+                this.simulation.on('tick', () => {
+                    link
+                        .attr('x1', d => d.source.x)
+                        .attr('y1', d => d.source.y)
+                        .attr('x2', d => d.target.x)
+                        .attr('y2', d => d.target.y);
+
+                    node.attr('transform', d => `translate(${d.x},${d.y})`);
+                });
+            }
+
+            openCapacityDetail(capacity) {
+                document.getElementById('capacity-title').textContent = capacity.title;
+                document.getElementById('capacity-subtitle').textContent = capacity.subtitle;
+                document.getElementById('capacity-what-it-is').textContent = capacity.what_it_is;
+                document.getElementById('capacity-why-exiled').textContent = capacity.why_exiled;
+                document.getElementById('capacity-what-possible').textContent = capacity.what_possible;
+
+                const distortionsList = document.getElementById('capacity-distortions');
+                distortionsList.innerHTML = '';
+                
+                capacity.distortions.forEach(distortion => {
+                    const li = document.createElement('li');
+                    li.className = 'distortion-item';
+                    li.innerHTML = `
+                        <div class="distortion-name">${distortion.name}</div>
+                        <div class="distortion-description">${distortion.description}</div>
+                    `;
+                    distortionsList.appendChild(li);
+                });
+
+                document.getElementById('capacity-detail').classList.add('active');
+            }
+
+            closeCapacityDetail() {
+                document.getElementById('capacity-detail').classList.remove('active');
+            }
+
+            dragstarted(event, d) {
+                if (!event.active) this.simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+
+            dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+
+            dragended(event, d) {
+                if (!event.active) this.simulation.alphaTarget(0);
+                if (d.type !== 'cluster') { // Keep center node fixed
+                    d.fx = null;
+                    d.fy = null;
+                }
+            }
+        }
+
+        // Initialize the visualization when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new CapacitiesVisualization();
+        });
+    </script>
+</body>
+</html>
