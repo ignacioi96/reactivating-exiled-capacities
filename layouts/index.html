@@ -78,7 +78,7 @@
             "title": {{ $cluster.Title | jsonify }},
             "description": {{ $cluster.Params.description | default "" | jsonify }},
             "why_matters": {{ $cluster.Params.why_matters | default "" | jsonify }},
-            "image": {{ $cluster.Params.image | default "" | jsonify }},
+            "image": {{ if $cluster.Params.image }}{{ $cluster.Params.image | jsonify }}{{ else }}""{{ end }},
             "position_x": {{ $cluster.Params.position_x | default 0 }},
             "position_y": {{ $cluster.Params.position_y | default 0 }},
             "capacities": [
@@ -116,6 +116,20 @@
             const dataScript = document.getElementById('clusters-data');
             if (dataScript && dataScript.textContent) {
                 clustersData = JSON.parse(dataScript.textContent);
+                
+                // Clean up any malformed image URLs
+                clustersData = clustersData.map(cluster => {
+                    // Fix image URL if it has extra quotes
+                    if (cluster.image && typeof cluster.image === 'string') {
+                        cluster.image = cluster.image.replace(/^["']|["']$/g, '');
+                        // Also handle any URL encoding issues
+                        cluster.image = decodeURIComponent(cluster.image);
+                        // Clean up any remaining quotes
+                        cluster.image = cluster.image.replace(/['"]/g, '');
+                    }
+                    return cluster;
+                });
+                
                 console.log('Clusters loaded from embedded data:', clustersData.length);
                 console.log('Cluster data:', clustersData);
             } else {
@@ -208,15 +222,22 @@
                     thumbnail.style.left = Math.max(0, x) + 'px';
                     thumbnail.style.top = Math.max(100, y) + 'px';
                     
-                    if (cluster.image && cluster.image !== '' && cluster.image !== '/images/') {
+                    // Better image handling
+                    if (cluster.image && cluster.image.trim() !== '' && !cluster.image.includes('""')) {
+                        console.log('Loading image for cluster:', cluster.title, 'Image path:', cluster.image);
                         const img = document.createElement('img');
                         img.src = cluster.image;
                         img.alt = cluster.title;
                         img.onerror = () => {
+                            console.log('Image failed to load for:', cluster.title, 'Path:', cluster.image);
                             thumbnail.innerHTML = `<div class="thumbnail-fallback">${cluster.title}</div>`;
+                        };
+                        img.onload = () => {
+                            console.log('Image loaded successfully for:', cluster.title);
                         };
                         thumbnail.appendChild(img);
                     } else {
+                        console.log('Using fallback for cluster:', cluster.title, 'Image value:', cluster.image);
                         const fallback = document.createElement('div');
                         fallback.className = 'thumbnail-fallback';
                         fallback.textContent = cluster.title;

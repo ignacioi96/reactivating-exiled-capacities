@@ -2,7 +2,7 @@
 title: "Liminal Capacities"
 description: "The art of dwelling in thresholds—between endings and beginnings, certainty and mystery, breakdown and emergence."
 why_matters: "Modernity denies liminal space. It rushes to resolution, treats grief as something to manage or overcome, and numbs collective pain into individualized pathology. This leaves us ill-equipped to feel what must be felt, to metabolize the systemic denial of pain, or to process the emotional fields that arise in times of transition and collapse. These capacities allow us to stay with the field long enough to grieve collectively, to compost what's dissolving, and to invite what's emerging without forcing it."
-image: "static/images/liminal-capacities.jpg"
+image: "images/liminal-capacities.jpg"
 position_x: 0.25
 position_y: 0.8
 capacities:
