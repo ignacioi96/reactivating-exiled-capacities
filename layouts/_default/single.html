@@ -1,0 +1,118 @@
+{{ define "main" }}
+<div class="about-content">
+    <article>
+        {{ .Content }}
+    </article>
+</div>
+
+<style>
+/* Inline styles for About page if main.css doesn't load */
+.about-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    color: #e2e8f0;
+    background: radial-gradient(ellipse at center, #0f0f23 0%, #050510 100%);
+    min-height: 100vh;
+}
+
+.about-content h1 {
+    color: #a855f7;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.about-content h2 {
+    color: #a855f7;
+    font-size: 1.8rem;
+    margin: 40px 0 20px 0;
+    border-bottom: 2px solid rgba(139, 92, 246, 0.3);
+    padding-bottom: 10px;
+}
+
+.about-content h3 {
+    color: #cbd5e1;
+    font-size: 1.4rem;
+    margin: 30px 0 15px 0;
+}
+
+.about-content p {
+    line-height: 1.7;
+    margin-bottom: 20px;
+    color: #cbd5e1;
+}
+
+.pause-reflect {
+    background: rgba(139, 92, 246, 0.1);
+    border-left: 4px solid #a855f7;
+    padding: 20px 25px;
+    margin: 30px 0;
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+    color: #e2e8f0;
+    backdrop-filter: blur(5px);
+}
+
+.pause-reflect strong {
+    color: #a855f7;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px;
+    font-style: normal;
+}
+
+.about-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 30px 0;
+    background: rgba(15, 15, 35, 0.6);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.about-content th,
+.about-content td {
+    padding: 15px 12px;
+    text-align: left;
+    border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+    color: #cbd5e1;
+    font-size: 0.9rem;
+}
+
+.about-content th {
+    background: rgba(139, 92, 246, 0.2);
+    color: #e2e8f0;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.8rem;
+}
+
+.about-content a {
+    color: #a855f7;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.about-content a:hover {
+    color: #c084fc;
+    border-bottom-color: #a855f7;
+}
+
+@media (max-width: 768px) {
+    .about-content {
+        padding: 20px 15px;
+    }
+    .about-content table {
+        font-size: 0.8rem;
+    }
+    .about-content th,
+    .about-content td {
+        padding: 10px 8px;
+    }
+}
+</style>
+{{ end }}

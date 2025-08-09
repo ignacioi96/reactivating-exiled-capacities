@@ -34,6 +34,23 @@ theme = 'capacities-theme'
   tag = "tags"
   category = "categories"
 
+# Add this to your existing hugo.toml
+
+[outputs]
+  home = ["HTML", "JSON"]
+  section = ["HTML", "JSON"]
+
+# Media and Outputformats
+[mediaTypes]
+  [mediaTypes."application/json"]
+    suffixes = ["json"]
+
+[outputFormats]
+  [outputFormats.JSON]
+    mediaType = "application/json"
+    baseName = "clusters"
+    isPlainText = true
+
 # Build configuration
 [build]
   publish = "public"
