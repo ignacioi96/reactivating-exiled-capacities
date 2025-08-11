@@ -386,8 +386,22 @@ body.mobile-menu-open {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(0.8); /* scale down to fit */
+    transform: translate(-50%, -50%) scale(0.9); /* scale down to fit */
     display: block;
+}
+
+.site-footer {
+    background: rgba(15, 15, 35, 0.8);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(139, 92, 246, 0.2);
+    padding: 20px;
+    text-align: center;
+    color: #cbd5e1;
+    margin-top: auto;
+}
+
+.site-footer p {
+    margin: 0; /* removes default paragraph margins */
 }
 
 /* ===== CAPACITY DETAIL PANEL ===== */
