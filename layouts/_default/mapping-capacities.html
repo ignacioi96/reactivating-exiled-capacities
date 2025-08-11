@@ -1,0 +1,98 @@
+{{ define "main" }}
+<div class="mapping-capacities-page">
+    <div class="page-header">
+        <h1>{{ .Title }}</h1>
+        {{ if .Description }}
+        <p class="page-description">{{ .Description }}</p>
+        {{ end }}
+        {{ .Content }}
+    </div>
+
+    <div class="clusters-overview">
+        {{- $clusters := where .Site.Pages "Type" "clusters" -}}
+        {{- $clusters := where $clusters "Kind" "!=" "section" -}}
+        
+        {{ range $clusterIndex, $cluster := $clusters }}
+        <section class="cluster-section" id="cluster-{{ $clusterIndex }}">
+            <div class="cluster-header">
+                <h2 class="cluster-title">{{ $cluster.Title }}</h2>
+                {{ if $cluster.Params.description }}
+                <p class="cluster-description">{{ $cluster.Params.description }}</p>
+                {{ end }}
+                
+                {{ if $cluster.Params.why_matters }}
+                <div class="why-matters">
+                    <h3>Why This Cluster Matters</h3>
+                    <p>{{ $cluster.Params.why_matters }}</p>
+                </div>
+                {{ end }}
+            </div>
+
+            {{ if $cluster.Params.capacities }}
+            <div class="capacities-grid">
+                {{ range $capacityIndex, $capacity := $cluster.Params.capacities }}
+                <article class="capacity-card">
+                    <header class="capacity-header">
+                        <h3 class="capacity-title">{{ $capacity.title }}</h3>
+                        {{ if $capacity.subtitle }}
+                        <p class="capacity-subtitle">{{ $capacity.subtitle }}</p>
+                        {{ end }}
+                    </header>
+
+                    <div class="capacity-content">
+                        {{ if $capacity.what_it_is }}
+                        <div class="capacity-section">
+                            <h4>What it is</h4>
+                            <div class="capacity-text">{{ $capacity.what_it_is | markdownify }}</div>
+                        </div>
+                        {{ end }}
+
+                        {{ if $capacity.why_exiled }}
+                        <div class="capacity-section">
+                            <h4>Why it's been exiled</h4>
+                            <div class="capacity-text">{{ $capacity.why_exiled | markdownify }}</div>
+                        </div>
+                        {{ end }}
+
+                        {{ if $capacity.what_possible }}
+                        <div class="capacity-section">
+                            <h4>What it makes possible</h4>
+                            <div class="capacity-text">{{ $capacity.what_possible | markdownify }}</div>
+                        </div>
+                        {{ end }}
+
+                        {{ if $capacity.distortions }}
+                        <div class="capacity-section">
+                            <h4>Distortions</h4>
+                            <ul class="distortions-list">
+                                {{ range $capacity.distortions }}
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">{{ .name }}</strong>
+                                    {{ if .description }}
+                                    <p class="distortion-description">{{ .description }}</p>
+                                    {{ end }}
+                                </li>
+                                {{ end }}
+                            </ul>
+                        </div>
+                        {{ end }}
+                    </div>
+                </article>
+                {{ end }}
+            </div>
+            {{ end }}
+        </section>
+        {{ end }}
+    </div>
+
+    <!-- Table of Contents -->
+    <aside class="table-of-contents">
+        <h3>Jump to Cluster</h3>
+        <ul class="toc-list">
+            {{ range $clusterIndex, $cluster := $clusters }}
+            <li><a href="#cluster-{{ $clusterIndex }}">{{ $cluster.Title }}</a></li>
+            {{ end }}
+        </ul>
+    </aside>
+</div>
+{{ end }}

@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Open Hugo Site",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}",
+      "runtimeExecutable": "open",
+      "runtimeArgs": ["http://localhost:1313"],
+      "skipFiles": ["<node_internals>/**"]
+    }
+  ]
+}

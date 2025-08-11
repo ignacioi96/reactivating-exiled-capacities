@@ -7,9 +7,10 @@ theme = 'capacities-theme'
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]
+    
       unsafe = true
 
-# Enable Hugo Pipes for asset processing
+# Site parameters
 [params]
   description = "Rediscovering forgotten human abilities and talents through an interconnected, network-based approach"
 
@@ -29,13 +30,7 @@ theme = 'capacities-theme'
   url = "/mapping-capacities/"
   weight = 30
 
-# Content types
-[taxonomies]
-  tag = "tags"
-  category = "categories"
-
-# Add this to your existing hugo.toml
-
+# Output formats for JSON data
 [outputs]
   home = ["HTML", "JSON"]
 
@@ -49,11 +44,5 @@ theme = 'capacities-theme'
     baseName = "clusters"
     isPlainText = true
 
-# Build configuration
-[build]
-  publish = "public"
-  command = "hugo --gc --minify"
-
-[build.environment]
-  HUGO_VERSION = "0.118.0"
-  HUGO_ENV = "production"
+# Disable unused content types
+disableKinds = ["taxonomy", "term"]

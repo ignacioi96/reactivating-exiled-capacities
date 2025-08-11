@@ -11,6 +11,14 @@
     {{ else }}
     <meta name="description" content="{{ .Site.Params.description }}">
     {{ end }}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+{{ if fileExists "assets/css/main.css" }}
+    {{ $style := resources.Get "css/main.css" | resources.Minify }}
+    <link rel="stylesheet" href="{{ $style.Permalink }}">
+{{ else }}
+    <link rel="stylesheet" href="/css/main.css">
+{{ end }}
     
     <!-- Netlify Identity Widget -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
@@ -42,25 +50,15 @@
             border-bottom: 1px solid #e9ecef;
         }
         
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 2rem;
-        }
-        
-        nav a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-        }
-        
-        nav a:hover {
-            color: #007bff;
-        }
+        /* Remove old nav styles - they're now in header.html */
         
         main {
-            padding: 2rem 0;
             min-height: 60vh;
+        }
+        
+        /* Add padding only for non-home pages */
+        main:not(.home-main) {
+            padding: 2rem 0;
         }
         
         footer {
@@ -129,7 +127,7 @@
 <body>
     {{ partial "header.html" . }}
     
-    <main>
+    <main{{ if .IsHome }} class="home-main"{{ end }}>
         <div class="container">
             {{ block "main" . }}{{ end }}
         </div>

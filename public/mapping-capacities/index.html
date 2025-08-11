@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Mapping Capacities | Reactivating Exiled Capacities</title>
+    
+    
+    <meta name="description" content="A comprehensive overview of all capacity clusters and their individual capacities">
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+
+    
+    <link rel="stylesheet" href="http://localhost:1313/css/main.min.css">
+
+    
+    
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: #f8f9fa;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+         
+        
+        main {
+            min-height: 60vh;
+        }
+        
+         
+        main:not(.home-main) {
+            padding: 2rem 0;
+        }
+        
+        footer {
+            background: #343a40;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+        
+        h1, h2, h3 {
+            margin-bottom: 1rem;
+        }
+        
+        .story-list {
+            display: grid;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .story-card {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: box-shadow 0.3s ease;
+        }
+        
+        .story-card:hover {
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .story-meta {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 1rem;
+        }
+        
+        .btn:hover {
+            background: #0056b3;
+        }
+        
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .container {
+                padding: 0 10px;
+            }
+        }
+    </style>
+    
+    
+</head>
+<body>
+    <header>
+    <div class="container">
+        <nav class="main-nav">
+            
+            <div class="nav-brand">
+                <a href="/" class="site-title">Reactivating Exiled Capacities</a>
+            </div>
+            
+            
+            <ul class="nav-links desktop-nav">
+                <li><a href="/">Home</a></li>
+                <li><a href="/about/">About</a></li>
+                <li><a href="/mapping-capacities/">Mapping Capacities</a></li>
+            </ul>
+            
+            
+            <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle Menu">
+                <span class="hamburger"></span>
+                <span class="hamburger"></span>
+                <span class="hamburger"></span>
+            </button>
+            
+            
+            <div class="mobile-nav" id="mobile-nav">
+                <ul class="mobile-nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about/">About</a></li>
+                    <li><a href="/mapping-capacities/">Mapping Capacities</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<style>
+ 
+header {
+    background: #f8f9fa;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e9ecef;
+    position: relative;
+    z-index: 100;
+}
+
+.main-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.nav-brand .site-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.nav-brand .site-title:hover {
+    color: #a855f7;
+}
+
+ 
+.desktop-nav {
+    list-style: none;
+    display: flex;
+    gap: 2.5rem;  
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+.desktop-nav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.desktop-nav a:hover {
+    color: #a855f7;
+    background: rgba(168, 85, 247, 0.1);
+    transform: translateY(-1px);
+}
+
+ 
+.desktop-nav a.active {
+    color: #a855f7;
+    background: rgba(168, 85, 247, 0.15);
+}
+
+ 
+.mobile-menu-btn {
+    display: none;
+    flex-direction: column;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    gap: 4px;
+}
+
+.hamburger {
+    width: 25px;
+    height: 3px;
+    background: #333;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+.mobile-menu-btn.active .hamburger:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.mobile-menu-btn.active .hamburger:nth-child(2) {
+    opacity: 0;
+}
+
+.mobile-menu-btn.active .hamburger:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+ 
+.mobile-nav {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    min-width: 200px;
+    z-index: 1000;
+}
+
+.mobile-nav.active {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+}
+
+.mobile-nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0.5rem 0;
+}
+
+.mobile-nav-links li {
+    padding: 0;
+}
+
+.mobile-nav-links a {
+    display: block;
+    padding: 0.75rem 1.5rem;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.mobile-nav-links a:hover {
+    background: rgba(168, 85, 247, 0.1);
+    color: #a855f7;
+}
+
+ 
+@media (max-width: 768px) {
+    .desktop-nav {
+        display: none;
+    }
+    
+    .mobile-menu-btn {
+        display: flex;
+    }
+    
+    .main-nav {
+        position: relative;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-brand .site-title {
+        font-size: 1.3rem;
+    }
+    
+    .mobile-nav {
+        right: -10px;
+        left: -10px;
+        min-width: auto;
+    }
+}
+
+ 
+@media (min-width: 1200px) {
+    .desktop-nav {
+        gap: 3rem;
+    }
+}
+</style>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileNav = document.getElementById('mobile-nav');
+    
+    if (mobileMenuBtn && mobileNav) {
+        mobileMenuBtn.addEventListener('click', function() {
+            mobileMenuBtn.classList.toggle('active');
+            mobileNav.classList.toggle('active');
+        });
+        
+        
+        document.addEventListener('click', function(e) {
+            if (!mobileMenuBtn.contains(e.target) && !mobileNav.contains(e.target)) {
+                mobileMenuBtn.classList.remove('active');
+                mobileNav.classList.remove('active');
+            }
+        });
+        
+        
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                mobileMenuBtn.classList.remove('active');
+                mobileNav.classList.remove('active');
+            }
+        });
+    }
+});
+</script>
+    
+    <main>
+        <div class="container">
+            
+<div class="mapping-capacities-page">
+    <div class="page-header">
+        <h1>Mapping Capacities</h1>
+        
+        <p class="page-description">A comprehensive overview of all capacity clusters and their individual capacities</p>
+        
+        
+    </div>
+
+    <div class="clusters-overview">
+        <section class="cluster-section" id="cluster-0">
+            <div class="cluster-header">
+                <h2 class="cluster-title">Liminal Capacities</h2>
+                
+                <p class="cluster-description">The art of dwelling in thresholds—between endings and beginnings, certainty and mystery, breakdown and emergence.</p>
+                
+                
+                
+                <div class="why-matters">
+                    <h3>Why This Cluster Matters</h3>
+                    <p>Modernity denies liminal space. It rushes to resolution, treats grief as something to manage or overcome, and numbs collective pain into individualized pathology. This leaves us ill-equipped to feel what must be felt, to metabolize the systemic denial of pain, or to process the emotional fields that arise in times of transition and collapse. These capacities allow us to stay with the field long enough to grieve collectively, to compost what&#39;s dissolving, and to invite what&#39;s emerging without forcing it.</p>
+                </div>
+                
+            </div>
+
+            
+            <div class="capacities-grid">
+                
+                <article class="capacity-card">
+                    <header class="capacity-header">
+                        <h3 class="capacity-title">Humor as Rupture</h3>
+                        
+                        <p class="capacity-subtitle">Laughter as a crack in the wall of authority</p>
+                        
+                    </header>
+
+                    <div class="capacity-content">
+                        
+                        <div class="capacity-section">
+                            <h4>What it is</h4>
+                            <div class="capacity-text">Humor as release and rupture. As a crack in the wall of authority, unrestricted autonomy, arbitration, affirmation. Clowning as a practice reminds us that we are not the center, that our need for righteousness, certainty, looking good, is part of the disease. This is the work of humor as humility—the capacity to fumble publicly and to openly and honestly look at our addictions to superiority in order to let failure become relational compost. When the clown stumbles, when we laugh at her, we are laughing at our own illusions—the part of us addicted to control, coherence, and exceptionalism.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Why it's been exiled</h4>
+                            <div class="capacity-text">Modernity treats failure as shame and humor as distraction—because both threaten the fragile scaffolding of superiority.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>What it makes possible</h4>
+                            <div class="capacity-text">Humor as humility allows us to compost these addictions. It makes room for failure without collapse, for truth without control, for presence without performance. It loosens the tapeworm&rsquo;s grip—not through force, but through laughter.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Distortions</h4>
+                            <ul class="distortions-list">
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Deflective humor</strong>
+                                    
+                                    <p class="distortion-description">Using humor to avoid or distract from necessary discomfort rather than to rupture illusions of control.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Performative vulnerability</strong>
+                                    
+                                    <p class="distortion-description">Staging fumbles or failures for social approval rather than allowing genuine interruption of superiority patterns.</p>
+                                    
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </article>
+                
+                <article class="capacity-card">
+                    <header class="capacity-header">
+                        <h3 class="capacity-title">Staying with(in) Emergence - &#39;Azar&#39;</h3>
+                        
+                        <p class="capacity-subtitle">Dancing with chance, randomness, the unknown</p>
+                        
+                    </header>
+
+                    <div class="capacity-content">
+                        
+                        <div class="capacity-section">
+                            <h4>What it is</h4>
+                            <div class="capacity-text">This capacity is an invitation to walk the tightrope between naive hope and desperate hopelessness—which are both expressions of certainty addiction—ways of trying to predict or control what&rsquo;s to come. But Azar—chance, randomness, emergence—has no allegiance to certainty. Azar is the spirit of the unknown. The fool walks into the scene without a script. Play is not a distraction—it&rsquo;s a relational practice with the unknown. Dancing with Azar is the capacity to stay with emergence—to feel the field shifting, to invite chance in, to let randomness be a co-facilitator.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Why it's been exiled</h4>
+                            <div class="capacity-text">Modernity demands predictability, control, and strategic certainty. Emergence threatens planning, efficiency, and the illusion of mastery over outcomes.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>What it makes possible</h4>
+                            <div class="capacity-text">Dancing with Azar lets experimentation return—not through rigid strategy, but through relational improvisation. It brings curiosity back into the room and allows for genuine co-creation with the unknown.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Distortions</h4>
+                            <ul class="distortions-list">
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Spiritual bypassing</strong>
+                                    
+                                    <p class="distortion-description">Using &#39;trust in emergence&#39; to avoid necessary planning, accountability, or difficult decisions.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Chaos addiction</strong>
+                                    
+                                    <p class="distortion-description">Creating unnecessary disruption or unpredictability as a way to avoid deeper engagement with what&#39;s actually emerging.</p>
+                                    
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </article>
+                
+                <article class="capacity-card">
+                    <header class="capacity-header">
+                        <h3 class="capacity-title">Inhabiting Liminality</h3>
+                        
+                        <p class="capacity-subtitle">Dwelling in the space between endings and beginnings</p>
+                        
+                    </header>
+
+                    <div class="capacity-content">
+                        
+                        <div class="capacity-section">
+                            <h4>What it is</h4>
+                            <div class="capacity-text">To inhabit liminality is to dwell in the space between endings and beginnings, where nothing feels certain, where identities dissolve but have not yet reformed. This space is often thick with feeling—not just personal emotions, but meta-affective landscapes: the collective weight of grief, longing, anger, emptiness, and the awe that flickers through even in the fog. This capacity asks: Can you stay in the fog? Can you hold the weight of the field without rushing to rebuild identity or make meaning? Can you listen to grief as a teacher, without needing to fix it or flee?</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Why it's been exiled</h4>
+                            <div class="capacity-text">Modernity denies liminal space. It rushes to resolution, treats grief as something to manage or overcome, and numbs collective pain into individualized pathology. This leaves us ill-equipped to feel what must be felt, to metabolize the systemic denial of pain, or to process the emotional fields that arise in times of transition and collapse.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>What it makes possible</h4>
+                            <div class="capacity-text">Reclaiming Inhabiting Liminality allows us to stay with the field long enough to grieve collectively, to compost what&rsquo;s dissolving, and to invite what&rsquo;s emerging without forcing it. It&rsquo;s the capacity to be interrupted by the full spectrum of feeling, and to respond with attuned care, knowing that collective hearts can hold what individual hearts cannot.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Distortions</h4>
+                            <ul class="distortions-list">
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Glorifying suffering</strong>
+                                    
+                                    <p class="distortion-description">Romanticizing pain or liminal states as inherently spiritual or superior, rather than metabolizing them as necessary passages.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Liminal addiction</strong>
+                                    
+                                    <p class="distortion-description">Getting stuck in the threshold as a way to avoid commitment, responsibility, or the work of emergence.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Emotional bypassing</strong>
+                                    
+                                    <p class="distortion-description">Using the language of &#39;collective grief&#39; to avoid personal accountability or specific relational repair.</p>
+                                    
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </article>
+                
+            </div>
+            
+        </section>
+        
+        <section class="cluster-section" id="cluster-1">
+            <div class="cluster-header">
+                <h2 class="cluster-title">Poly-Rhythmic Knowing</h2>
+                
+                <p class="cluster-description">The Art of Relating to Knowings as Tempos—recognizing layers, braiding between layers, and holding layers simultaneously.</p>
+                
+                
+                
+                <div class="why-matters">
+                    <h3>Why This Cluster Matters</h3>
+                    <p>Colonial modernity flattens complexity into singular tempos of knowing—logocentric, binary, universal. It treats knowing (i.e epistemologies, ontologies, and methods) as fixed structures to be understood or controlled, rather than rhythms to be felt and related to. The invitation with this cluster is to relate to ideas, methods, epistemologies, and ontologies as tempos as opposed to singular beats to collapse into coherence. It invites us to see reality through layered, pulsing patterns that resist synchronization. It&#39;s less about finding one rhythm and more about learning to feel the polyrhythmic field. It teaches us to recognize layers, braid between layers, and hold layers simultaneously—without needing to resolve or collapse them.</p>
+                </div>
+                
+            </div>
+
+            
+            <div class="capacities-grid">
+                
+                <article class="capacity-card">
+                    <header class="capacity-header">
+                        <h3 class="capacity-title">Epistemic Polyphony</h3>
+                        
+                        <p class="capacity-subtitle">Recognizing multiple ways of knowing as indispensable and insufficient</p>
+                        
+                    </header>
+
+                    <div class="capacity-content">
+                        
+                        <div class="capacity-section">
+                            <h4>What it is</h4>
+                            <div class="capacity-text">This capacity is the foundational polyphonic awareness: the ability to hear multiple knowings at once—scientific, ancestral, ecological, embodied, historical—without needing them to collapse into agreement. Each knowing carries its own tempo, scale, and logic. Each is true, each is partial. This is like polyphony in music: multiple independent melodies coexist, weaving texture without resolving into unison. It&rsquo;s not harmony—the knowings retain their autonomy, but relate in their difference.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Why it's been exiled</h4>
+                            <div class="capacity-text">Modernity demands a singular beat—usually Western, rational, and dominant. Other epistemologies are treated as secondary, mystical, or primitive.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>What it makes possible</h4>
+                            <div class="capacity-text">Epistemic Polyphony refuses this erasure and reclaims plurality as baseline—letting the choir of knowings be heard, even when dissonant.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Distortions</h4>
+                            <ul class="distortions-list">
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Tokenism</strong>
+                                    
+                                    <p class="distortion-description">Naming other knowings without letting them interrupt or reshape your own.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Epistemic relativism</strong>
+                                    
+                                    <p class="distortion-description">Flattening all knowings into &#39;equally valid&#39; without attending to power dynamics or historical context.</p>
+                                    
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </article>
+                
+                <article class="capacity-card">
+                    <header class="capacity-header">
+                        <h3 class="capacity-title">Dissonant Holding</h3>
+                        
+                        <p class="capacity-subtitle">Staying with epistemic friction long enough to feel the chord beneath it</p>
+                        
+                    </header>
+
+                    <div class="capacity-content">
+                        
+                        <div class="capacity-section">
+                            <h4>What it is</h4>
+                            <div class="capacity-text">This is the capacity to hold multiple knowings or rhythms simultaneously, even when they don&rsquo;t harmonize or resolve. It&rsquo;s the embodied metabolizing of friction, syncopation, and incommensurability—without collapsing into coherence or fleeing the dissonance. In polyrhythmic theory, multiple rhythms played simultaneously can feel dissonant at one tempo but become resonance at another scale. At the micro-level, different knowings feel incommensurable, conflicting. At the macro-level, those same knowings form a complex chord that only exists because of their friction, their difference, their syncopation.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Why it's been exiled</h4>
+                            <div class="capacity-text">Western traditions often favor harmony, unison, and resolution—flattening rhythms or layering them in ways that prioritize coherence over the relational space between differences.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>What it makes possible</h4>
+                            <div class="capacity-text">Dissonant Holding reclaims the polyphonic principle: that difference itself is the rhythm. It allows for staying with complexity without premature resolution.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Distortions</h4>
+                            <ul class="distortions-list">
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Coherence addiction</strong>
+                                    
+                                    <p class="distortion-description">The compulsive need to resolve dissonance into harmony, missing the intelligence that lives in the friction.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Dissonance addiction</strong>
+                                    
+                                    <p class="distortion-description">Creating or maintaining conflict as a way to avoid the deeper work of finding relationship across difference.</p>
+                                    
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </article>
+                
+                <article class="capacity-card">
+                    <header class="capacity-header">
+                        <h3 class="capacity-title">Translational Attunement</h3>
+                        
+                        <p class="capacity-subtitle">Flowing between epistemologies without flattening any of them</p>
+                        
+                    </header>
+
+                    <div class="capacity-content">
+                        
+                        <div class="capacity-section">
+                            <h4>What it is</h4>
+                            <div class="capacity-text">This capacity is about moving between different rhythms of knowing—like a musician shifting between polyrhythms without losing the distinct tempo of each. It&rsquo;s translational humility: recognizing that something is always lost in translation. You don&rsquo;t collapse one knowing into another. You flow between them, honoring their difference, adjusting your tempo without diminishing the tempo you just left. Like moving between polyrhythms, this is not about finding the sync—it&rsquo;s about finding the relationship between tempos.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Why it's been exiled</h4>
+                            <div class="capacity-text">Academic and institutional cultures demand translation into dominant epistemological frameworks, flattening the texture and rhythm of non-dominant ways of knowing.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>What it makes possible</h4>
+                            <div class="capacity-text">Translational Attunement allows for cross-epistemic dialogue without colonization—maintaining the integrity of each knowing while finding points of resonance and relationship.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Distortions</h4>
+                            <ul class="distortions-list">
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Over-translating</strong>
+                                    
+                                    <p class="distortion-description">Explaining away the friction, smoothing edges until difference disappears.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Universalism</strong>
+                                    
+                                    <p class="distortion-description">Believing that moving between knowings makes them &#39;the same deep down.&#39; (They&#39;re not.)</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Intellectual appropriation</strong>
+                                    
+                                    <p class="distortion-description">Taking concepts from other epistemologies without understanding their relational context or accountability structures.</p>
+                                    
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </article>
+                
+            </div>
+            
+        </section>
+        
+        <section class="cluster-section" id="cluster-2">
+            <div class="cluster-header">
+                <h2 class="cluster-title">Regenerative Regulation</h2>
+                
+                <p class="cluster-description">The Metabolic Core - Nervous system as web, bridge, and compost heap.</p>
+                
+                
+                
+                <div class="why-matters">
+                    <h3>Why This Cluster Matters</h3>
+                    <p>Modernity, through its demand for speed, control, and coherence, trains our nervous systems to interpret complexity as danger. The consequence is what we call narrow boundary response: binary thinking, reactive behavior, simplified identity defense, and disconnection from relational context. This cluster supports the capacity to feel complex, layered realities without collapsing into defensiveness or savior urgency. It is the process of re-patterning the nervous system not just to survive, but to become metabolically capable of staying with contradiction, discomfort, and deep time responsibility. The pathway goes: from self-regulation (I can stay with myself), to co-regulation (I can stay with you/us/the land), to meta-regulation (I can stay with the whole metabolic field—including what came before and what comes after).</p>
+                </div>
+                
+            </div>
+
+            
+            <div class="capacities-grid">
+                
+                <article class="capacity-card">
+                    <header class="capacity-header">
+                        <h3 class="capacity-title">Self-Regulation</h3>
+                        
+                        <p class="capacity-subtitle">Attuning to Presence</p>
+                        
+                    </header>
+
+                    <div class="capacity-content">
+                        
+                        <div class="capacity-section">
+                            <h4>What it is</h4>
+                            <div class="capacity-text">The capacity to shift from reactive states—fight, flight, freeze—into sober, curious presence. It grounds the nervous system without forcing coherence, allowing grief, contradiction, sensation, and uncertainty to coexist. Rooted in polyvagal theory, this isn&rsquo;t just calming down—it&rsquo;s learning to orient your system toward complexity without threat.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Why it's been exiled</h4>
+                            <div class="capacity-text">Modernity exiles self-regulation by reducing it to a product for personal optimization—meditate so you can perform better. This isolates the nervous system from its collective and ecological context and turns regulation into a privatized act.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>What it makes possible</h4>
+                            <div class="capacity-text">Reclaiming self-regulation as a relational practice makes it possible to soften the narrow boundary condition and create the inner spaciousness necessary for non-binary thinking. It becomes a way to pause before collapse.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Distortions</h4>
+                            <ul class="distortions-list">
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Collapse anxiety</strong>
+                                    
+                                    <p class="distortion-description">A form of nervous system overload that emerges when the body feels the weight of systemic grief or planetary despair and freezes. Often misinterpreted as apathy or inaction, but is actually a form of paralyzed overwhelm.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Identity-protective regulation</strong>
+                                    
+                                    <p class="distortion-description">Happens when the nervous system reacts defensively in order to maintain social standing, purity, or innocence. Instead of metabolizing complexity, it fortifies rigid identities to avoid discomfort.</p>
+                                    
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </article>
+                
+                <article class="capacity-card">
+                    <header class="capacity-header">
+                        <h3 class="capacity-title">Co-Regulation</h3>
+                        
+                        <p class="capacity-subtitle">Entering the Shared Field</p>
+                        
+                    </header>
+
+                    <div class="capacity-content">
+                        
+                        <div class="capacity-section">
+                            <h4>What it is</h4>
+                            <div class="capacity-text">The capacity to resonate with others without merging, fixing, or disappearing. It includes sensing the nervous systems of others (human and more-than-human) as part of a larger field—and responding with reciprocity. Often misunderstood as &lsquo;being nice,&rsquo; true co-regulation is the metabolic calibration of field-based relation.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Why it's been exiled</h4>
+                            <div class="capacity-text">Modern belonging tends to enforce conformity. Co-regulation gets instrumentalized to maintain false harmony or suppress conflict. And often, it only flows within in-groups, reinforcing exclusion, white supremacy, or anthropocentrism.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>What it makes possible</h4>
+                            <div class="capacity-text">Reclaiming it as a plural, uncomfortable, and reciprocal act makes space for attunement inside tension, not just in comfort.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Distortions</h4>
+                            <ul class="distortions-list">
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Savior urgency</strong>
+                                    
+                                    <p class="distortion-description">Arises when someone attempts to co-regulate by overriding or &#39;fixing&#39; the emotional field of another, rather than staying with discomfort. It is a reactive attempt to restore personal comfort by managing others.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Superficial attunement</strong>
+                                    
+                                    <p class="distortion-description">Appears as performative empathy—it replicates the gestures of connection without engaging with the deeper, messier undercurrents of rupture and relational repair.</p>
+                                    
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </article>
+                
+                <article class="capacity-card">
+                    <header class="capacity-header">
+                        <h3 class="capacity-title">Meta-Regulation</h3>
+                        
+                        <p class="capacity-subtitle">Navigating Deep Time &amp; Complexity</p>
+                        
+                    </header>
+
+                    <div class="capacity-content">
+                        
+                        <div class="capacity-section">
+                            <h4>What it is</h4>
+                            <div class="capacity-text">Meta-regulation requires a degree of Neuro-decolonization, which is a concept developed by Cree elder Dr. Cash Ahenakew that refers to unwiring these harmful attachments and honouring our entangled nervous system—one attuned to and guided by collective and metabolic processes. Meta-regulation is a layered, deep-time-aware capacity to stay present while metabolizing intergenerational, ecological, and ancestral threads. It is a nervous system practice of holding space for what can&rsquo;t yet be resolved and choosing action not from urgency, but alignment.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Why it's been exiled</h4>
+                            <div class="capacity-text">Meta-regulation is often exiled because it slows things down. It exposes illusion, demands complicity, and resists short-termism. It challenges modern systems that reward only what is visible, quick, or profitable.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>What it makes possible</h4>
+                            <div class="capacity-text">Meta-regulation is what makes accountability possible across time and scale—it roots action in alignment, not reactivity.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Distortions</h4>
+                            <ul class="distortions-list">
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Trauma-stuckness</strong>
+                                    
+                                    <p class="distortion-description">Emerges when individuals remain locked in past survival states, replaying old patterns as if they&#39;re still true. It restricts capacity to imagine future pathways or engage with slow repair.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Fixing-as-control</strong>
+                                    
+                                    <p class="distortion-description">The impulse to prematurely resolve complex tensions. It appears as saviorism or over-productivity and often reproduces harm in the name of &#39;doing good.&#39; Meta-regulation composts this into humble alignment with the actual pace of healing and repair.</p>
+                                    
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </article>
+                
+            </div>
+            
+        </section>
+        
+        <section class="cluster-section" id="cluster-3">
+            <div class="cluster-header">
+                <h2 class="cluster-title">Relational Integrity and Accountability</h2>
+                
+                <p class="cluster-description">The capacity to act with visceral care inside entangled systems—without centering oneself, without purity posturing.</p>
+                
+                
+                
+                <div class="why-matters">
+                    <h3>Why This Cluster Matters</h3>
+                    <p>Relational integrity is the ability to act with care, precision, and answerability inside entangled systems, without centering oneself, without purity posturing. This is where service, care, and accountability live—not as isolated virtues, but as co-arising states that can only exist in the space between. The ethics of presence here are visceral. They belong to the nervous system as much as the mind: humility that doesn&#39;t hide, boundaries that make intimacy possible, clarity that keeps power visible, and the willingness to stay woven into relation when the weave gets messy. Under modernity&#39;s political grammar, these capacities have been thinned out or replaced. Boundaries get reframed as private property lines. Clarity gets outsourced to ideology. Accountability gets swapped for public displays of guilt or moral branding. The result is brittle relations that fracture under conflict, avoid repair, and reproduce the same power-over dynamics they claim to resist.</p>
+                </div>
+                
+            </div>
+
+            
+            <div class="capacities-grid">
+                
+                <article class="capacity-card">
+                    <header class="capacity-header">
+                        <h3 class="capacity-title">Boundary Clarity as Relational Practice</h3>
+                        
+                        <p class="capacity-subtitle">Naming edges in ways that deepen rather than cut off relation</p>
+                        
+                    </header>
+
+                    <div class="capacity-content">
+                        
+                        <div class="capacity-section">
+                            <h4>What it is</h4>
+                            <div class="capacity-text">Boundary clarity is the ability to name and hold one&rsquo;s edges in a way that deepens relation rather than cuts it off. It&rsquo;s the somatic and political skill of knowing where I end and you begin—not as a separation, but as a meeting point. This clarity lives in the body: a felt sense of what strengthens reciprocity, what erodes it, and what power dynamics are at play in the moment. It also includes the capacity to recognize when you—or the community you belong to—are crossing, have crossed, or are benefiting from the crossing of another&rsquo;s boundaries, whether in the present or through historical harm.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Why it's been exiled</h4>
+                            <div class="capacity-text">Modernity&rsquo;s survival logics distort boundaries in two main ways: by erasing them entirely in the name of &lsquo;connection,&rsquo; or by fortifying them as rigid walls of autonomy and control. Political clarity is similarly displaced—outsourced to abstract ideology rather than cultivated as a felt, situated discernment in real time.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>What it makes possible</h4>
+                            <div class="capacity-text">Restoring this capacity makes intimacy sustainable. It enables us to name power dynamics without freezing the relation in judgment, to protect the conditions for reciprocity, and to respond to rupture in ways that strengthen the weave rather than tear it further. In collective spaces, boundary clarity grounds trust because people know where they stand—and where they can meet, repair, and reweave.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Distortions</h4>
+                            <ul class="distortions-list">
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Boundaries as personal property lines</strong>
+                                    
+                                    <p class="distortion-description">Weaponizing &#39;no&#39; to protect privilege rather than foster equity.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Over-flexibility as virtue</strong>
+                                    
+                                    <p class="distortion-description">Dissolving all edges to be &#39;easy to work with,&#39; masking power imbalances.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Ideological clarity without embodiment</strong>
+                                    
+                                    <p class="distortion-description">Knowing the &#39;right&#39; political position but being unable to enact it somatically in live relation.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Selective perception</strong>
+                                    
+                                    <p class="distortion-description">Attuning only to when one&#39;s own boundaries are crossed, not when one is crossing another&#39;s.</p>
+                                    
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </article>
+                
+                <article class="capacity-card">
+                    <header class="capacity-header">
+                        <h3 class="capacity-title">Repair Literacy</h3>
+                        
+                        <p class="capacity-subtitle">Entering, navigating, and completing processes of repair after rupture</p>
+                        
+                    </header>
+
+                    <div class="capacity-content">
+                        
+                        <div class="capacity-section">
+                            <h4>What it is</h4>
+                            <div class="capacity-text">Repair literacy is the ability to enter, navigate, and complete processes of repair after rupture—whether the rupture is intimate, communal, or systemic—without collapsing into shame, weaponizing harm, or bypassing the discomfort. It requires the skills of naming, listening, taking responsibility, and making amends in ways that are proportionate to the harm and responsive to the needs of those affected. In the context of boundary clarity, repair literacy is the follow-through: the capacity to act when we recognize we have crossed someone&rsquo;s edge, or when our communities (past or present) have done so.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Why it's been exiled</h4>
+                            <div class="capacity-text">Modernity trains us to treat conflict and harm as either personal failures to be hidden or as battles to be won. This creates cultures of avoidance, blame, and punishment rather than repair. Under colonial-capitalist logics, historical harms are either erased (&lsquo;That was in the past&rsquo;) or exploited for political capital, while personal conflicts often get abandoned rather than addressed.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>What it makes possible</h4>
+                            <div class="capacity-text">Restoring repair literacy allows us to stay in the weave when it&rsquo;s frayed, to rebuild trust after rupture, and to hold complexity without demanding premature resolution. In collective spaces, it creates resilience—because people know that harm is neither ignored nor escalated into irreparable fracture.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Distortions</h4>
+                            <ul class="distortions-list">
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Transactional apology</strong>
+                                    
+                                    <p class="distortion-description">Offering quick &#39;sorrys&#39; as image management without changing behavior.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Punitive accountability</strong>
+                                    
+                                    <p class="distortion-description">Equating repair with punishment or expulsion, erasing the possibility of transformation.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Performative vulnerability</strong>
+                                    
+                                    <p class="distortion-description">Sharing one&#39;s guilt or shame publicly as a way to reclaim social standing, rather than centering the needs of those harmed.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Historical distancing</strong>
+                                    
+                                    <p class="distortion-description">Treating systemic or historical harms as irrelevant to present-day repair responsibilities.</p>
+                                    
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </article>
+                
+                <article class="capacity-card">
+                    <header class="capacity-header">
+                        <h3 class="capacity-title">Visceral Accountability</h3>
+                        
+                        <p class="capacity-subtitle">Acting with care, precision, and answerability from inside the weave</p>
+                        
+                    </header>
+
+                    <div class="capacity-content">
+                        
+                        <div class="capacity-section">
+                            <h4>What it is</h4>
+                            <div class="capacity-text">Visceral accountability is the capacity to act with care, precision, and answerability from inside the weave, without centering oneself or slipping into purity posturing. It is accountability felt in the gut and the nervous system—not just as an intellectual or moral stance. This capacity keeps us grounded in service to something larger than individual comfort or reputation, and is expressed through actions that maintain or restore the health of the relational field. It is the ongoing practice of staying oriented to the needs of the whole—especially when those needs are inconvenient, uncomfortable, or require letting go of protagonism.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Why it's been exiled</h4>
+                            <div class="capacity-text">Modernity has stripped accountability of its relational metabolism, turning it into either punitive control or a branding exercise. Acting from genuine answerability has been replaced by acting from fear of consequence or desire for recognition. Under these conditions, &lsquo;being accountable&rsquo; often means performing remorse in public or withdrawing to avoid scrutiny—neither of which actually repair trust or redistribute power.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>What it makes possible</h4>
+                            <div class="capacity-text">Restoring visceral accountability shifts the frame: it&rsquo;s not about protecting oneself, it&rsquo;s about protecting the conditions for dignity, reciprocity, and repair across all scales of relation. It makes possible a form of leadership that doesn&rsquo;t center authority but rather centers the collective&rsquo;s capacity to stay in complex relation.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Distortions</h4>
+                            <ul class="distortions-list">
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Accountability as surveillance</strong>
+                                    
+                                    <p class="distortion-description">Equating answerability with constant policing of others or oneself.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Purity posturing</strong>
+                                    
+                                    <p class="distortion-description">Using morality as a way to elevate status or authority, rather than to deepen connection.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Self-centering in accountability</strong>
+                                    
+                                    <p class="distortion-description">Making the process about one&#39;s own redemption arc instead of the needs of those harmed.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Risk avoidance</strong>
+                                    
+                                    <p class="distortion-description">Mistaking avoidance of harm for the work of repair, resulting in inaction or disengagement from necessary tensions.</p>
+                                    
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </article>
+                
+            </div>
+            
+        </section>
+        
+        <section class="cluster-section" id="cluster-4">
+            <div class="cluster-header">
+                <h2 class="cluster-title">Somatic Relationality</h2>
+                
+                <p class="cluster-description">The Sensing Web where the body is not a tool, but a terrain; not a site of mastery, but a site of relation.</p>
+                
+                
+                
+                <div class="why-matters">
+                    <h3>Why This Cluster Matters</h3>
+                    <p>Modernity has trained us to treat the body like an object: something to manage, optimize, decorate, or transcend. Under colonial systems, the body is either hyper-visible (as a site of extraction, classification, and control) or absent (erased through disembodied cognition). Both orientations sever the body from its capacity to listen, transmit, and metabolize information as a living node in a vast, entangled web. Somatic Relationality is not about &#39;getting into the body&#39;—it&#39;s about remembering that you are already a body, and that your body is always in relation. To land in this cluster is to move from instrumental embodiment to relational presence. From &#39;what can I do with my body&#39; to &#39;what is my body attuning to right now?&#39; This cluster supports quorum sensing at the somatic level. Not as performance. Not as catharsis. But as ongoing, slow, reciprocal responsiveness to the field.</p>
+                </div>
+                
+            </div>
+
+            
+            <div class="capacities-grid">
+                
+                <article class="capacity-card">
+                    <header class="capacity-header">
+                        <h3 class="capacity-title">Reciprocal Sensory Listening</h3>
+                        
+                        <p class="capacity-subtitle">Feeling with, not just sensing at</p>
+                        
+                    </header>
+
+                    <div class="capacity-content">
+                        
+                        <div class="capacity-section">
+                            <h4>What it is</h4>
+                            <div class="capacity-text">Reciprocal Sensory Listening is the embodied capacity to sense as a relational act—not just as perception, but as participation. It&rsquo;s the shift from &lsquo;I am observing something&rsquo; to &lsquo;I am being touched by it.&rsquo; This capacity recognizes that every act of sensing is also an act of being sensed. The world is not passive data; it listens back. This means listening through skin, breath, posture, humidity, texture, silence. It&rsquo;s listening not only with ears, but with fascia, with micro-movements, with the heartbeat&rsquo;s shift when someone walks in the room.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Why it's been exiled</h4>
+                            <div class="capacity-text">Under colonial modernity, sensation is treated as raw input for centralized processing—a resource to be interpreted by the rational mind. The body is reduced to a feedback machine, and its porous relational intelligence is dismissed as distraction, oversensitivity, or mysticism.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>What it makes possible</h4>
+                            <div class="capacity-text">Reclaiming this capacity interrupts the idea that knowledge is always spoken, that change comes only through action, or that relation must be explicit. It reminds us that the body can attune, signal, and shift long before language arrives—and that this is already doing the work.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Distortions</h4>
+                            <ul class="distortions-list">
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Sensation extraction</strong>
+                                    
+                                    <p class="distortion-description">When the body is used to collect &#39;data&#39; for emotional labor, artistic production, or spiritual insight without being cared for as an ecosystem.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Somatic detachment</strong>
+                                    
+                                    <p class="distortion-description">The habit of overriding or dismissing bodily knowing in favor of intellectual or institutional legitimacy. Often shows up as &#39;I need to make sure this makes sense before I trust it.&#39;</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Anthropocentric listening</strong>
+                                    
+                                    <p class="distortion-description">Tuning only to human signals, missing the field of plants, air, land, architecture, ancestors.</p>
+                                    
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </article>
+                
+                <article class="capacity-card">
+                    <header class="capacity-header">
+                        <h3 class="capacity-title">Somatic Permission &amp; the Body as Conduit</h3>
+                        
+                        <p class="capacity-subtitle">Granting the body full license to be a terrain</p>
+                        
+                    </header>
+
+                    <div class="capacity-content">
+                        
+                        <div class="capacity-section">
+                            <h4>What it is</h4>
+                            <div class="capacity-text">This capacity is about granting the body full license to be a terrain, not a project. It&rsquo;s the invitation to stop managing the body and instead let it express, leak, tremble, stutter, soften, ache, move—without having to justify or decode it. Somatic permission is not indulgence; it&rsquo;s decolonial disobedience to the control-based logic that demands the body always be knowable, containable, or useful. When the body is permitted to be what it already is, it can begin to act as a conduit—not just a container of self, but a passage for memory, rhythm, sound, ancestral residue, collective charge.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Why it's been exiled</h4>
+                            <div class="capacity-text">This capacity has been exiled by centuries of bodily discipline: the regulation of expression, the commodification of productivity, the criminalization of non-compliance. Bodies—especially racialized, gendered, disabled, queer, poor bodies—are taught to contain themselves to survive.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>What it makes possible</h4>
+                            <div class="capacity-text">What becomes possible when this is interrupted is radical: grief that moves, rage that vibrates, joy that escapes choreography. The body regains its right to be a passage, not a performance. And from that place, sound, sensation, and movement become metabolizers, not messages.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Distortions</h4>
+                            <ul class="distortions-list">
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Body management</strong>
+                                    
+                                    <p class="distortion-description">The internalized mandate to present the body as readable, tidy, non-threatening. Often includes masking or minimizing sensation in group spaces.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Expressive scarcity</strong>
+                                    
+                                    <p class="distortion-description">The belief that there&#39;s not enough room for your full expression unless it&#39;s productive, beautiful, or safe.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Performative presence</strong>
+                                    
+                                    <p class="distortion-description">Staying in control of how you&#39;re being perceived instead of being metabolically present to what&#39;s happening.</p>
+                                    
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </article>
+                
+                <article class="capacity-card">
+                    <header class="capacity-header">
+                        <h3 class="capacity-title">Resonance as Relation &amp; Silence as Signal</h3>
+                        
+                        <p class="capacity-subtitle">Trusting the medium between bodies</p>
+                        
+                    </header>
+
+                    <div class="capacity-content">
+                        
+                        <div class="capacity-section">
+                            <h4>What it is</h4>
+                            <div class="capacity-text">This capacity is about trusting the medium—the space between bodies, the silence between sounds—as an active part of relational communication. If reciprocal sensory listening is the radar (how we pick up signals) and somatic permission is the response mechanism (how we transmit), resonance and silence are the medium—the shared field where those signals and responses ripple, reverberate, settle, or shift without needing to be named. It&rsquo;s the relational space where vibration is enough.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Why it's been exiled</h4>
+                            <div class="capacity-text">Resonance and silence have been exiled by the logics of urgency, productivity, and verbal dominance—which frame non-verbal space as awkward, empty, or useless. Capitalism and coloniality require that all relational charge be immediately translated into action, data, or affirmation, leaving no room for ambiguity or quiet metabolization.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>What it makes possible</h4>
+                            <div class="capacity-text">Bringing this capacity back makes space for communication that doesn&rsquo;t collapse difference—where relation can live in tension, in pause, in the slow reverberation of what has been sensed but not resolved. It allows collective fields to settle, deepen, and shift below the radar of words.</div>
+                        </div>
+                        
+
+                        
+                        <div class="capacity-section">
+                            <h4>Distortions</h4>
+                            <ul class="distortions-list">
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Over-translation</strong>
+                                    
+                                    <p class="distortion-description">The compulsion to explain or narrate relational shifts, rather than letting them reverberate unspoken.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Response-seeking</strong>
+                                    
+                                    <p class="distortion-description">Needing immediate confirmation that &#39;something happened,&#39; which pulls energy out of the shared field.</p>
+                                    
+                                </li>
+                                
+                                <li class="distortion-item">
+                                    <strong class="distortion-name">Discomfort with ambiguity</strong>
+                                    
+                                    <p class="distortion-description">Misreading silence as disengagement or failure, rather than metabolizing space for resonance to work.</p>
+                                    
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </article>
+                
+            </div>
+            
+        </section>
+        
+    </div>
+
+    
+    <aside class="table-of-contents">
+        <h3>Jump to Cluster</h3>
+        <ul class="toc-list">
+            
+            <li><a href="#cluster-0">Liminal Capacities</a></li>
+            
+            <li><a href="#cluster-1">Poly-Rhythmic Knowing</a></li>
+            
+            <li><a href="#cluster-2">Regenerative Regulation</a></li>
+            
+            <li><a href="#cluster-3">Relational Integrity and Accountability</a></li>
+            
+            <li><a href="#cluster-4">Somatic Relationality</a></li>
+            
+        </ul>
+    </aside>
+</div>
+
+        </div>
+    </main>
+    
+    <footer style="background: rgba(15, 15, 35, 0.8); backdrop-filter: blur(10px); border-top: 1px solid rgba(139, 92, 246, 0.2); padding: 20px; text-align: center; color: #cbd5e1; margin-top: auto;">
+    <p>&copy; 2025 Reactivating Exiled Capacities.</p>
+</footer>
+    
+    
+    <script>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", user => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
+            });
+          }
+        });
+      }
+    </script>
+    
+    
+</body>
+</html>
