@@ -71,8 +71,9 @@
     <div class="debug-controls" id="debugControls">
         <div>Debug Controls</div>
         <button onclick="regenerateMyceliumNetwork()">Regenerate</button>
-        <button onclick="myceliumNetwork.toggleWireframe()">Wireframe</button>
-        <button onclick="myceliumNetwork.changeColorScheme()">Color</button>
+        <button onclick="toggleMyceliumWireframe()">Wireframe</button>
+        <button onclick="changeMyceliumColorScheme()">Color</button>
+        <button onclick="openAdvanced3DModal()" style="background: #ff6b4a;">Test Modal</button>
         <div class="control-row">
             <label>Branches:</label>
             <input type="range" id="branchCount" min="3" max="12" value="8">
@@ -93,27 +94,8 @@
     
     
     
-<script>
-    
-    document.addEventListener('DOMContentLoaded', () => {
-        
-        document.addEventListener('keydown', (e) => {
-            if (e.key.toLowerCase() === 'd') {
-                const debug = document.getElementById('debugControls');
-                debug.classList.toggle('visible');
-            }
-        });
-        
-        
-        const branchSlider = document.getElementById('branchCount');
-        const branchValue = document.getElementById('branchValue');
-        if (branchSlider && branchValue) {
-            branchSlider.addEventListener('input', (e) => {
-                branchValue.textContent = e.target.value;
-            });
-        }
-    });
-</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 </body>
 </html>

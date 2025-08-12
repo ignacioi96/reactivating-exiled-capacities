@@ -716,3 +716,171 @@ p {
     opacity: 0.25;
     animation: myceliumGrow 3.5s ease-out forwards;
 }
+
+/* Advanced 3D Modal Styles */
+.advanced-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+}
+
+.advanced-modal-content {
+    background: rgba(244, 239, 229, 0.98);
+    border: 2px solid #8b7355;
+    border-radius: 15px;
+    padding: 0;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 10px 50px rgba(139, 115, 85, 0.3);
+    backdrop-filter: blur(15px);
+}
+
+.modal-header {
+    padding: 20px 30px;
+    border-bottom: 1px solid #8b7355;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(139, 115, 85, 0.1);
+}
+
+.modal-header h2 {
+    color: #2c2c2c;
+    font-family: 'Libre Baskerville', serif;
+    font-style: italic;
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.close-advanced-modal {
+    background: none;
+    border: none;
+    color: #8b7355;
+    font-size: 28px;
+    cursor: pointer;
+    padding: 5px;
+    line-height: 1;
+    transition: all 0.3s ease;
+}
+
+.close-advanced-modal:hover {
+    color: #2c2c2c;
+    transform: scale(1.1);
+}
+
+.modal-body {
+    display: flex;
+    padding: 0;
+}
+
+#advancedMyceliumCanvas {
+    width: 800px;
+    height: 600px;
+    background: #0a0a0a;
+    border-right: 1px solid #8b7355;
+}
+
+.advanced-controls {
+    width: 300px;
+    padding: 30px;
+    background: rgba(244, 239, 229, 1);
+}
+
+.advanced-controls h3 {
+    color: #2c2c2c;
+    font-family: 'Libre Baskerville', serif;
+    font-style: italic;
+    margin-bottom: 20px;
+    text-align: center;
+    border-bottom: 1px solid #8b7355;
+    padding-bottom: 10px;
+}
+
+.control-group {
+    margin-bottom: 20px;
+}
+
+.control-group label {
+    display: block;
+    color: #2c2c2c;
+    font-size: 14px;
+    margin-bottom: 8px;
+    font-family: 'Libre Baskerville', serif;
+}
+
+.control-group input[type="range"] {
+    width: 100%;
+    margin: 5px 0;
+}
+
+.control-group span {
+    float: right;
+    color: #8b7355;
+    font-weight: bold;
+}
+
+.control-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.generate-btn, .animate-btn, .wireframe-btn {
+    padding: 12px 20px;
+    border: 2px solid #8b7355;
+    background: transparent;
+    color: #2c2c2c;
+    border-radius: 25px;
+    cursor: pointer;
+    font-family: 'Libre Baskerville', serif;
+    font-style: italic;
+    transition: all 0.3s ease;
+}
+
+.generate-btn:hover, .animate-btn:hover, .wireframe-btn:hover {
+    background: rgba(139, 115, 85, 0.1);
+    transform: translateY(-1px);
+}
+
+.generate-btn {
+    background: rgba(139, 115, 85, 0.2);
+}
+
+.animate-btn {
+    border-color: #4ade80;
+    color: #047857;
+}
+
+.wireframe-btn {
+    border-color: #6366f1;
+    color: #4338ca;
+}
+
+/* Mobile responsive for modal */
+@media (max-width: 1200px) {
+    .modal-body {
+        flex-direction: column;
+    }
+    
+    #advancedMyceliumCanvas {
+        width: 100%;
+        height: 400px;
+        border-right: none;
+        border-bottom: 1px solid #8b7355;
+    }
+    
+    .advanced-controls {
+        width: 100%;
+        padding: 20px;
+    }
+}
