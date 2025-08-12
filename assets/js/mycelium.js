@@ -939,7 +939,23 @@ function openAdvanced3DModal() {
         existingModal.remove();
     }
     
-    // Create modal HTML with instructions
+    // Calculate responsive canvas size
+    const maxWidth = Math.min(window.innerWidth * 0.9, 1000);
+    const maxHeight = Math.min(window.innerHeight * 0.8, 700);
+    const aspectRatio = 4/3; // Preferred aspect ratio
+    
+    let canvasWidth, canvasHeight;
+    if (maxWidth / maxHeight > aspectRatio) {
+        // Height is the limiting factor
+        canvasHeight = maxHeight;
+        canvasWidth = canvasHeight * aspectRatio;
+    } else {
+        // Width is the limiting factor
+        canvasWidth = maxWidth;
+        canvasHeight = canvasWidth / aspectRatio;
+    }
+    
+    // Create responsive modal HTML
     const modalHTML = `
         <div id="advanced3d-modal" style="
             position: fixed;
@@ -953,18 +969,20 @@ function openAdvanced3DModal() {
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(10px);
+            padding: 20px;
+            box-sizing: border-box;
         ">
             <div style="
                 background: rgba(244, 239, 229, 0.98);
                 padding: 0;
                 border-radius: 15px;
                 text-align: center;
-                max-width: 90vw;
-                max-height: 90vh;
                 border: 2px solid #8b7355;
                 overflow: hidden;
                 box-shadow: 0 10px 50px rgba(139, 115, 85, 0.3);
                 position: relative;
+                max-width: 100%;
+                max-height: 100%;
             ">
                 <button onclick="closeAdvanced3DModal()" style="
                     position: absolute;
@@ -981,8 +999,8 @@ function openAdvanced3DModal() {
                 ">&times;</button>
                 
                 <canvas id="advancedMyceliumCanvas" style="
-                    width: 800px;
-                    height: 600px;
+                    width: ${canvasWidth}px;
+                    height: ${canvasHeight}px;
                     background: #0a0a0a;
                     display: block;
                     cursor: grab;
@@ -1011,7 +1029,11 @@ function openAdvanced3DModal() {
     document.body.insertAdjacentHTML('beforeend', modalHTML);
     console.log('Modal HTML added to page');
     
-    // Initialize 3D scene with interactive controls
+    // Store canvas dimensions for proper camera setup
+    window.advancedCanvasWidth = canvasWidth;
+    window.advancedCanvasHeight = canvasHeight;
+    
+    // Initialize 3D scene with responsive sizing
     setTimeout(() => {
         console.log('Attempting to initialize advanced 3D...');
         try {
@@ -1028,20 +1050,30 @@ let advancedCameraControls = {
     isUserControlled: false,
     cinematicStartTime: 0,
     fullSpeedDuration: 8000, // 8 seconds at full speed
-    slowdownDuration: 12000, // 12 seconds to slow down to gentle speed
+    slowdownDuration: 12000, // 12 seconds to slow down
     
-    // Speed control
+    // Speed and timing control
     initialSpeed: 1.0,
-    gentleSpeed: 0.3, // Final gentle speed (30% of original)
+    gentleSpeed: 0.3,
     currentSpeed: 1.0,
     
-    // User input offsets
+    // Continuous time tracking (doesn't reset)
+    baseTimeOffset: 0, // Tracks total elapsed time for smooth continuation
+    lastUpdateTime: 0,
+    
+    // User interaction state
     isDragging: false,
     lastMouseX: 0,
     lastMouseY: 0,
     cameraDistance: 8,
     
-    // User offset from the base cinematic position
+    // Pause/resume system
+    isPaused: false,
+    lastInteractionTime: 0,
+    resumeDelay: 5000, // 5 seconds
+    pauseCheckInterval: null,
+    
+    // User offset from base position
     userOffsetX: 0,
     userOffsetY: 0,
     userOffsetZ: 0,
@@ -1050,7 +1082,7 @@ let advancedCameraControls = {
     targetUserOffsetZ: 0,
     
     smoothing: 0.08,
-    userInputDecay: 0.998 // Very gentle decay
+    userInputDecay: 0.998
 };
 
 // Enhanced initAdvanced3D with interactive camera
@@ -1060,35 +1092,59 @@ function initAdvanced3D() {
     console.log('Canvas found:', !!canvas);
     if (!canvas) return;
     
+    // Get actual canvas dimensions
+    const canvasWidth = window.advancedCanvasWidth || 800;
+    const canvasHeight = window.advancedCanvasHeight || 600;
+    const aspectRatio = canvasWidth / canvasHeight;
+    
+    console.log(`Canvas dimensions: ${canvasWidth}x${canvasHeight}, aspect ratio: ${aspectRatio.toFixed(2)}`);
+    
     // Scene setup
     advancedScene = new THREE.Scene();
     advancedScene.background = new THREE.Color(0x0a0a0a);
     
-    // Camera  
-    advancedCamera = new THREE.PerspectiveCamera(75, 800 / 600, 0.1, 1000);
-    advancedCamera.position.set(5, 3, 5); // Higher and better angle
-    advancedCamera.lookAt(0, 0, 0); // Look at center where mycelium will be
-
-    // Renderer
+    // Camera with proper aspect ratio and centered view
+    advancedCamera = new THREE.PerspectiveCamera(60, aspectRatio, 0.1, 1000);
+    
+    // Adjust camera distance based on aspect ratio for consistent framing
+    let cameraDistance = 8;
+    if (aspectRatio < 1) {
+        // Portrait/narrow screens - pull back more to fit mycelium
+        cameraDistance = 10;
+    } else if (aspectRatio < 1.2) {
+        // Nearly square - slight pullback
+        cameraDistance = 9;
+    }
+    
+    // Set initial camera position with proper distance
+    advancedCamera.position.set(cameraDistance * 0.7, cameraDistance * 0.4, cameraDistance * 0.7);
+    advancedCamera.lookAt(0, 0, 0);
+    
+    // Update camera controls with responsive distance
+    advancedCameraControls.cameraDistance = cameraDistance;
+    
+    // Renderer with exact canvas dimensions
     advancedRenderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-    advancedRenderer.setSize(800, 600);
+    advancedRenderer.setSize(canvasWidth, canvasHeight);
     advancedRenderer.shadowMap.enabled = true;
     
-    // Lighting
+    // Lighting positioned to illuminate center
     const ambientLight = new THREE.AmbientLight(0x404040, 0.4);
     advancedScene.add(ambientLight);
     
-    const directionalLight = new THREE.DirectionalLight(0xf0f0f0, 0.8);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
     directionalLight.position.set(5, 10, 5);
+    directionalLight.target.position.set(0, 0, 0); // Explicitly target center
     directionalLight.castShadow = true;
     advancedScene.add(directionalLight);
+    advancedScene.add(directionalLight.target);
     console.log('Lighting added to scene');
     
     // Create network
     advancedNetwork = new RadialMyceliumNetwork();
     advancedScene.add(advancedNetwork);
     
-    // Generate network structure
+    // Generate network at exact center
     generateAdvancedMycelium();
     
     // Setup camera controls
@@ -1096,15 +1152,11 @@ function initAdvanced3D() {
     
     // Initialize camera control state
     advancedCameraControls.cinematicStartTime = Date.now();
+    advancedCameraControls.lastUpdateTime = 0;
+    advancedCameraControls.baseTimeOffset = 0;
     advancedCameraControls.isUserControlled = false;
+    advancedCameraControls.isPaused = false;
     advancedCameraControls.currentSpeed = advancedCameraControls.initialSpeed;
-    // advancedCameraControls.cinematicStartTime = Date.now();
-    // advancedCameraControls.isUserControlled = false;
-    // advancedCameraControls.cinematicTheta = 0;
-    // advancedCameraControls.userThetaOffset = 0;
-    // advancedCameraControls.userPhiOffset = 0;
-    // advancedCameraControls.targetUserThetaOffset = 0;
-    // advancedCameraControls.targetUserPhiOffset = 0;
     
     // Start the animation loop
     animateAdvanced3D();
@@ -1118,21 +1170,27 @@ function initAdvanced3D() {
 
 // Setup interactive camera controls
 function setupAdvancedCameraControls(canvas) {
+    // Helper function to mark user interaction
+    function markUserInteraction() {
+        advancedCameraControls.lastInteractionTime = Date.now();
+        if (!advancedCameraControls.isUserControlled) {
+            takeUserControl();
+        }
+    }
+    
     // Mouse controls
     canvas.addEventListener('mousedown', (e) => {
         advancedCameraControls.isDragging = true;
         advancedCameraControls.lastMouseX = e.clientX;
         advancedCameraControls.lastMouseY = e.clientY;
         canvas.style.cursor = 'grabbing';
-        
-        if (!advancedCameraControls.isUserControlled) {
-            takeUserControl();
-        }
+        markUserInteraction();
     });
     
     canvas.addEventListener('mouseup', () => {
         advancedCameraControls.isDragging = false;
         canvas.style.cursor = 'grab';
+        // Don't mark interaction on mouseup - let the 5-second timer start
     });
     
     canvas.addEventListener('mouseleave', () => {
@@ -1143,15 +1201,16 @@ function setupAdvancedCameraControls(canvas) {
     canvas.addEventListener('mousemove', (e) => {
         if (!advancedCameraControls.isDragging) return;
         
+        // Mark interaction for any drag movement
+        markUserInteraction();
+        
         const deltaX = e.clientX - advancedCameraControls.lastMouseX;
         const deltaY = e.clientY - advancedCameraControls.lastMouseY;
         
-        // Convert mouse movement to 3D offset
         const sensitivity = 0.02;
         advancedCameraControls.targetUserOffsetX += deltaX * sensitivity;
-        advancedCameraControls.targetUserOffsetY -= deltaY * sensitivity; // Negative for natural movement
+        advancedCameraControls.targetUserOffsetY -= deltaY * sensitivity;
         
-        // Limit the offset range
         const maxOffset = 4;
         advancedCameraControls.targetUserOffsetX = Math.max(-maxOffset, Math.min(maxOffset, advancedCameraControls.targetUserOffsetX));
         advancedCameraControls.targetUserOffsetY = Math.max(-maxOffset, Math.min(maxOffset, advancedCameraControls.targetUserOffsetY));
@@ -1163,10 +1222,7 @@ function setupAdvancedCameraControls(canvas) {
     // Zoom with mouse wheel
     canvas.addEventListener('wheel', (e) => {
         e.preventDefault();
-        
-        if (!advancedCameraControls.isUserControlled) {
-            takeUserControl();
-        }
+        markUserInteraction();
         
         advancedCameraControls.cameraDistance += e.deltaY * 0.01;
         advancedCameraControls.cameraDistance = Math.max(2, Math.min(20, advancedCameraControls.cameraDistance));
@@ -1177,29 +1233,23 @@ function setupAdvancedCameraControls(canvas) {
     
     canvas.addEventListener('touchstart', (e) => {
         e.preventDefault();
+        markUserInteraction();
         
         if (e.touches.length === 1) {
             const touch = e.touches[0];
             advancedCameraControls.isDragging = true;
             advancedCameraControls.lastMouseX = touch.clientX;
             advancedCameraControls.lastMouseY = touch.clientY;
-            
-            if (!advancedCameraControls.isUserControlled) {
-                takeUserControl();
-            }
         } else if (e.touches.length === 2) {
             const dx = e.touches[0].clientX - e.touches[1].clientX;
             const dy = e.touches[0].clientY - e.touches[1].clientY;
             touchDistance = Math.sqrt(dx * dx + dy * dy);
-            
-            if (!advancedCameraControls.isUserControlled) {
-                takeUserControl();
-            }
         }
     });
     
     canvas.addEventListener('touchmove', (e) => {
         e.preventDefault();
+        markUserInteraction();
         
         if (e.touches.length === 1 && advancedCameraControls.isDragging) {
             const touch = e.touches[0];
@@ -1237,15 +1287,44 @@ function setupAdvancedCameraControls(canvas) {
     });
 }
 
+function resumeAutomaticRotation() {
+    console.log('Resuming automatic rotation');
+    advancedCameraControls.isPaused = false;
+    
+    // Clear the check interval
+    if (advancedCameraControls.pauseCheckInterval) {
+        clearInterval(advancedCameraControls.pauseCheckInterval);
+        advancedCameraControls.pauseCheckInterval = null;
+    }
+    
+    // Note: Don't reset isUserControlled to false - keep user offsets but resume base rotation
+}
+
 // Switch to user control mode
 function takeUserControl() {
-    console.log('User took camera control - slowing down cinematic movement');
+    console.log('User took camera control - pausing automatic rotation');
     advancedCameraControls.isUserControlled = true;
+    advancedCameraControls.isPaused = true;
+    advancedCameraControls.lastInteractionTime = Date.now();
+    
+    // Start checking for resume
+    if (advancedCameraControls.pauseCheckInterval) {
+        clearInterval(advancedCameraControls.pauseCheckInterval);
+    }
+    
+    advancedCameraControls.pauseCheckInterval = setInterval(() => {
+        const timeSinceLastInteraction = Date.now() - advancedCameraControls.lastInteractionTime;
+        
+        if (!advancedCameraControls.isDragging && timeSinceLastInteraction > advancedCameraControls.resumeDelay) {
+            console.log('Resuming automatic rotation after 5 seconds of inactivity');
+            resumeAutomaticRotation();
+        }
+    }, 100);
     
     // Update instructions
     const instructions = document.getElementById('cameraInstructions');
     if (instructions) {
-        instructions.textContent = 'Interactive mode • Movement slowing down • Drag to adjust view';
+        instructions.textContent = 'User control • Automatic rotation paused • Release for 5s to resume';
         setTimeout(() => {
             instructions.style.opacity = '0';
             setTimeout(() => {
@@ -1253,9 +1332,10 @@ function takeUserControl() {
                     instructions.parentNode.removeChild(instructions);
                 }
             }, 500);
-        }, 3000);
+        }, 4000);
     }
 }
+
 
 // Enhanced animation loop with camera control
 function animateAdvanced3D() {
@@ -1272,33 +1352,41 @@ function animateAdvanced3D() {
 // Camera position update function
 function updateAdvancedCamera() {
     const now = Date.now();
-    const elapsed = now - advancedCameraControls.cinematicStartTime;
     
-    // Calculate current speed based on elapsed time
-    if (elapsed < advancedCameraControls.fullSpeedDuration) {
-        // Full speed phase
-        advancedCameraControls.currentSpeed = advancedCameraControls.initialSpeed;
-    } else if (elapsed < advancedCameraControls.fullSpeedDuration + advancedCameraControls.slowdownDuration) {
-        // Slowdown phase - gradual transition
-        const slowdownProgress = (elapsed - advancedCameraControls.fullSpeedDuration) / advancedCameraControls.slowdownDuration;
-        const easeOut = 1 - Math.pow(1 - slowdownProgress, 3); // Smooth easing curve
-        advancedCameraControls.currentSpeed = advancedCameraControls.initialSpeed + 
-            (advancedCameraControls.gentleSpeed - advancedCameraControls.initialSpeed) * easeOut;
-    } else {
-        // Gentle speed phase
-        advancedCameraControls.currentSpeed = advancedCameraControls.gentleSpeed;
-        
-        // Auto-enable user control after slowdown completes
-        if (!advancedCameraControls.isUserControlled) {
-            takeUserControl();
-        }
+    // Initialize timing on first run
+    if (advancedCameraControls.lastUpdateTime === 0) {
+        advancedCameraControls.lastUpdateTime = now;
     }
     
-    // Use the SAME original cinematic movement, just scaled by current speed
-    const time = elapsed * 0.0008 * advancedCameraControls.currentSpeed;
+    // Calculate time delta and update base time offset only when not paused
+    const deltaTime = now - advancedCameraControls.lastUpdateTime;
+    if (!advancedCameraControls.isPaused) {
+        // Only advance time when not paused - this prevents jerky direction changes
+        const elapsed = now - advancedCameraControls.cinematicStartTime + advancedCameraControls.baseTimeOffset;
+        
+        // Calculate current speed based on elapsed time
+        if (elapsed < advancedCameraControls.fullSpeedDuration) {
+            advancedCameraControls.currentSpeed = advancedCameraControls.initialSpeed;
+        } else if (elapsed < advancedCameraControls.fullSpeedDuration + advancedCameraControls.slowdownDuration) {
+            const slowdownProgress = (elapsed - advancedCameraControls.fullSpeedDuration) / advancedCameraControls.slowdownDuration;
+            const easeOut = 1 - Math.pow(1 - slowdownProgress, 3);
+            advancedCameraControls.currentSpeed = advancedCameraControls.initialSpeed + 
+                (advancedCameraControls.gentleSpeed - advancedCameraControls.initialSpeed) * easeOut;
+        } else {
+            advancedCameraControls.currentSpeed = advancedCameraControls.gentleSpeed;
+        }
+        
+        // Advance the base time offset by the scaled delta time
+        advancedCameraControls.baseTimeOffset += deltaTime * advancedCameraControls.currentSpeed;
+    }
+    
+    advancedCameraControls.lastUpdateTime = now;
+    
+    // Use the accumulated base time for smooth, continuous movement
+    const time = advancedCameraControls.baseTimeOffset * 0.0008;
     const radius = advancedCameraControls.cameraDistance;
     
-    // Calculate base cinematic position
+    // Calculate base cinematic position (continues smoothly even when paused)
     const baseCameraX = Math.cos(time) * radius;
     const baseCameraZ = Math.sin(time) * radius;
     const baseCameraY = -3 + Math.sin(time * 0.3) * 1;
@@ -1308,11 +1396,12 @@ function updateAdvancedCamera() {
     advancedCameraControls.userOffsetY += (advancedCameraControls.targetUserOffsetY - advancedCameraControls.userOffsetY) * advancedCameraControls.smoothing;
     advancedCameraControls.userOffsetZ += (advancedCameraControls.targetUserOffsetZ - advancedCameraControls.userOffsetZ) * advancedCameraControls.smoothing;
     
-    // Gentle decay when not actively dragging
+    // Gentle decay when not actively dragging (more aggressive when resumed)
     if (!advancedCameraControls.isDragging) {
-        advancedCameraControls.targetUserOffsetX *= advancedCameraControls.userInputDecay;
-        advancedCameraControls.targetUserOffsetY *= advancedCameraControls.userInputDecay;
-        advancedCameraControls.targetUserOffsetZ *= advancedCameraControls.userInputDecay;
+        const decayRate = advancedCameraControls.isPaused ? advancedCameraControls.userInputDecay : 0.95; // Faster decay when resuming
+        advancedCameraControls.targetUserOffsetX *= decayRate;
+        advancedCameraControls.targetUserOffsetY *= decayRate;
+        advancedCameraControls.targetUserOffsetZ *= decayRate;
     }
     
     // Apply final position (base cinematic + user offset)
@@ -1327,19 +1416,29 @@ function updateAdvancedCamera() {
 
 function closeAdvanced3DModal() {
     console.log('Closing modal...');
+    
+    // Clean up pause check interval
+    if (advancedCameraControls.pauseCheckInterval) {
+        clearInterval(advancedCameraControls.pauseCheckInterval);
+        advancedCameraControls.pauseCheckInterval = null;
+    }
+    
     const modal = document.getElementById('advanced3d-modal');
     if (modal) {
         modal.remove();
         console.log('Modal removed');
     }
 }
-
 // Advanced 3D scene variables
 let advancedScene, advancedCamera, advancedRenderer, advancedNetwork;
 let advancedAnimationId;
 
 function generateAdvancedMycelium() {
     if (!advancedNetwork) return;
+    
+    // Clear any previous network
+    advancedNetwork.branches = [];
+    advancedNetwork.mesh.visible = false;
     
     const options = {
         initialBranches: 8,
@@ -1350,9 +1449,28 @@ function generateAdvancedMycelium() {
         maxAngle: 45
     };
     
-    // Generate at world origin instead of button position
-    // This centers the network in the 3D space
+    console.log('Generating mycelium at world center (0, 0, 0)');
+    
+    // Generate at exact world origin for perfect centering
     advancedNetwork.generateCentered(options);
+    
+    // Verify the network is centered by checking bounds
+    setTimeout(() => {
+        if (advancedNetwork.mesh.geometry) {
+            advancedNetwork.mesh.geometry.computeBoundingBox();
+            const box = advancedNetwork.mesh.geometry.boundingBox;
+            if (box) {
+                const center = box.getCenter(new THREE.Vector3());
+                console.log(`Mycelium bounding box center: (${center.x.toFixed(2)}, ${center.y.toFixed(2)}, ${center.z.toFixed(2)})`);
+                
+                // If not perfectly centered, adjust
+                if (Math.abs(center.x) > 0.1 || Math.abs(center.y) > 0.1 || Math.abs(center.z) > 0.1) {
+                    console.log('Adjusting network position to perfect center');
+                    advancedNetwork.position.set(-center.x, -center.y, -center.z);
+                }
+            }
+        }
+    }, 100);
 }
 
 function animateAdvancedGrowth() {
@@ -1389,8 +1507,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Window resize handler
-window.addEventListener('resize', handleMyceliumResize);
+window.addEventListener('resize', () => {
+    // If modal is open, update camera aspect ratio
+    if (document.getElementById('advanced3d-modal') && advancedCamera && advancedRenderer) {
+        const canvas = document.getElementById('advancedMyceliumCanvas');
+        if (canvas) {
+            const rect = canvas.getBoundingClientRect();
+            const newAspectRatio = rect.width / rect.height;
+            
+            advancedCamera.aspect = newAspectRatio;
+            advancedCamera.updateProjectionMatrix();
+            
+            console.log(`Updated camera aspect ratio: ${newAspectRatio.toFixed(2)}`);
+        }
+    }
+});
 
 // Debug controls setup
 document.addEventListener('DOMContentLoaded', () => {
