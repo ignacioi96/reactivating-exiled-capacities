@@ -8,10 +8,20 @@
         {{ .Content }}
     </div>
 
+    {{- $clusters := where .Site.Pages "Type" "clusters" -}}
+    {{- $clusters := where $clusters "Kind" "!=" "section" -}}
+
+    <!-- TOC Navigation -->
+    <nav class="inline-toc">
+        <h3>Clusters in this guide:</h3>
+        <div class="toc-chips">
+            {{ range $clusterIndex, $cluster := $clusters }}
+            <a href="#cluster-{{ $clusterIndex }}" class="toc-chip">{{ $cluster.Title }}</a>
+            {{ end }}
+        </div>
+    </nav>
+
     <div class="clusters-overview">
-        {{- $clusters := where .Site.Pages "Type" "clusters" -}}
-        {{- $clusters := where $clusters "Kind" "!=" "section" -}}
-        
         {{ range $clusterIndex, $cluster := $clusters }}
         <section class="cluster-section" id="cluster-{{ $clusterIndex }}">
             <div class="cluster-header">
@@ -84,15 +94,28 @@
         </section>
         {{ end }}
     </div>
-
-    <!-- Table of Contents -->
-    <aside class="table-of-contents">
-        <h3>Jump to Cluster</h3>
-        <ul class="toc-list">
-            {{ range $clusterIndex, $cluster := $clusters }}
-            <li><a href="#cluster-{{ $clusterIndex }}">{{ $cluster.Title }}</a></li>
-            {{ end }}
-        </ul>
-    </aside>
+    <a href="#" class="back-to-top" id="backToTop">
+        <span>↑</span>
+    </a>
 </div>
+<script>
+// Show/hide back to top button based on scroll position
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('backToTop');
+    if (window.pageYOffset > 300) {
+        backToTop.classList.add('visible');
+    } else {
+        backToTop.classList.remove('visible');
+    }
+});
+
+// Smooth scroll to top
+document.getElementById('backToTop').addEventListener('click', function(e) {
+    e.preventDefault();
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+</script>
 {{ end }}

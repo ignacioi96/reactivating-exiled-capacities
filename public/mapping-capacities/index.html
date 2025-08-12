@@ -365,8 +365,25 @@ document.addEventListener('DOMContentLoaded', function() {
         
         
     </div>
+    <nav class="inline-toc">
+        <h3>Clusters in this guide:</h3>
+        <div class="toc-chips">
+            
+            <a href="#cluster-0" class="toc-chip">Liminal Capacities</a>
+            
+            <a href="#cluster-1" class="toc-chip">Poly-Rhythmic Knowing</a>
+            
+            <a href="#cluster-2" class="toc-chip">Regenerative Regulation</a>
+            
+            <a href="#cluster-3" class="toc-chip">Relational Integrity and Accountability</a>
+            
+            <a href="#cluster-4" class="toc-chip">Somatic Relationality</a>
+            
+        </div>
+    </nav>
 
     <div class="clusters-overview">
+        
         <section class="cluster-section" id="cluster-0">
             <div class="cluster-header">
                 <h2 class="cluster-title">Liminal Capacities</h2>
@@ -887,7 +904,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <header class="capacity-header">
                         <h3 class="capacity-title">Meta-Regulation</h3>
                         
-                        <p class="capacity-subtitle">Navigating Deep Time &amp; Complexity</p>
+                        <p class="capacity-subtitle">Navigating Deep Time and Complexity</p>
                         
                     </header>
 
@@ -1380,25 +1397,30 @@ document.addEventListener('DOMContentLoaded', function() {
         </section>
         
     </div>
-
-    
-    <aside class="table-of-contents">
-        <h3>Jump to Cluster</h3>
-        <ul class="toc-list">
-            
-            <li><a href="#cluster-0">Liminal Capacities</a></li>
-            
-            <li><a href="#cluster-1">Poly-Rhythmic Knowing</a></li>
-            
-            <li><a href="#cluster-2">Regenerative Regulation</a></li>
-            
-            <li><a href="#cluster-3">Relational Integrity and Accountability</a></li>
-            
-            <li><a href="#cluster-4">Somatic Relationality</a></li>
-            
-        </ul>
-    </aside>
+    <a href="#" class="back-to-top" id="backToTop">
+        <span>↑</span>
+    </a>
 </div>
+<script>
+
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('backToTop');
+    if (window.pageYOffset > 300) {
+        backToTop.classList.add('visible');
+    } else {
+        backToTop.classList.remove('visible');
+    }
+});
+
+
+document.getElementById('backToTop').addEventListener('click', function(e) {
+    e.preventDefault();
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+</script>
 
         </div>
     </main>

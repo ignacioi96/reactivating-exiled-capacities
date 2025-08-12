@@ -91,7 +91,7 @@ The polycrisis triggers nervous system responses rooted in survival, often cycli
 | Dorsal Vagal Complex | Faint | Collapse and numbing | Seeking solace in consumerism, addiction, or escapism to avoid facing uncomfortable realities. |
 | Sympathetic Nervous System | Fix | Oversimplified problem-solving | Proposing quick fixes like carbon credits, green capitalism, and green-energy solutions that rely on exploitation and extraction; geoengineering as a technological "solution." |
 
-## Neuro-Colonization & Neuro-Decolonization: Reclaiming the Entangled Nervous System
+## Neuro-Colonization and Neuro-Decolonization: Reclaiming the Entangled Nervous System
 
 Chief Ninawa Huni Kui, an Indigenous leader from the Huni Kui community in the Amazon and co-researcher in the GTDF collective, describes separability as a "metabolic dis-ease"—a condition that fractures our sense of identity and leaves us insecure, seeking superiority to mask this insecurity. This dis-ease operates at the level of neurobiology, shaping our fears, desires, and relational patterns. It drives the systems of cultural supremacy, ecological destruction, and exploitation that are at the root of our crises.
 

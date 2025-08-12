@@ -21,7 +21,7 @@ capacities:
     color: "06b6d4"
     position_x: -0.5
     position_y: -0.2
-  - title: Somatic Permission & the Body as Conduit
+  - title: Somatic Permission and the Body as Conduit
     subtitle: Granting the body full license to be a terrain
     what_it_is: This capacity is about granting the body full license to be a terrain, not a project. It's the invitation to stop managing the body and instead let it express, leak, tremble, stutter, soften, ache, move—without having to justify or decode it. Somatic permission is not indulgence; it's decolonial disobedience to the control-based logic that demands the body always be knowable, containable, or useful. When the body is permitted to be what it already is, it can begin to act as a conduit—not just a container of self, but a passage for memory, rhythm, sound, ancestral residue, collective charge.
     why_exiled: "This capacity has been exiled by centuries of bodily discipline: the regulation of expression, the commodification of productivity, the criminalization of non-compliance. Bodies—especially racialized, gendered, disabled, queer, poor bodies—are taught to contain themselves to survive."
@@ -36,7 +36,7 @@ capacities:
     color: "0891b2"
     position_x: 0.3
     position_y: 0.4
-  - title: Resonance as Relation & Silence as Signal
+  - title: Resonance as Relation and Silence as Signal
     subtitle: Trusting the medium between bodies
     what_it_is: This capacity is about trusting the medium—the space between bodies, the silence between sounds—as an active part of relational communication. If reciprocal sensory listening is the radar (how we pick up signals) and somatic permission is the response mechanism (how we transmit), resonance and silence are the medium—the shared field where those signals and responses ripple, reverberate, settle, or shift without needing to be named. It's the relational space where vibration is enough.
     why_exiled: Resonance and silence have been exiled by the logics of urgency, productivity, and verbal dominance—which frame non-verbal space as awkward, empty, or useless. Capitalism and coloniality require that all relational charge be immediately translated into action, data, or affirmation, leaving no room for ambiguity or quiet metabolization.

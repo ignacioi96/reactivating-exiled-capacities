@@ -68,29 +68,29 @@
     [
     {{- range $i, $cluster := $clusters -}}
       {
-        "title": {{ $cluster.Title | jsonify }},
-        "description": {{ $cluster.Params.description | default "" | jsonify }},
-        "why_matters": {{ $cluster.Params.why_matters | default "" | jsonify }},
-        "image": {{ if $cluster.Params.image }}{{ $cluster.Params.image | jsonify }}{{ else }}""{{ end }},
+        "title": {{ $cluster.Title | jsonify | safeHTML }},
+        "description": {{ $cluster.Params.description | default "" | jsonify | safeHTML }},
+        "why_matters": {{ $cluster.Params.why_matters | default "" | jsonify | safeHTML }},
+        "image": {{ if $cluster.Params.image }}{{ $cluster.Params.image | jsonify | safeHTML }}{{ else }}""{{ end }},
         "position_x": {{ $cluster.Params.position_x | default 0 }},
         "position_y": {{ $cluster.Params.position_y | default 0 }},
         "capacities": [
           {{- range $j, $capacity := $cluster.Params.capacities -}}
           {
-            "title": {{ $capacity.title | default "" | jsonify }},
-            "subtitle": {{ $capacity.subtitle | default "" | jsonify }},
-            "what_it_is": {{ $capacity.what_it_is | default "" | jsonify }},
-            "why_exiled": {{ $capacity.why_exiled | default "" | jsonify }},
-            "what_possible": {{ $capacity.what_possible | default "" | jsonify }},
+            "title": {{ $capacity.title | default "" | jsonify | safeHTML }},
+            "subtitle": {{ $capacity.subtitle | default "" | jsonify | safeHTML }},
+            "what_it_is": {{ $capacity.what_it_is | default "" | jsonify | safeHTML }},
+            "why_exiled": {{ $capacity.why_exiled | default "" | jsonify | safeHTML }},
+            "what_possible": {{ $capacity.what_possible | default "" | jsonify | safeHTML }},
             "distortions": [
               {{- range $k, $distortion := $capacity.distortions -}}
               {
-                "name": {{ $distortion.name | default "" | jsonify }},
-                "description": {{ $distortion.description | default "" | jsonify }}
+                "name": {{ $distortion.name | default "" | jsonify | safeHTML }},
+                "description": {{ $distortion.description | default "" | jsonify | safeHTML }}
               }{{- if ne $k (sub (len $capacity.distortions) 1) -}},{{- end -}}
               {{- end -}}
             ],
-            "color": {{ $capacity.color | default $defaultColor | jsonify }},
+            "color": {{ $capacity.color | default $defaultColor | jsonify | safeHTML }},
             "position_x": {{ $capacity.position_x | default 0 }},
             "position_y": {{ $capacity.position_y | default 0 }}
           }{{- if ne $j (sub (len $cluster.Params.capacities) 1) -}},{{- end -}}
