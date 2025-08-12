@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode | default "en" }}">
+<head>
+    {{ partial "head.html" . }}
+</head>
+<body>
+    <!-- Show floating navigation on non-home pages -->
+    {{ if not .IsHome }}
+        {{ partial "header.html" . }}
+    {{ end }}
+    
+    {{ block "main" . }}{{ end }}
+    
+    <!-- Only load 3D scripts on home page -->
+    {{ if .IsHome }}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+        {{ $mycelium := resources.Get "js/mycelium.js" }}
+        {{ if $mycelium }}
+            {{ $myceliumMinified := $mycelium | resources.Minify }}
+            <script src="{{ $myceliumMinified.Permalink }}"></script>
+        {{ end }}
+    {{ end }}
+    
+    {{ block "scripts" . }}{{ end }}
+</body>
+</html>

@@ -1,44 +1,23 @@
 {{ define "main" }}
-<div class="about-page">
-    <div class="about-hero">
-        <div class="hero-content">
-            <h1 class="hero-title">{{ .Title }}</h1>
-            <p class="hero-subtitle">An inquiry about listening with more honesty, sensing what has been fragmented but not erased, and making space for its return.</p>
-        </div>
-        <div class="hero-background"></div>
-    </div>
-
-    <div class="about-content">
-        <article class="about-article">
+<div class="page-container">
+    <div class="content-wrapper">
+        <h1>{{ .Title }}</h1>
+        
+        {{ if .Params.description }}
+            <div class="page-description">
+                <p><em>{{ .Params.description }}</em></p>
+            </div>
+        {{ end }}
+        
+        <div class="page-content">
             {{ .Content }}
-        </article>
+        </div>
+        
+        {{ if .Section }}
+            <div class="page-navigation">
+                <a href="{{ "/" | relURL }}{{ .Section }}/" class="back-link">← Back to {{ .Section | humanize }}</a>
+            </div>
+        {{ end }}
     </div>
-    
-    <div class="reading-progress"></div>
 </div>
-
-<script>
-// Reading progress indicator
-window.addEventListener('scroll', () => {
-    const article = document.querySelector('.about-article');
-    if (!article) return;
-    
-    const articleTop = article.offsetTop;
-    const articleHeight = article.offsetHeight;
-    const windowHeight = window.innerHeight;
-    const scrollTop = window.scrollY;
-    
-    const articleStart = articleTop - windowHeight;
-    const articleEnd = articleTop + articleHeight;
-    const totalDistance = articleEnd - articleStart;
-    const currentDistance = scrollTop - articleStart;
-    
-    const progress = Math.max(0, Math.min(100, (currentDistance / totalDistance) * 100));
-    
-    const progressBar = document.querySelector('.reading-progress');
-    if (progressBar) {
-        progressBar.style.width = progress + '%';
-    }
-});
-</script>
 {{ end }}

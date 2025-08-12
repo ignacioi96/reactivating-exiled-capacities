@@ -1,239 +1,34 @@
-<header>
-    <div class="container">
-        <nav class="main-nav">
-            <!-- Logo/Site Title -->
-            <div class="nav-brand">
-                <a href="/" class="site-title">{{ .Site.Title }}</a>
-            </div>
-            
-            <!-- Desktop Navigation -->
-            <ul class="nav-links desktop-nav">
-                <li><a href="/">Home</a></li>
-                <li><a href="/about/">About</a></li>
-                <li><a href="/mapping-capacities/">Mapping Capacities</a></li>
-            </ul>
-            
-            <!-- Mobile Menu Button -->
-            <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle Menu">
-                <span class="hamburger"></span>
-                <span class="hamburger"></span>
-                <span class="hamburger"></span>
-            </button>
-            
-            <!-- Mobile Navigation -->
-            <div class="mobile-nav" id="mobile-nav">
-                <ul class="mobile-nav-links">
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/about/">About</a></li>
-                    <li><a href="/mapping-capacities/">Mapping Capacities</a></li>
-                </ul>
-            </div>
-        </nav>
+<!-- Floating Navigation -->
+<div class="floating-nav">
+    <div class="nav-toggle" onclick="toggleNavDropdown()">
+        <div class="nav-lines">
+            <div class="nav-line"></div>
+            <div class="nav-line"></div>
+            <div class="nav-line"></div>
+            <div class="nav-line"></div>
+        </div>
     </div>
-</header>
-
-<style>
-/* Header Styles */
-header {
-    background: #f8f9fa;
-    padding: 1rem 0;
-    border-bottom: 1px solid #e9ecef;
-    position: relative;
-    z-index: 100;
-}
-
-.main-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-}
-
-.nav-brand .site-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #333;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.nav-brand .site-title:hover {
-    color: #a855f7;
-}
-
-/* Desktop Navigation - Right Aligned */
-.desktop-nav {
-    list-style: none;
-    display: flex;
-    gap: 2.5rem; /* More space between items */
-    margin: 0;
-    padding: 0;
-    align-items: center;
-}
-
-.desktop-nav a {
-    text-decoration: none;
-    color: #333;
-    font-weight: 500;
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    transition: all 0.3s ease;
-    position: relative;
-}
-
-.desktop-nav a:hover {
-    color: #a855f7;
-    background: rgba(168, 85, 247, 0.1);
-    transform: translateY(-1px);
-}
-
-/* Active page indicator */
-.desktop-nav a.active {
-    color: #a855f7;
-    background: rgba(168, 85, 247, 0.15);
-}
-
-/* Mobile Menu Button */
-.mobile-menu-btn {
-    display: none;
-    flex-direction: column;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-    gap: 4px;
-}
-
-.hamburger {
-    width: 25px;
-    height: 3px;
-    background: #333;
-    transition: all 0.3s ease;
-    border-radius: 2px;
-}
-
-.mobile-menu-btn.active .hamburger:nth-child(1) {
-    transform: rotate(45deg) translate(6px, 6px);
-}
-
-.mobile-menu-btn.active .hamburger:nth-child(2) {
-    opacity: 0;
-}
-
-.mobile-menu-btn.active .hamburger:nth-child(3) {
-    transform: rotate(-45deg) translate(6px, -6px);
-}
-
-/* Mobile Navigation */
-.mobile-nav {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    transform: translateY(-10px);
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    min-width: 200px;
-    z-index: 1000;
-}
-
-.mobile-nav.active {
-    transform: translateY(0);
-    opacity: 1;
-    visibility: visible;
-}
-
-.mobile-nav-links {
-    list-style: none;
-    margin: 0;
-    padding: 0.5rem 0;
-}
-
-.mobile-nav-links li {
-    padding: 0;
-}
-
-.mobile-nav-links a {
-    display: block;
-    padding: 0.75rem 1.5rem;
-    color: #333;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.mobile-nav-links a:hover {
-    background: rgba(168, 85, 247, 0.1);
-    color: #a855f7;
-}
-
-/* Responsive Breakpoints */
-@media (max-width: 768px) {
-    .desktop-nav {
-        display: none;
-    }
-    
-    .mobile-menu-btn {
-        display: flex;
-    }
-    
-    .main-nav {
-        position: relative;
-    }
-}
-
-@media (max-width: 480px) {
-    .nav-brand .site-title {
-        font-size: 1.3rem;
-    }
-    
-    .mobile-nav {
-        right: -10px;
-        left: -10px;
-        min-width: auto;
-    }
-}
-
-/* Large screens - even more space */
-@media (min-width: 1200px) {
-    .desktop-nav {
-        gap: 3rem;
-    }
-}
-</style>
+    <div class="nav-dropdown" id="nav-dropdown">
+        <h3>Navigation</h3>
+        {{ range .Site.Menus.main }}
+            <a href="{{ .URL }}">{{ .Name }}</a>
+        {{ end }}
+    </div>
+</div>
 
 <script>
-// Mobile menu toggle functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const mobileNav = document.getElementById('mobile-nav');
-    
-    if (mobileMenuBtn && mobileNav) {
-        mobileMenuBtn.addEventListener('click', function() {
-            mobileMenuBtn.classList.toggle('active');
-            mobileNav.classList.toggle('active');
-        });
-        
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!mobileMenuBtn.contains(e.target) && !mobileNav.contains(e.target)) {
-                mobileMenuBtn.classList.remove('active');
-                mobileNav.classList.remove('active');
-            }
-        });
-        
-        // Close mobile menu when window is resized to desktop
-        window.addEventListener('resize', function() {
-            if (window.innerWidth > 768) {
-                mobileMenuBtn.classList.remove('active');
-                mobileNav.classList.remove('active');
-            }
-        });
+// Navigation dropdown functionality
+function toggleNavDropdown() {
+    const dropdown = document.getElementById('nav-dropdown');
+    dropdown.classList.toggle('active');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+    const nav = document.querySelector('.floating-nav');
+    const dropdown = document.getElementById('nav-dropdown');
+    if (nav && dropdown && !nav.contains(e.target)) {
+        dropdown.classList.remove('active');
     }
 });
 </script>

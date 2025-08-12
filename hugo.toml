@@ -1,38 +1,62 @@
 baseURL = 'https://temp-rec.netlify.app'
 languageCode = 'en-us'
-title = 'Reactivating Exiled Capacities'
-theme = 'capacities-theme'
+title = 'Recovering Exiled Capacities'
+
+# Remove theme since we're using custom layouts
+# theme = 'capacities-theme'
 
 # Enable HTML in markdown
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]
-    
       unsafe = true
 
 # Site parameters
 [params]
-  description = "Rediscovering forgotten human abilities and talents through an interconnected, network-based approach"
+  description = ""
+  # Optional: Add Open Graph image for social sharing
+  ogImage = "/images/og-mycelium.jpg"
+  # Background image for splash page - using your existing image
+  backgroundImage = "/images/soil-background.jpg"
 
-# Menu configuration
+# Menu configuration for internal navigation
 [[menu.main]]
   name = "Home"
   url = "/"
   weight = 10
 
 [[menu.main]]
-  name = "About"
+  name = "About the Inquiry"
   url = "/about/"
   weight = 20
 
 [[menu.main]]
-  name = "Mapping Capacities"
-  url = "/mapping-capacities/"
+  name = "The Nervous System as Relational Fabric"
+  url = "/nervous-system/"
   weight = 30
+
+[[menu.main]]
+  name = "Mapping Exiled Capacities"
+  url = "/mapping-capacities/"
+  weight = 40
+
+[[menu.main]]
+  name = "Artist Residency 2024"
+  url = "/residency/"
+  weight = 50
+
+[[menu.main]]
+  name = "Contact"
+  url = "/contact/"
+  weight = 60
+
+# Disable unused content types - this should fix taxonomy warnings
+disableKinds = ["taxonomy", "term", "RSS"]
 
 # Output formats for JSON data
 [outputs]
   home = ["HTML", "JSON"]
+  section = ["HTML"]
 
 [mediaTypes]
   [mediaTypes."application/json"]
@@ -44,5 +68,20 @@ theme = 'capacities-theme'
     baseName = "clusters"
     isPlainText = true
 
-# Disable unused content types
-disableKinds = ["taxonomy", "term"]
+# Build configuration
+[build]
+  writeStats = true
+
+# Security settings
+[security]
+  [security.exec]
+    allow = ['^(dart-)?sass(-embedded)?$', '^go$', '^npx$', '^postcss$']
+  [security.funcs]
+    getenv = ['^HUGO_', '^CI$']
+
+# Privacy settings for GDPR compliance
+[privacy]
+  [privacy.googleAnalytics]
+    disable = true
+  [privacy.youtube]
+    privacyEnhanced = true

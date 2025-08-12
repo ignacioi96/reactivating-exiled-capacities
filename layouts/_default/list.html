@@ -1,0 +1,27 @@
+{{ define "main" }}
+<div class="page-container">
+    <div class="content-wrapper">
+        <h1>{{ .Title }}</h1>
+        
+        {{ if .Content }}
+            <div class="section-content">
+                {{ .Content }}
+            </div>
+        {{ end }}
+        
+        {{ if .Pages }}
+            <div class="cluster-buttons">
+                {{ range .Pages.ByWeight }}
+                    <div class="cluster-btn">
+                        <h4>{{ .Title }}</h4>
+                        {{ if .Params.description }}
+                            <p>{{ .Params.description }}</p>
+                        {{ end }}
+                        <a href="{{ .Permalink }}" class="cluster-link">Learn more</a>
+                    </div>
+                {{ end }}
+            </div>
+        {{ end }}
+    </div>
+</div>
+{{ end }}
