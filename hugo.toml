@@ -1,6 +1,6 @@
 baseURL = 'https://temp-rec.netlify.app'
 languageCode = 'en-us'
-title = 'Recovering Exiled Capacities'
+title = 'Reactivating Exiled Capacities'
 
 # Remove theme since we're using custom layouts
 # theme = 'capacities-theme'
