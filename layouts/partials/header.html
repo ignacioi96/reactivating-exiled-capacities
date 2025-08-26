@@ -1,34 +1,83 @@
-<!-- Floating Navigation -->
+<!-- Enhanced Organic Floating Navigation -->
 <div class="floating-nav">
-    <div class="nav-toggle" onclick="toggleNavDropdown()">
-        <div class="nav-lines">
-            <div class="nav-line"></div>
-            <div class="nav-line"></div>
-            <div class="nav-line"></div>
-            <div class="nav-line"></div>
+    <button class="nav-toggle" onclick="toggleNavDropdown()" role="button" tabindex="0" aria-label="Open navigation menu" aria-expanded="false">
+        <div class="nav-core"></div>
+        <div class="nav-tendrils" aria-hidden="true">
+            <div class="nav-tendril"></div>
+            <div class="nav-tendril"></div>
+            <div class="nav-tendril"></div>
+            <div class="nav-tendril"></div>
+            <div class="nav-tendril"></div>
+            <div class="nav-tendril"></div>
+            <div class="nav-tendril"></div>
+            <div class="nav-tendril"></div>
         </div>
-    </div>
-    <div class="nav-dropdown" id="nav-dropdown">
-        <h3>Navigation</h3>
+    </button>
+    <div class="nav-dropdown" id="nav-dropdown" role="menu" aria-hidden="true">
+        <h3>navigation</h3>
         {{ range .Site.Menus.main }}
-            <a href="{{ .URL }}">{{ .Name }}</a>
+            <a href="{{ .URL }}" role="menuitem">{{ .Name }}</a>
         {{ end }}
     </div>
 </div>
 
 <script>
-// Navigation dropdown functionality
+// Enhanced organic navigation functionality
 function toggleNavDropdown() {
+    console.log('Nav toggle clicked');
     const dropdown = document.getElementById('nav-dropdown');
-    dropdown.classList.toggle('active');
+    const toggle = document.querySelector('.nav-toggle');
+    
+    if (dropdown && toggle) {
+        const isActive = dropdown.classList.contains('active');
+        
+        if (isActive) {
+            dropdown.classList.remove('active');
+            toggle.classList.remove('active');
+            toggle.setAttribute('aria-expanded', 'false');
+            dropdown.setAttribute('aria-hidden', 'true');
+        } else {
+            dropdown.classList.add('active');
+            toggle.classList.add('active');
+            toggle.setAttribute('aria-expanded', 'true');
+            dropdown.setAttribute('aria-hidden', 'false');
+        }
+    }
 }
 
 // Close dropdown when clicking outside
 document.addEventListener('click', (e) => {
     const nav = document.querySelector('.floating-nav');
     const dropdown = document.getElementById('nav-dropdown');
+    
     if (nav && dropdown && !nav.contains(e.target)) {
         dropdown.classList.remove('active');
+        const toggle = document.querySelector('.nav-toggle');
+        if (toggle) {
+            toggle.classList.remove('active');
+            toggle.setAttribute('aria-expanded', 'false');
+            dropdown.setAttribute('aria-hidden', 'true');
+        }
     }
 });
+
+// Enhanced keyboard support
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const dropdown = document.getElementById('nav-dropdown');
+        const toggle = document.querySelector('.nav-toggle');
+        
+        if (dropdown && dropdown.classList.contains('active')) {
+            dropdown.classList.remove('active');
+            if (toggle) {
+                toggle.classList.remove('active');
+                toggle.setAttribute('aria-expanded', 'false');
+                dropdown.setAttribute('aria-hidden', 'true');
+                toggle.focus();
+            }
+        }
+    }
+});
+
+console.log('Enhanced organic navigation loaded successfully');
 </script>

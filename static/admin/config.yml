@@ -6,55 +6,147 @@ backend:
 media_folder: "static/images"
 public_folder: "/images"
 
+# Enable editorial workflow for drafts
+publish_mode: editorial_workflow
+
+# Site URL for preview
+site_url: https://temp-rec.netlify.app
+
 collections:
   - name: "clusters"
-    label: Clusters
+    label: "Capacity Clusters"
     folder: "content/clusters"
     create: true
     slug: "{{slug}}"
     fields:
-      - { label: Title, name: "title", widget: "string" }
-      - { label: Description, name: "description", widget: "text" }
-      - { label: Why This Cluster Matters, name: "why_matters", widget: "markdown" }
-      - { label: Cluster Image, name: "image", widget: "image", required: false }
-      - { label: Position X, name: "position_x", widget: "number", default: 0, value_type: "float" }
-      - { label: Position Y, name: "position_y", widget: "number", default: 0, value_type: "float" }
-      - label: Capacities
+      - label: "Title"
+        name: "title"
+        widget: "string"
+      - label: "Description"
+        name: "description"
+        widget: "text"
+      - label: "Why It Matters"
+        name: "why_matters"
+        widget: "markdown"
+      - label: "Cluster Image"
+        name: "image"
+        widget: "image"
+        required: false
+      - label: "Position X"
+        name: "position_x"
+        widget: "number"
+        value_type: "float"
+        min: -1
+        max: 1
+        step: 0.1
+        default: 0
+      - label: "Position Y"
+        name: "position_y"
+        widget: "number"
+        value_type: "float"
+        min: -1
+        max: 1
+        step: 0.1
+        default: 0
+      - label: "Capacities"
         name: "capacities"
         widget: "list"
         fields:
-          - { label: Title, name: "title", widget: "string" }
-          - { label: Subtitle, name: "subtitle", widget: "string" }
-          - { label: What it is, name: "what_it_is", widget: "markdown" }
-          - { label: Why it's been exiled, name: "why_exiled", widget: "markdown" }
-          - { label: What it makes possible, name: "what_possible", widget: "markdown" }
-          - label: Distortions
+          - label: "Title"
+            name: "title"
+            widget: "string"
+          - label: "Subtitle"
+            name: "subtitle"
+            widget: "string"
+          - label: "What It Is"
+            name: "what_it_is"
+            widget: "markdown"
+          - label: "Why Exiled"
+            name: "why_exiled"
+            widget: "markdown"
+          - label: "What's Possible"
+            name: "what_possible"
+            widget: "markdown"
+          - label: "Distortions"
             name: "distortions"
             widget: "list"
             fields:
-              - { label: Name, name: "name", widget: "string" }
-              - { label: Description, name: "description", widget: "text" }
-          - { label: Node Color, name: "color", widget: "string", default: "#7c3aed" }
-          - { label: Position X, name: "position_x", widget: "number", default: 0, value_type: "float" }
-          - { label: Position Y, name: "position_y", widget: "number", default: 0, value_type: "float" }
+              - label: "Name"
+                name: "name"
+                widget: "string"
+              - label: "Description"
+                name: "description"
+                widget: "text"
+          - label: "Color"
+            name: "color"
+            widget: "string"
+            pattern: ['^[0-9a-fA-F]{6}$', 'Must be a valid hex color code (6 characters)']
+            hint: "Enter hex color code without # (e.g., ff6b4a)"
+          - label: "Position X"
+            name: "position_x"
+            widget: "number"
+            value_type: "float"
+            min: -1
+            max: 1
+            step: 0.1
+            default: 0
+          - label: "Position Y"
+            name: "position_y"
+            widget: "number"
+            value_type: "float"
+            min: -1
+            max: 1
+            step: 0.1
+            default: 0
 
   - name: "pages"
-    label: Pages
+    label: "Pages"
     files:
-      - label: About
+      - label: "About Page"
         name: "about"
         file: "content/about/_index.md"
         fields:
-          - { label: Title, name: "title", widget: "string" }
-          - { label: Body, name: "body", widget: "markdown" }
+          - label: "Title"
+            name: "title"
+            widget: "string"
+          - label: "Date"
+            name: "date"
+            widget: "datetime"
+          - label: "Body"
+            name: "body"
+            widget: "markdown"
 
-            - name: "pages"
-
-    label: Pages
+  - name: "site_settings"
+    label: "Site Settings"
     files:
-      - label: Mapping Capacities
-        name: "mapping-capacities"
-        file: "content/mapping-capacities.md"
+      - label: "Site Configuration"
+        name: "config"
+        file: "hugo.toml"
         fields:
-          - { label: Title, name: "title", widget: "string" }
-          - { label: Body, name: "body", widget: "markdown" }
+          - label: "Base URL"
+            name: "baseURL"
+            widget: "string"
+          - label: "Language Code"
+            name: "languageCode"
+            widget: "string"
+            default: "en-us"
+          - label: "Site Title"
+            name: "title"
+            widget: "string"
+          - label: "Site Description"
+            name: "params.description"
+            widget: "text"
+          - label: "Background Image"
+            name: "params.backgroundImage"
+            widget: "image"
+            required: false
+          - label: "Open Graph Image"
+            name: "params.ogImage"
+            widget: "image"
+            required: false
+
+# Preview configuration
+preview_path: "{{slug}}"
+
+# Local development
+local_backend: true

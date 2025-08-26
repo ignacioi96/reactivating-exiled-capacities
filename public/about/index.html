@@ -3,7 +3,7 @@
 <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About Reactivating Exiled Capacities | Reactivating Exiled Capacities</title>
+<title>About the Inquiry | reactivating exiled capacities</title>
 <meta name="description" content="">
 
 
@@ -19,9 +19,12 @@
 <meta name="theme-color" content="#f4efe5">
 
 
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+
 <meta property="og:type" content="website">
 <meta property="og:url" content="http://localhost:1313/about/">
-<meta property="og:title" content="About Reactivating Exiled Capacities | Reactivating Exiled Capacities">
+<meta property="og:title" content="About the Inquiry | reactivating exiled capacities">
 <meta property="og:description" content="">
 
 <meta property="og:image" content="http://localhost:1313/images/og-mycelium.jpg">
@@ -30,7 +33,7 @@
 
 <meta property="twitter:card" content="summary_large_image">
 <meta property="twitter:url" content="http://localhost:1313/about/">
-<meta property="twitter:title" content="About Reactivating Exiled Capacities | Recovering Exiled Capacities">
+<meta property="twitter:title" content="About the Inquiry | reactivating exiled capacities">
 <meta property="twitter:description" content="">
 
 <meta property="twitter:image" content="http://localhost:1313/images/og-mycelium.jpg">
@@ -41,28 +44,33 @@
     
         
 <div class="floating-nav">
-    <div class="nav-toggle" onclick="toggleNavDropdown()">
-        <div class="nav-lines">
-            <div class="nav-line"></div>
-            <div class="nav-line"></div>
-            <div class="nav-line"></div>
-            <div class="nav-line"></div>
+    <button class="nav-toggle" onclick="toggleNavDropdown()" role="button" tabindex="0" aria-label="Open navigation menu" aria-expanded="false">
+        <div class="nav-core"></div>
+        <div class="nav-tendrils" aria-hidden="true">
+            <div class="nav-tendril"></div>
+            <div class="nav-tendril"></div>
+            <div class="nav-tendril"></div>
+            <div class="nav-tendril"></div>
+            <div class="nav-tendril"></div>
+            <div class="nav-tendril"></div>
+            <div class="nav-tendril"></div>
+            <div class="nav-tendril"></div>
         </div>
-    </div>
-    <div class="nav-dropdown" id="nav-dropdown">
-        <h3>Navigation</h3>
+    </button>
+    <div class="nav-dropdown" id="nav-dropdown" role="menu" aria-hidden="true">
+        <h3>navigation</h3>
         
-            <a href="/">Home</a>
+            <a href="/" role="menuitem">Home</a>
         
-            <a href="/about/">About the Inquiry</a>
+            <a href="/about/" role="menuitem">About the Inquiry</a>
         
-            <a href="/nervous-system/">The Nervous System as Relational Fabric</a>
+            <a href="/nervous-system/" role="menuitem">The Nervous System as Relational Fabric</a>
         
-            <a href="/mapping-capacities/">Mapping Exiled Capacities</a>
+            <a href="/mapping-capacities/" role="menuitem">Mapping Exiled Capacities</a>
         
-            <a href="/residency/">Artist Residency 2024</a>
+            <a href="/residency/" role="menuitem">Artist Residency 2024</a>
         
-            <a href="/contact/">Contact</a>
+            <a href="/contact/" role="menuitem">Contact</a>
         
     </div>
 </div>
@@ -70,33 +78,78 @@
 <script>
 
 function toggleNavDropdown() {
+    console.log('Nav toggle clicked');
     const dropdown = document.getElementById('nav-dropdown');
-    dropdown.classList.toggle('active');
+    const toggle = document.querySelector('.nav-toggle');
+    
+    if (dropdown && toggle) {
+        const isActive = dropdown.classList.contains('active');
+        
+        if (isActive) {
+            dropdown.classList.remove('active');
+            toggle.classList.remove('active');
+            toggle.setAttribute('aria-expanded', 'false');
+            dropdown.setAttribute('aria-hidden', 'true');
+        } else {
+            dropdown.classList.add('active');
+            toggle.classList.add('active');
+            toggle.setAttribute('aria-expanded', 'true');
+            dropdown.setAttribute('aria-hidden', 'false');
+        }
+    }
 }
 
 
 document.addEventListener('click', (e) => {
     const nav = document.querySelector('.floating-nav');
     const dropdown = document.getElementById('nav-dropdown');
+    
     if (nav && dropdown && !nav.contains(e.target)) {
         dropdown.classList.remove('active');
+        const toggle = document.querySelector('.nav-toggle');
+        if (toggle) {
+            toggle.classList.remove('active');
+            toggle.setAttribute('aria-expanded', 'false');
+            dropdown.setAttribute('aria-hidden', 'true');
+        }
     }
 });
+
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const dropdown = document.getElementById('nav-dropdown');
+        const toggle = document.querySelector('.nav-toggle');
+        
+        if (dropdown && dropdown.classList.contains('active')) {
+            dropdown.classList.remove('active');
+            if (toggle) {
+                toggle.classList.remove('active');
+                toggle.setAttribute('aria-expanded', 'false');
+                dropdown.setAttribute('aria-hidden', 'true');
+                toggle.focus();
+            }
+        }
+    }
+});
+
+console.log('Enhanced organic navigation loaded successfully');
 </script>
+    
     
     
     
 <div class="page-container">
     <div class="content-wrapper">
-        <h1>About Reactivating Exiled Capacities</h1>
+        <h1>About the Inquiry</h1>
         
         
         
         <div class="page-content">
             <h2 id="why-reactivating-exiled-capacities">Why Reactivating Exiled Capacities?</h2>
-<p>Reactivating Exiled Capacities is an inquiry about listening with more honesty, sensing what has been fragmented but not erased, and making space for its return. This is not a comfortable path. It is one that requires us to sit with what we don&rsquo;t want to know about ourselves—the ways we have been trained to numb and invest in our own disconnection.</p>
+<p><strong>Reactivating Exiled Capacities is an inquiry</strong> about listening with more honesty, sensing what has been <strong>fragmented</strong> but not erased, and making space for its return. <strong>This is not a comfortable path. It is one that requires us to sit with what we don&rsquo;t want to know about ourselves—the ways we have been trained to numb and invest in our own disconnection.</strong></p>
 <p>The Reactivating Exiled Capacities (REC) project emerges as a humble inquiry into the roots of our meta-crisis. Rather than offering surface-level solutions or perpetuating a cycle of quick fixes, REC seeks to address the deeply entrenched patterns of thought, emotion, and relation that sustain harm in the colonial systems we live in.</p>
-<p>Anchored in the teachings of the Gesturing Towards Decolonial Futures (GTDF) collective, this project invites participants to explore how colonialism manifests not only in geopolitical systems and historical injustices but also in intimate, molecular, and embodied ways. Generally, in education, we attempt to conceptualize the problem as one of &lsquo;ignorance&rsquo; by providing &lsquo;more knowledge&rsquo; —operating under the assumption that if people only knew the truth about [x], they would change their behavior. However, we have come to realize that our current metacrisis is not a challenge of ignorance but one of unconscious denial. When these denials are confronted, they are often met with anger and defensiveness, as they threaten our sense of identity, safety, and control. One way to compost through our collective denials we must engage with the emotional, relational, and systemic forces that uphold and reward these denials in the first place.</p>
+<p>Anchored in the teachings of the <a href="https://decolonialfutures.net/">Gesturing Towards Decolonial Futures (GTDF) collective</a>, this project invites participants to explore how colonialism manifests not only in geopolitical systems and historical injustices but also in intimate, molecular, and embodied ways. Generally, in education, we attempt to conceptualize the problem as one of &lsquo;ignorance&rsquo; by providing &lsquo;more knowledge&rsquo; —operating under the assumption that if people only knew the truth about [x], they would change their behavior. However, we have come to realize that our current metacrisis is not a challenge of ignorance but one of unconscious denial. When these denials are confronted, they are often met with anger and defensiveness, as they threaten our sense of identity, safety, and control. One way to compost through our collective denials we must engage with the emotional, relational, and systemic forces that uphold and reward these denials in the first place.</p>
 <div class="pause-reflect">
 <strong>Before moving forward, pause.</strong>
 Feel the weight of your body. Notice how your breath is moving—shallow, deep, tight, soft? Let it shift, if it wants to. If not, just notice.
@@ -111,7 +164,7 @@ What have you been conditioned to avoid? What would it ask of you to stay presen
 </div>
 <p>Exiled capacities are not lost forever, but reactivating them requires practices that extend beyond intellectual comprehension. We invite a form of knowing that is not just cognitive, but meta-epistemic—one that recognizes partiality, contradiction, and the limits of human understanding. This means holding space for multiple truths, even when they appear contradictory, and listening beyond words. This means recognizing that sensory, embodied, and ancestral knowledge are not in opposition to scientific or conceptual frameworks, but in conversation with them.</p>
 <p>In a sense, reactivating these exiled capacities is like tending to a relationship over time: it deepens and gains nuance as we tend to it. Most of these capacities live in the embodied layers of our existence, in how we respond to complexity, and in how we care for the entangled web of life we are part of. REC is one attempt among many to support this reactivation, a modest contribution to a larger field of efforts seeking to interrupt the patterns of separability that sustain harm.</p>
-<h2 id="recs-relationship-to-art-and-language-an-aesthetics-of-listening">REC&rsquo;s Relationship to Art and Language: An Aesthetics of Listening</h2>
+<h2 id="relationship-to-art-and-language-an-aesthetics-of-listening">Relationship to Art and Language: An Aesthetics of Listening</h2>
 <p>The somatic invitations from this inquiry are not performances or artworks in the traditional sense, because REC approaches art not as object, vehicle for content, or product—but as an ecology of living practices.</p>
 <p>These practices engage with art not in the service of representation, but as invitation: to feel, to unlearn, to stay with what resists resolution. Artistic practice becomes a relational technology for tuning perception, disrupting conditioned habits of attention, and composting the logics of control, purity, and separability that underlie colonial modernity.</p>
 <p>This approach has profound implications for how we relate to language.</p>
@@ -119,219 +172,103 @@ What have you been conditioned to avoid? What would it ask of you to stay presen
 <p>As you move through this website, you will encounter different proxy-languages—words that attempt to approximate the vibrational field we seek to nurture. Yet it is crucial to release the expectation that these proxy-languages serve as encyclopedic agents. These words are not definitions: they are suggestions, approximations, pointers, and guides.</p>
 <p>This reframing of art and language is an aesthetics of listening—not listening for answers, but listening with frequencies.</p>
 <p>We invite those who engage with these invitations to approach them as they would a piece of music, or a shift in temperature. Let it move you, stretch you, blur your boundaries. Let meaning hover at the edges of sensation.</p>
-<h2 id="the-nervous-system-as-relational-fabric">The Nervous System as Relational Fabric</h2>
-<h3 id="polyvagal-theory-and-the-nervous-system-a-thread-of-connection">Polyvagal Theory and the Nervous System: A Thread of Connection</h3>
-<p>Within REC we are inviting an understanding of the nervous system as a continuous network of communication between what we conceptualize as the human body, mind, and the rest of nature. While modern frameworks often treat these domains as separate, we see them as deeply intertwined, forming a dynamic whole. Our nervous system reflects and interacts with relational and ecological systems, serving as a thread that weaves together the personal, collective, and planetary dimensions of our existence.</p>
-<p>Polyvagal Theory, developed by Stephen Porges, offers a nuanced lens for understanding how our autonomic nervous system responds to stress, safety, and connection. It identifies three intertwined circuits:</p>
-<ul>
-<li><strong>Dorsal Vagal Complex</strong>: Governs immobilization responses like fainting or shutdown.</li>
-<li><strong>Sympathetic Nervous System</strong>: Drives mobilization responses such as fight or flight.</li>
-<li><strong>Ventral Vagal Complex</strong>: Facilitates social engagement, calm, and connection.</li>
-</ul>
-<p>These circuits help us map how our nervous systems react to stress and regulate states of being, whether through retreating, defending, or connecting. However, Polyvagal Theory often reflects modernity&rsquo;s emphasis on individual regulation, overlooking the ways our nervous systems are entangled with broader relational and ecological networks. Expanding this perspective is essential for addressing the polycrisis.</p>
-<div class="pause-reflect">
-<strong>Pause, observe:</strong> Where is tension living in you right now?<br>
-Not in an abstract way—scan your shoulders, your jaw, your belly. What happens when you bring your attention there? Does it shift, resist, settle?
-</div>
-<h3 id="mapping-individual-survival-and-resilience-responses">Mapping Individual Survival and Resilience Responses</h3>
-<p>The chart below illustrates how these circuits influence individual survival and resilience responses, highlighting the interplay between physiology, emotional states, and cognitive capacities. However, this framework often centers individual regulation, reflecting modernity&rsquo;s orientation toward separability. Expanding this lens requires reimagining the nervous system as entangled—not just within the individual body but also with the collective, ecological, and temporal webs of life.</p>
-<table>
-  <thead>
-      <tr>
-          <th>Nervous System Circuit</th>
-          <th>Survival State</th>
-          <th>Physiological Effects</th>
-          <th>Emotional Effects</th>
-          <th>Cognitive Effects</th>
-          <th>Common reactions</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>Dorsal Vagal Complex</td>
-          <td>Immobilization (Freeze/Faint)</td>
-          <td>Shutdown, low energy</td>
-          <td>Numbness, despair</td>
-          <td>Difficulty processing</td>
-          <td>Withdrawal/avoidance/denials</td>
-      </tr>
-      <tr>
-          <td>Sympathetic Nervous System</td>
-          <td>Mobilization (Fight/Flight)</td>
-          <td>Increased energy, tension</td>
-          <td>Anxiety, fear, anger</td>
-          <td>Reactive, short-term thinking</td>
-          <td>Attack others/attack self/denials</td>
-      </tr>
-      <tr>
-          <td>Ventral Vagal Complex</td>
-          <td>Social Engagement</td>
-          <td>Relaxed, calm, alert</td>
-          <td>Safety, connection</td>
-          <td>Open, collaborative thinking</td>
-          <td>Ability to hold compassion and complexity/work through conflict</td>
-      </tr>
-  </tbody>
-</table>
-<h3 id="our-nervous-systems-within-the-meta--perma--poly--crisis">Our nervous systems within the meta- perma- poly- crisis</h3>
-<p>The polycrisis triggers nervous system responses rooted in survival, often cycling through fight, flight, freeze, faint, or fix. These reactions are shaped by modernity&rsquo;s emphasis on control, consumption, and disconnection, leading to patterns of avoidance or oversimplified solutions. The chart below illustrates how these survival states manifest in societal responses:</p>
-<table>
-  <thead>
-      <tr>
-          <th>Nervous System Circuit</th>
-          <th>Survival State</th>
-          <th>Response Pattern</th>
-          <th>Examples in the Polycrisis</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>Sympathetic Nervous System</td>
-          <td>Fight</td>
-          <td>Confrontation and domination</td>
-          <td>Exploiting resources further to &ldquo;win&rdquo; against environmental collapse; increasing militarization and policing borders when facing the climate refugee crisis; scapegoating vulnerable populations and perpetuating racism.</td>
-      </tr>
-      <tr>
-          <td>Sympathetic Nervous System</td>
-          <td>Flight</td>
-          <td>Avoidance and escape</td>
-          <td>Fleeing to ideologies of techno-utopia; disengaging from responsibility by retreating into individualism or apathy.</td>
-      </tr>
-      <tr>
-          <td>Dorsal Vagal Complex</td>
-          <td>Freeze</td>
-          <td>Immobilization and paralysis</td>
-          <td>Feeling overwhelmed and paralyzed by the scale of the crises; resorting to denial or falling into nihilism or hopelessness.</td>
-      </tr>
-      <tr>
-          <td>Dorsal Vagal Complex</td>
-          <td>Faint</td>
-          <td>Collapse and numbing</td>
-          <td>Seeking solace in consumerism, addiction, or escapism to avoid facing uncomfortable realities.</td>
-      </tr>
-      <tr>
-          <td>Sympathetic Nervous System</td>
-          <td>Fix</td>
-          <td>Oversimplified problem-solving</td>
-          <td>Proposing quick fixes like carbon credits, green capitalism, and green-energy solutions that rely on exploitation and extraction; geoengineering as a technological &ldquo;solution.&rdquo;</td>
-      </tr>
-  </tbody>
-</table>
-<h2 id="neuro-colonization-and-neuro-decolonization-reclaiming-the-entangled-nervous-system">Neuro-Colonization and Neuro-Decolonization: Reclaiming the Entangled Nervous System</h2>
-<p>Chief Ninawa Huni Kui, an Indigenous leader from the Huni Kui community in the Amazon and co-researcher in the GTDF collective, describes separability as a &ldquo;metabolic dis-ease&rdquo;—a condition that fractures our sense of identity and leaves us insecure, seeking superiority to mask this insecurity. This dis-ease operates at the level of neurobiology, shaping our fears, desires, and relational patterns. It drives the systems of cultural supremacy, ecological destruction, and exploitation that are at the root of our crises.</p>
-<p>Colonial-modern systems have conditioned our nervous systems to prioritize separability, shaping physiological, emotional, and relational patterns that perpetuate harm. This phenomenon, which we call neuro-colonization, systematically wires our nervous systems to favor control, fear, and disconnection. It reinforces survival-based responses like fight, flight, freeze, and faint, making us less capable of engaging with complexity and interdependence.</p>
-<p>Neuro-decolonization is a concept developed by Cree elder Dr. Cash Ahenakew that refers to unwiring these harmful attachments and reclaiming an entangled nervous system—one attuned to and guided by collective and metabolic processes. This involves reactivating capacities for relational intelligence, intergenerational accountability, and ecological attunement. It is a shift from survival-based, individualistic regulation toward a relational embodiment of shared rhythms and responsibilities.</p>
-<div class="pause-reflect">
-<strong>Pause, observe your body.</strong> Sit with the following question: Who taught you what is worth knowing?<br>
-Whose intelligence has been silenced in your own education? What might knowing feel like beyond words?
-</div>
-<p>Relationality does only operate in spatial dimensions, it is also temporal. In the practice of REC we invite a meta-scalar awareness: How do the traumas and wisdoms of past generations shape the present? How might today&rsquo;s choices ripple through future generations and ecosystems? Can the future be pulling us toward it, guiding us into repair? And perhaps most provocatively—Can our actions in the present reverberate backward, altering the motion of the past—not to erase it, but to transform its resonance?</p>
-<h3 id="mapping-polyvagal-theory-to-an-entangled-paradigm">Mapping Polyvagal Theory to an Entangled Paradigm</h3>
-<p>To address the limitations of Polyvagal Theory when applied to the polycrisis, REC proposes an expanded view—one that acknowledges our nervous systems as entangled with the relational, ecological, and temporal processes that sustain life. It also invites a meta-affective disposition. To engage meta-affectively is to hold space for pain—not as something to escape or fix, but as a teacher. Pain reveals the threads of connection that have been strained or broken. Modernity isolates us in these wounds, framing them as private failures rather than collective fractures. Meta-affective awareness invites us to re-enter the fullness of feeling without fear or shame, so that pain may be metabolized rather than suppressed. This reimagining moves us beyond survival responses rooted in individualism toward collective and systemic resilience.</p>
-<p>The chart below offers an entry point into this inquiry:</p>
-<table>
-  <thead>
-      <tr>
-          <th>Usual Nervous System State</th>
-          <th>Focus</th>
-          <th>Entangled Response</th>
-          <th>Implications for Relationality</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>Fight</td>
-          <td>Survival/self</td>
-          <td>Surrender without collapsing: Accountability</td>
-          <td>Acknowledging complicity</td>
-      </tr>
-      <tr>
-          <td>Flight</td>
-          <td>Avoidance/self</td>
-          <td>Attunement</td>
-          <td>Staying with discomfort</td>
-      </tr>
-      <tr>
-          <td>Freeze</td>
-          <td>(Paralysis)/self</td>
-          <td>Movement</td>
-          <td>Relating generatively to failure</td>
-      </tr>
-      <tr>
-          <td>Faint</td>
-          <td>(Collapse)/self</td>
-          <td>Nurturing</td>
-          <td>Shifting our relationship to hope and imagination</td>
-      </tr>
-      <tr>
-          <td>Fix</td>
-          <td>(Control)/self</td>
-          <td>Composting</td>
-          <td>Letting go of unsustainable patterns of thinking, being and relating</td>
-      </tr>
-  </tbody>
-</table>
-<h3 id="shifting-toward-responsible-and-relational-responses">Shifting Toward Responsible and Relational Responses</h3>
-<p>To respond to the polycrisis with care and accountability, we must move beyond survival states into resilient states. The chart below maps these shifts:</p>
-<table>
-  <thead>
-      <tr>
-          <th>Survival State (separability)</th>
-          <th>Entangled State</th>
-          <th>Nervous System Circuit</th>
-          <th>Examples of Relational Responses</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>Fight (Survival)</td>
-          <td>Surrender without collapsing: Accountability</td>
-          <td>Entangled Ventral Vagal Complex</td>
-          <td>A call for humility: Acknowledging complicity with harm and sitting with discomfort. Engage with the difficult truths about harm and complicity rather than rushing to solutions. Create spaces for collective reckoning, foster humility, and a willingness to hold the discomfort of shared responsibility.</td>
-      </tr>
-      <tr>
-          <td>Flight (Avoidance)</td>
-          <td>Attuning: staying with the trouble</td>
-          <td>Entangled Ventral Vagal Complex</td>
-          <td>Developing practices for deep listening to relational and ecological vibrations; attuning to different scales of experience—personal, collective, and planetary. Acknowledge where avoidance has been a default response and commit to staying present and curious instead of avoiding complicity.</td>
-      </tr>
-      <tr>
-          <td>Freeze (Paralysis)</td>
-          <td>Moving</td>
-          <td>Entangled Ventral Vagal Complex</td>
-          <td>Focusing on small, relational actions that build trust; using body-based practices to awaken movement and responsiveness; co-creating incremental steps toward change. Focus on new mistakes and failure as a generative practice. Shift from paralysis to co-created action, recognizing the value of imperfection in initial steps.</td>
-      </tr>
-      <tr>
-          <td>Faint (Collapse)</td>
-          <td>Nurturing</td>
-          <td>Dorsal and Ventral Vagal Integration</td>
-          <td>Co-creating rituals of care that acknowledge shared vulnerability and interdependence; building restorative practices for mutual repair and ecological healing. Ground relational care in reciprocity rather than transactionalism, saviorism or escapism.</td>
-      </tr>
-      <tr>
-          <td>Fix (Control)</td>
-          <td>Composting</td>
-          <td>Sympathetic/Ventral Vagal Coordination</td>
-          <td>Supporting collective processes of letting go—whether of harmful systems, outdated beliefs, or unsustainable practices. Foster spaces for emergent, adaptive possibilities. Acknowledge the value of decay as part of regeneration, rather than forcing premature resolutions.</td>
-      </tr>
-  </tbody>
-</table>
-<p>The approach we are suggesting is one where the nervous system is not just a site of individual regulation but a relational and collective thread that connects us to the larger web of life. In this context, the capacity for meta-regulation emerges as a vital yet often exiled ability. Meta-regulation involves three interconnected layers: self-regulation, co-regulation, and meta-regulation, each expanding the nervous system&rsquo;s capacity to engage with complexity, ambiguity, and interdependence.</p>
-<h2 id="recs-2024-art-residency">REC&rsquo;s 2024 Art Residency</h2>
-<p>In 2024, a digital art residency was hosted with several artists from diverse artistic practices, geographical locations, and ancestral heritages. It was a shared space to experiment with the reactivation of capacities that have been exiled through colonial modernity: sensibilities for relationality, care, accountability, and complexity.</p>
-<p>To enter this inquiry, each artist first participated in the Facing Human Wrongs course, which invited them to confront their complicity in systems of harm, to feel the grief and contradictions that arise, and to sit with discomfort without rushing to solutions. From this ground, the artists created artistic, somatic, and metaphorical invitations—experiments designed to nurture relational sensibilities and cultivate the capacity to stay with complexity.</p>
-<p>These invitations offer ways to interrupt conditioned desires for comfort, certainty, and control, and to reawaken the embodied wisdom that colonial modernity has tried to sever.</p>
-<p><strong>Learn more about the artist&rsquo;s invitations <a href="/stories/">HERE</a></strong></p>
 
         </div>
         
         
+
+        
+        
+        
+        
+        
+        
+        
+            
+            
+            
+        
+        
+        
+        
+        <div class="inline-next-page">
+          <a href="/nervous-system/" class="inline-next-link">
+            <div class="inline-next-content">
+              <span class="inline-next-label">next page:</span>
+              <span class="inline-next-title">the nervous system as relational fabric</span>
+            </div>
+            <div class="inline-next-arrow-icon">
+              <svg class="organic-arrow-svg" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+                
+                <path class="organic-arrow-shaft" 
+                      d="M 8 20 Q 15 18 25 19 Q 35 20 45 19" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round"/>
+                
+                
+                <path class="organic-arrow-head-top" 
+                      d="M 37 13 Q 42 16 45 19 Q 47 20 49 21" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round"/>
+                
+                
+                <path class="organic-arrow-head-bottom" 
+                      d="M 37 26 Q 42 23 45 19 Q 47 18 49 17" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round"/>
+                
+                
+                <path class="organic-arrow-texture" 
+                      d="M 20 17 Q 22 19 24 18" 
+                      stroke-width="1" 
+                      opacity="0.4"
+                      stroke-linecap="round"/>
+                <path class="organic-arrow-texture" 
+                      d="M 30 21 Q 32 19 34 20" 
+                      stroke-width="1" 
+                      opacity="0.4"
+                      stroke-linecap="round"/>
+              </svg>
+            </div>
+          </a>
+        </div>
+        
     </div>
 </div>
+
 
     
     
     
+    <div class="background-container" style="--bg-image: url('/images/soil-background.jpg');">
+        <div class="background-overlay"></div>
+    </div>
     
     
+    
+    
+    
+    
+        
+        
+            <script src="http://localhost:1313/js/background-mycelium.js" defer></script>
+        
+    
+    
+    
+    
+    
+    
+    <script>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", user => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
+            });
+          }
+        });
+      }
+    </script>
 </body>
 </html>

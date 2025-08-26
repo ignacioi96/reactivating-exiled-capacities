@@ -4,7 +4,7 @@
 	<meta name="generator" content="Hugo 0.148.2"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reactivating Exiled Capacities</title>
+<title>reactivating exiled capacities</title>
 <meta name="description" content="">
 
 
@@ -20,9 +20,12 @@
 <meta name="theme-color" content="#f4efe5">
 
 
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+
 <meta property="og:type" content="website">
 <meta property="og:url" content="http://localhost:1313/">
-<meta property="og:title" content="Reactivating Exiled Capacities">
+<meta property="og:title" content="reactivating exiled capacities">
 <meta property="og:description" content="">
 
 <meta property="og:image" content="http://localhost:1313/images/og-mycelium.jpg">
@@ -31,7 +34,7 @@
 
 <meta property="twitter:card" content="summary_large_image">
 <meta property="twitter:url" content="http://localhost:1313/">
-<meta property="twitter:title" content="Reactivating Exiled Capacities">
+<meta property="twitter:title" content="reactivating exiled capacities">
 <meta property="twitter:description" content="">
 
 <meta property="twitter:image" content="http://localhost:1313/images/og-mycelium.jpg">
@@ -42,60 +45,257 @@
     
     
     
+    
 
-<div class="splash-layout" style="--bg-image: url('/images/soil-background.jpg');">
+<div class="splash-layout" id="mainLayout" style="--bg-image: url('/images/soil-background.jpg');">
     
     <div class="background-container">
         <div class="background-overlay"></div>
     </div>
 
     
-    <canvas id="myceliumCanvas"></canvas>
 
     
     <div class="content-container">
-        <button class="central-button" id="centralButton">
-            Reactivating Exiled Capacities
+        <button class="central-button" id="centralButton" onclick="handleButtonClick();">
+            reactivating exiled capacities
         </button>
     </div>
 
     
-    <div class="instructions">
-        Website under construction
+    <div class="nav-buttons-container" id="navButtonsContainer">
+        
+        <button class="nav-button nav-button-about" id="aboutButton" onclick="navigateToPage('/about/')">
+            about the inquiry
+        </button>
+
+        
+        <button class="nav-button nav-button-mapping" id="mappingButton" onclick="navigateToPage('/mapping-capacities/')">
+            mapping exiled capacities
+        </button>
+
+        
+        <button class="nav-button nav-button-nervous" id="nervousButton" onclick="navigateToPage('/nervous-system/')">
+            the nervous system as relational fabric
+        </button>
+    </div>
+
+    
+    <div class="artist-residency-link" id="artistResidencyLink" onclick="navigateToPage('/residency/')">
+        artist residency 2024
+    </div>
+
+    
+    <div class="instructions" id="instructions">
+        Click to enter.
+        Webpage still undergoing growth.
     </div>
 
     
     <div class="loading" id="loading">Growing network...</div>
-
-    
-    <div class="debug-controls" id="debugControls">
-        <div>Debug Controls</div>
-        <button onclick="regenerateMyceliumNetwork()">Regenerate</button>
-        <button onclick="toggleMyceliumWireframe()">Wireframe</button>
-        <button onclick="changeMyceliumColorScheme()">Color</button>
-        <button onclick="openAdvanced3DModal()" style="background: #ff6b4a;">Test Modal</button>
-        <div class="control-row">
-            <label>Branches:</label>
-            <input type="range" id="branchCount" min="3" max="12" value="8">
-            <span id="branchValue">8</span>
-        </div>
-    </div>
 </div>
 
+<script>
+
+let isHomeMode = false;
+let transformationInProgress = false;
+let hasBeenTransformed = false;
+
+
+const BUTTON_POSITIONS = {
+    about: { x: 50, y: 15 },     
+    mapping: { x: 15, y: 80 },   
+    nervous: { x: 85, y: 80 }    
+};
+
+function handleButtonClick() {
+    console.log('Button clicked, isHomeMode:', isHomeMode, 'transformationInProgress:', transformationInProgress);
+    
+    if (transformationInProgress) {
+        console.log('Transformation already in progress, ignoring click');
+        return;
+    }
+    
+    if (!isHomeMode && !hasBeenTransformed) {
+        console.log('Transforming via button click');
+        transformToHomeMode();
+    } else if (isHomeMode) {
+        
+        console.log('Regenerating network to buttons');
+        if (typeof growNetworkToButtons === 'function') {
+            growNetworkToButtons();
+        }
+    }
+}
+
+function transformToHomeMode() {
+    if (transformationInProgress || hasBeenTransformed) return;
+    
+    console.log('Starting transformation to home mode...');
+    transformationInProgress = true;
+    isHomeMode = true;
+    hasBeenTransformed = true;
+    window.isHomeMode = true;
+    
+    
+    const layout = document.getElementById('mainLayout');
+    layout.classList.remove('splash-layout');
+    layout.classList.add('home-layout');
+    
+    
+    const instructions = document.getElementById('instructions');
+    if (instructions) {
+        instructions.style.transition = 'opacity 0.3s ease';
+        instructions.style.opacity = '0';
+        instructions.style.pointerEvents = 'none';
+    }
+    
+    
+    setTimeout(() => {
+        console.log('Starting network growth to buttons...');
+        if (typeof growNetworkToButtons === 'function') {
+            growNetworkToButtons();
+        }
+    }, 100);
+    
+    
+    setTimeout(() => {
+        showNavigationElements();
+    }, 800); 
+    
+    
+    setTimeout(() => {
+        transformationInProgress = false;
+    }, 2000);
+}
+
+function showNavigationElements() {
+    console.log('Showing navigation elements...');
+    
+    const navContainer = document.getElementById('navButtonsContainer');
+    const artistLink = document.getElementById('artistResidencyLink');
+    
+    if (navContainer) {
+        navContainer.style.display = 'block';
+        navContainer.style.pointerEvents = 'auto';
+        
+        
+        const aboutButton = document.getElementById('aboutButton');
+        const mappingButton = document.getElementById('mappingButton');
+        const nervousButton = document.getElementById('nervousButton');
+        
+        
+        const buttons = [aboutButton, mappingButton, nervousButton];
+        const delays = [0, 200, 400]; 
+        
+        buttons.forEach((button, index) => {
+            if (button) {
+                
+                button.style.opacity = '0';
+                button.style.transform = 'scale(0.8) translateY(20px)';
+                button.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                button.style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    button.style.opacity = '1';
+                    button.style.transform = 'scale(1) translateY(0)';
+                    button.style.pointerEvents = 'auto';
+                    console.log(`Button ${index + 1} animated in`);
+                }, delays[index]);
+            }
+        });
+    }
+    
+    if (artistLink) {
+        artistLink.style.display = 'block';
+        artistLink.style.opacity = '0';
+        artistLink.style.transform = 'translateY(20px)';
+        artistLink.style.transition = 'all 0.5s ease';
+        artistLink.style.pointerEvents = 'none';
+        
+        setTimeout(() => {
+            artistLink.style.opacity = '1';
+            artistLink.style.transform = 'translateY(0)';
+            artistLink.style.pointerEvents = 'auto';
+        }, 600);
+    }
+}
+
+function navigateToPage(url) {
+    console.log('Navigating to:', url);
+    document.body.style.transition = 'opacity 0.3s ease';
+    document.body.style.opacity = '0';
+    
+    setTimeout(() => {
+        window.location.href = url;
+    }, 200);
+}
+
+
+function viewportToScreen(vpX, vpY) {
+    return {
+        x: (vpX / 100) * window.innerWidth,
+        y: (vpY / 100) * window.innerHeight
+    };
+}
+
+
+function getTargetPositions() {
+    return [
+        viewportToScreen(BUTTON_POSITIONS.about.x, BUTTON_POSITIONS.about.y),
+        viewportToScreen(BUTTON_POSITIONS.mapping.x, BUTTON_POSITIONS.mapping.y),
+        viewportToScreen(BUTTON_POSITIONS.nervous.x, BUTTON_POSITIONS.nervous.y)
+    ];
+}
+
+
+window.addEventListener('click', function(e) {
+    if (e.target === document.getElementById('centralButton')) {
+        e.stopPropagation();
+    }
+});
+</script>
+
+    
+    
+    
+    <div class="background-container" style="--bg-image: url('/images/soil-background.jpg');">
+        <div class="background-overlay"></div>
+    </div>
+    
+    
+    
+
+
+<script src="http://localhost:1313/js/network.js"></script>
+
+    
+    
+    
     
     
     
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
         
         
+        
+        
             
-            <script src="http://localhost:1313/js/mycelium.min.js"></script>
+            <script src="http://localhost:1313/js/network.min.js"></script>
         
     
     
     
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
+    <script>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", user => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
+            });
+          }
+        });
+      }
+    </script>
 </body>
 </html>

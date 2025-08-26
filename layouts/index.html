@@ -1,46 +1,217 @@
 {{ define "main" }}
 {{ $backgroundImage := .Site.Params.backgroundImage | default "/images/soil-background.jpg" | relURL }}
-<div class="splash-layout" style="--bg-image: url('{{ $backgroundImage }}');">
+<div class="splash-layout" id="mainLayout" style="--bg-image: url('{{ $backgroundImage }}');">
     <!-- Background image -->
     <div class="background-container">
         <div class="background-overlay"></div>
     </div>
 
-    <!-- 3D Canvas -->
-    <canvas id="myceliumCanvas"></canvas>
+    <!-- Network SVG container (created dynamically by JavaScript) -->
 
     <!-- Central Content -->
     <div class="content-container">
-        <button class="central-button" id="centralButton">
+        <button class="central-button" id="centralButton" onclick="handleButtonClick();">
             {{ .Site.Title | default "reactivating exiled capacities" }}
         </button>
     </div>
 
+    <!-- Navigation Buttons (hidden initially, positioned with fixed coordinates) -->
+    <div class="nav-buttons-container" id="navButtonsContainer">
+        <!-- About the Inquiry - Top Center -->
+        <button class="nav-button nav-button-about" id="aboutButton" onclick="navigateToPage('/about/')">
+            about the inquiry
+        </button>
+
+        <!-- Mapping Exiled Capacities - Bottom Left -->
+        <button class="nav-button nav-button-mapping" id="mappingButton" onclick="navigateToPage('/mapping-capacities/')">
+            mapping exiled capacities
+        </button>
+
+        <!-- The Nervous System as Relational Fabric - Bottom Right -->
+        <button class="nav-button nav-button-nervous" id="nervousButton" onclick="navigateToPage('/nervous-system/')">
+            the nervous system as relational fabric
+        </button>
+    </div>
+
+    <!-- Artist Residency Link (hidden initially) -->
+    <div class="artist-residency-link" id="artistResidencyLink" onclick="navigateToPage('/residency/')">
+        artist residency 2024
+    </div>
+
     <!-- Instructions -->
-    <div class="instructions">
-        Website under construction
+    <div class="instructions" id="instructions">
+        Click to enter.
+        Webpage still undergoing growth.
     </div>
 
     <!-- Loading indicator -->
     <div class="loading" id="loading">Growing network...</div>
-
-    <!-- Debug controls (press 'D' to toggle) -->
-    <div class="debug-controls" id="debugControls">
-        <div>Debug Controls</div>
-        <button onclick="regenerateMyceliumNetwork()">Regenerate</button>
-        <button onclick="toggleMyceliumWireframe()">Wireframe</button>
-        <button onclick="changeMyceliumColorScheme()">Color</button>
-        <button onclick="openAdvanced3DModal()" style="background: #ff6b4a;">Test Modal</button>
-        <div class="control-row">
-            <label>Branches:</label>
-            <input type="range" id="branchCount" min="3" max="12" value="8">
-            <span id="branchValue">8</span>
-        </div>
-    </div>
 </div>
+
+<script>
+// Page state management
+let isHomeMode = false;
+let transformationInProgress = false;
+let hasBeenTransformed = false;
+
+// Predetermined button positions (viewport percentages)
+const BUTTON_POSITIONS = {
+    about: { x: 50, y: 15 },     // Top center
+    mapping: { x: 15, y: 80 },   // Bottom left  
+    nervous: { x: 85, y: 80 }    // Bottom right
+};
+
+function handleButtonClick() {
+    console.log('Button clicked, isHomeMode:', isHomeMode, 'transformationInProgress:', transformationInProgress);
+    
+    if (transformationInProgress) {
+        console.log('Transformation already in progress, ignoring click');
+        return;
+    }
+    
+    if (!isHomeMode && !hasBeenTransformed) {
+        console.log('Transforming via button click');
+        transformToHomeMode();
+    } else if (isHomeMode) {
+        // In home mode, regenerate network
+        console.log('Regenerating network to buttons');
+        if (typeof growNetworkToButtons === 'function') {
+            growNetworkToButtons();
+        }
+    }
+}
+
+function transformToHomeMode() {
+    if (transformationInProgress || hasBeenTransformed) return;
+    
+    console.log('Starting transformation to home mode...');
+    transformationInProgress = true;
+    isHomeMode = true;
+    hasBeenTransformed = true;
+    window.isHomeMode = true;
+    
+    // Update layout class
+    const layout = document.getElementById('mainLayout');
+    layout.classList.remove('splash-layout');
+    layout.classList.add('home-layout');
+    
+    // Hide instructions immediately
+    const instructions = document.getElementById('instructions');
+    if (instructions) {
+        instructions.style.transition = 'opacity 0.3s ease';
+        instructions.style.opacity = '0';
+        instructions.style.pointerEvents = 'none';
+    }
+    
+    // Start network growth immediately to predetermined positions
+    setTimeout(() => {
+        console.log('Starting network growth to buttons...');
+        if (typeof growNetworkToButtons === 'function') {
+            growNetworkToButtons();
+        }
+    }, 100);
+    
+    // Show navigation buttons with staggered timing
+    setTimeout(() => {
+        showNavigationElements();
+    }, 800); // Delay to let mycelium start growing first
+    
+    // Mark transformation complete
+    setTimeout(() => {
+        transformationInProgress = false;
+    }, 2000);
+}
+
+function showNavigationElements() {
+    console.log('Showing navigation elements...');
+    
+    const navContainer = document.getElementById('navButtonsContainer');
+    const artistLink = document.getElementById('artistResidencyLink');
+    
+    if (navContainer) {
+        navContainer.style.display = 'block';
+        navContainer.style.pointerEvents = 'auto';
+        
+        // Get individual buttons
+        const aboutButton = document.getElementById('aboutButton');
+        const mappingButton = document.getElementById('mappingButton');
+        const nervousButton = document.getElementById('nervousButton');
+        
+        // Animate buttons in with staggered timing
+        const buttons = [aboutButton, mappingButton, nervousButton];
+        const delays = [0, 200, 400]; // Staggered delays
+        
+        buttons.forEach((button, index) => {
+            if (button) {
+                // Reset initial state
+                button.style.opacity = '0';
+                button.style.transform = 'scale(0.8) translateY(20px)';
+                button.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                button.style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    button.style.opacity = '1';
+                    button.style.transform = 'scale(1) translateY(0)';
+                    button.style.pointerEvents = 'auto';
+                    console.log(`Button ${index + 1} animated in`);
+                }, delays[index]);
+            }
+        });
+    }
+    
+    if (artistLink) {
+        artistLink.style.display = 'block';
+        artistLink.style.opacity = '0';
+        artistLink.style.transform = 'translateY(20px)';
+        artistLink.style.transition = 'all 0.5s ease';
+        artistLink.style.pointerEvents = 'none';
+        
+        setTimeout(() => {
+            artistLink.style.opacity = '1';
+            artistLink.style.transform = 'translateY(0)';
+            artistLink.style.pointerEvents = 'auto';
+        }, 600);
+    }
+}
+
+function navigateToPage(url) {
+    console.log('Navigating to:', url);
+    document.body.style.transition = 'opacity 0.3s ease';
+    document.body.style.opacity = '0';
+    
+    setTimeout(() => {
+        window.location.href = url;
+    }, 200);
+}
+
+// Convert viewport percentage to screen coordinates
+function viewportToScreen(vpX, vpY) {
+    return {
+        x: (vpX / 100) * window.innerWidth,
+        y: (vpY / 100) * window.innerHeight
+    };
+}
+
+// Get predetermined target positions for mycelium growth
+function getTargetPositions() {
+    return [
+        viewportToScreen(BUTTON_POSITIONS.about.x, BUTTON_POSITIONS.about.y),
+        viewportToScreen(BUTTON_POSITIONS.mapping.x, BUTTON_POSITIONS.mapping.y),
+        viewportToScreen(BUTTON_POSITIONS.nervous.x, BUTTON_POSITIONS.nervous.y)
+    ];
+}
+
+// Prevent double-transformation on accidental clicks
+window.addEventListener('click', function(e) {
+    if (e.target === document.getElementById('centralButton')) {
+        e.stopPropagation();
+    }
+});
+</script>
 {{ end }}
 
 {{ define "scripts" }}
-<!-- Three.js Library -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- Clean 2D Network System (No conflicts!) -->
+{{ $js := resources.Get "js/network.js" }}
+<script src="{{ $js.Permalink }}"></script>
 {{ end }}

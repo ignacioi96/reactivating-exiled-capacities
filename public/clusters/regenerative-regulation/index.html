@@ -3,7 +3,7 @@
 <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Regenerative Regulation | Recovering Exiled Capacities</title>
+<title>Regenerative Regulation | reactivating exiled capacities</title>
 <meta name="description" content="">
 
 
@@ -19,9 +19,12 @@
 <meta name="theme-color" content="#f4efe5">
 
 
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+
 <meta property="og:type" content="website">
 <meta property="og:url" content="http://localhost:1313/clusters/regenerative-regulation/">
-<meta property="og:title" content="Regenerative Regulation | Recovering Exiled Capacities">
+<meta property="og:title" content="Regenerative Regulation | reactivating exiled capacities">
 <meta property="og:description" content="">
 
 <meta property="og:image" content="http://localhost:1313/images/og-mycelium.jpg">
@@ -30,7 +33,7 @@
 
 <meta property="twitter:card" content="summary_large_image">
 <meta property="twitter:url" content="http://localhost:1313/clusters/regenerative-regulation/">
-<meta property="twitter:title" content="Regenerative Regulation | Recovering Exiled Capacities">
+<meta property="twitter:title" content="Regenerative Regulation | reactivating exiled capacities">
 <meta property="twitter:description" content="">
 
 <meta property="twitter:image" content="http://localhost:1313/images/og-mycelium.jpg">
@@ -41,28 +44,33 @@
     
         
 <div class="floating-nav">
-    <div class="nav-toggle" onclick="toggleNavDropdown()">
-        <div class="nav-lines">
-            <div class="nav-line"></div>
-            <div class="nav-line"></div>
-            <div class="nav-line"></div>
-            <div class="nav-line"></div>
+    <button class="nav-toggle" onclick="toggleNavDropdown()" role="button" tabindex="0" aria-label="Open navigation menu" aria-expanded="false">
+        <div class="nav-core"></div>
+        <div class="nav-tendrils" aria-hidden="true">
+            <div class="nav-tendril"></div>
+            <div class="nav-tendril"></div>
+            <div class="nav-tendril"></div>
+            <div class="nav-tendril"></div>
+            <div class="nav-tendril"></div>
+            <div class="nav-tendril"></div>
+            <div class="nav-tendril"></div>
+            <div class="nav-tendril"></div>
         </div>
-    </div>
-    <div class="nav-dropdown" id="nav-dropdown">
-        <h3>Navigation</h3>
+    </button>
+    <div class="nav-dropdown" id="nav-dropdown" role="menu" aria-hidden="true">
+        <h3>navigation</h3>
         
-            <a href="/">Home</a>
+            <a href="/" role="menuitem">Home</a>
         
-            <a href="/about/">About the Inquiry</a>
+            <a href="/about/" role="menuitem">About the Inquiry</a>
         
-            <a href="/nervous-system/">The Nervous System as Relational Fabric</a>
+            <a href="/nervous-system/" role="menuitem">The Nervous System as Relational Fabric</a>
         
-            <a href="/mapping-capacities/">Mapping Exiled Capacities</a>
+            <a href="/mapping-capacities/" role="menuitem">Mapping Exiled Capacities</a>
         
-            <a href="/residency/">Artist Residency 2024</a>
+            <a href="/residency/" role="menuitem">Artist Residency 2024</a>
         
-            <a href="/contact/">Contact</a>
+            <a href="/contact/" role="menuitem">Contact</a>
         
     </div>
 </div>
@@ -70,19 +78,64 @@
 <script>
 
 function toggleNavDropdown() {
+    console.log('Nav toggle clicked');
     const dropdown = document.getElementById('nav-dropdown');
-    dropdown.classList.toggle('active');
+    const toggle = document.querySelector('.nav-toggle');
+    
+    if (dropdown && toggle) {
+        const isActive = dropdown.classList.contains('active');
+        
+        if (isActive) {
+            dropdown.classList.remove('active');
+            toggle.classList.remove('active');
+            toggle.setAttribute('aria-expanded', 'false');
+            dropdown.setAttribute('aria-hidden', 'true');
+        } else {
+            dropdown.classList.add('active');
+            toggle.classList.add('active');
+            toggle.setAttribute('aria-expanded', 'true');
+            dropdown.setAttribute('aria-hidden', 'false');
+        }
+    }
 }
 
 
 document.addEventListener('click', (e) => {
     const nav = document.querySelector('.floating-nav');
     const dropdown = document.getElementById('nav-dropdown');
+    
     if (nav && dropdown && !nav.contains(e.target)) {
         dropdown.classList.remove('active');
+        const toggle = document.querySelector('.nav-toggle');
+        if (toggle) {
+            toggle.classList.remove('active');
+            toggle.setAttribute('aria-expanded', 'false');
+            dropdown.setAttribute('aria-hidden', 'true');
+        }
     }
 });
+
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const dropdown = document.getElementById('nav-dropdown');
+        const toggle = document.querySelector('.nav-toggle');
+        
+        if (dropdown && dropdown.classList.contains('active')) {
+            dropdown.classList.remove('active');
+            if (toggle) {
+                toggle.classList.remove('active');
+                toggle.setAttribute('aria-expanded', 'false');
+                dropdown.setAttribute('aria-hidden', 'true');
+                toggle.focus();
+            }
+        }
+    }
+});
+
+console.log('Enhanced organic navigation loaded successfully');
 </script>
+    
     
     
     
@@ -105,13 +158,98 @@ document.addEventListener('click', (e) => {
                 <a href="/clusters/" class="back-link">← Back to Clusters</a>
             </div>
         
+
+        
+        
+        
+        
+        
+        
+        
+            
+            
+            
+        
+        
+        
+        <div class="inline-next-page">
+          <a href="http://localhost:1313/clusters/poly-rhythmic-knowing/" class="inline-next-link">
+            <div class="inline-next-content">
+              <span class="inline-next-label">next page:</span>
+              <span class="inline-next-title">Poly-Rhythmic Knowing</span>
+            </div>
+            <div class="inline-next-arrow-icon">
+              <svg class="organic-arrow-svg" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+                
+                <path class="organic-arrow-shaft" 
+                      d="M 8 20 Q 15 18 25 19 Q 35 20 45 19" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round"/>
+                
+                
+                <path class="organic-arrow-head-top" 
+                      d="M 37 13 Q 42 16 45 19 Q 47 20 49 21" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round"/>
+                
+                
+                <path class="organic-arrow-head-bottom" 
+                      d="M 37 26 Q 42 23 45 19 Q 47 18 49 17" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round"/>
+                
+                
+                <path class="organic-arrow-texture" 
+                      d="M 20 17 Q 22 19 24 18" 
+                      stroke-width="1" 
+                      opacity="0.4"
+                      stroke-linecap="round"/>
+                <path class="organic-arrow-texture" 
+                      d="M 30 21 Q 32 19 34 20" 
+                      stroke-width="1" 
+                      opacity="0.4"
+                      stroke-linecap="round"/>
+              </svg>
+            </div>
+          </a>
+        </div>
+        
     </div>
 </div>
+
 
     
     
     
+    <div class="background-container" style="--bg-image: url('/images/soil-background.jpg');">
+        <div class="background-overlay"></div>
+    </div>
     
     
+    
+    
+    
+    
+        
+        
+            <script src="http://localhost:1313/js/background-mycelium.js" defer></script>
+        
+    
+    
+    
+    
+    
+    
+    <script>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", user => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
+            });
+          }
+        });
+      }
+    </script>
 </body>
 </html>

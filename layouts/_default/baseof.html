@@ -9,7 +9,25 @@
         {{ partial "header.html" . }}
     {{ end }}
     
+    <!-- Main content block -->
     {{ block "main" . }}{{ end }}
+    
+    <!-- Background image and overlay for all pages -->
+    {{ $backgroundImage := .Site.Params.backgroundImage | default "/images/soil-background.jpg" | relURL }}
+    <div class="background-container" style="--bg-image: url('{{ $backgroundImage }}');">
+        <div class="background-overlay"></div>
+    </div>
+    
+    <!-- Scripts at end of body -->
+    {{ block "scripts" . }}{{ end }}
+    
+    <!-- Only load background mycelium on content pages -->
+    {{ if not (or (.IsHome) (eq .Layout "splash")) }}
+        {{ $bgMyceliumJS := resources.Get "js/background-mycelium.js" }}
+        {{ if $bgMyceliumJS }}
+            <script src="{{ $bgMyceliumJS.Permalink }}" defer></script>
+        {{ end }}
+    {{ end }}
     
     <!-- Only load 3D scripts on home page -->
     {{ if .IsHome }}
@@ -19,21 +37,24 @@
             {{ $myceliumMinified := $mycelium | resources.Minify }}
             <script src="{{ $myceliumMinified.Permalink }}"></script>
         {{ end }}
+        {{ $network := resources.Get "js/network.js" }}
+        {{ if $network }}
+            {{ $networkMinified := $network | resources.Minify }}
+            <script src="{{ $networkMinified.Permalink }}"></script>
+        {{ end }}
     {{ end }}
     
-    {{ block "scripts" . }}{{ end }}
-</body>
-</html>
-
-<!-- Netlify Identity redirect handling -->
-<script>
-  if (window.netlifyIdentity) {
-    window.netlifyIdentity.on("init", user => {
-      if (!user) {
-        window.netlifyIdentity.on("login", () => {
-          document.location.href = "/admin/";
+    <!-- Netlify Identity redirect handling -->
+    <script>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", user => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
+            });
+          }
         });
       }
-    });
-  }
-</script>
+    </script>
+</body>
+</html>

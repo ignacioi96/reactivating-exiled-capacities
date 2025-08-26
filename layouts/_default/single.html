@@ -18,6 +18,69 @@
                 <a href="{{ "/" | relURL }}{{ .Section }}/" class="back-link">← Back to {{ .Section | humanize }}</a>
             </div>
         {{ end }}
+
+        <!-- Inline next page link - uses custom frontmatter first, falls back to 
+            extInSection -->
+        {{ $nextPage := false }}
+        {{ $nextTitle := "" }}
+        {{ $nextURL := "" }}
+        
+        <!-- Priority 1: Custom next_page from frontmatter -->
+        {{ if .Params.next_page }}
+            {{ $nextPage = true }}
+            {{ $nextTitle = .Params.next_page.title }}
+            {{ $nextURL = .Params.next_page.url }}
+        <!-- Priority 2: Hugo's automatic NextInSection -->
+        {{ else if .NextInSection }}
+            {{ $nextPage = true }}
+            {{ $nextTitle = .NextInSection.Title }}
+            {{ $nextURL = .NextInSection.Permalink }}
+        {{ end }}
+        
+        {{ if $nextPage }}
+        <div class="inline-next-page">
+          <a href="{{ $nextURL }}" class="inline-next-link">
+            <div class="inline-next-content">
+              <span class="inline-next-label">next page:</span>
+              <span class="inline-next-title">{{ $nextTitle }}</span>
+            </div>
+            <div class="inline-next-arrow-icon">
+              <svg class="organic-arrow-svg" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+                <!-- Main arrow shaft with organic curve -->
+                <path class="organic-arrow-shaft" 
+                      d="M 8 20 Q 15 18 25 19 Q 35 20 45 19" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round"/>
+                
+                <!-- Top arrowhead barb with organic curve -->
+                <path class="organic-arrow-head-top" 
+                      d="M 37 13 Q 42 16 45 19 Q 47 20 49 21" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round"/>
+                
+                <!-- Bottom arrowhead barb with organic curve -->
+                <path class="organic-arrow-head-bottom" 
+                      d="M 37 26 Q 42 23 45 19 Q 47 18 49 17" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round"/>
+                
+                <!-- Optional: Add some organic texture lines -->
+                <path class="organic-arrow-texture" 
+                      d="M 20 17 Q 22 19 24 18" 
+                      stroke-width="1" 
+                      opacity="0.4"
+                      stroke-linecap="round"/>
+                <path class="organic-arrow-texture" 
+                      d="M 30 21 Q 32 19 34 20" 
+                      stroke-width="1" 
+                      opacity="0.4"
+                      stroke-linecap="round"/>
+              </svg>
+            </div>
+          </a>
+        </div>
+        {{ end }}
     </div>
 </div>
+
 {{ end }}
