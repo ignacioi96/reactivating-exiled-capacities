@@ -505,7 +505,7 @@ function growNetworkToButtons() {
             Math.pow(target.y - buttonCenter.y, 2)
         );
         const names = ['about', 'mapping', 'nervous'];
-        console.log(`Distance to ${names[i]}: ${distance.toFixed(1)}px`);
+        console.log(`Distance to the "${names[i]}" button: ${distance.toFixed(1)}px`);
     });
     
     organicNetwork.generateToTargets(buttonCenter, targets);
