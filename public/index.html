@@ -101,13 +101,6 @@ let isHomeMode = false;
 let transformationInProgress = false;
 let hasBeenTransformed = false;
 
-
-const BUTTON_POSITIONS = {
-    about: { x: 50, y: 15 },     
-    mapping: { x: 15, y: 80 },   
-    nervous: { x: 85, y: 80 }    
-};
-
 function handleButtonClick() {
     console.log('Button clicked, isHomeMode:', isHomeMode, 'transformationInProgress:', transformationInProgress);
     
@@ -123,12 +116,12 @@ function handleButtonClick() {
         
         console.log('Regenerating network to buttons');
         if (typeof growNetworkToButtons === 'function') {
-            growNetworkToButtons();
+            growNetworkToButtons(); 
         }
     }
 }
 
-function transformToHomeMode() {
+async function transformToHomeMode() {
     if (transformationInProgress || hasBeenTransformed) return;
     
     console.log('Starting transformation to home mode...');
@@ -151,17 +144,24 @@ function transformToHomeMode() {
     }
     
     
-    setTimeout(() => {
-        console.log('Starting network growth to buttons...');
+    positionButtonsForMeasurement();
+    
+    
+    setTimeout(async () => {
+        console.log('Starting dynamic network growth...');
         if (typeof growNetworkToButtons === 'function') {
-            growNetworkToButtons();
+            try {
+                await growNetworkToButtons();
+            } catch (error) {
+                console.error('Error in network growth:', error);
+            }
         }
     }, 100);
     
     
     setTimeout(() => {
         showNavigationElements();
-    }, 800); 
+    }, 600); 
     
     
     setTimeout(() => {
@@ -169,14 +169,35 @@ function transformToHomeMode() {
     }, 2000);
 }
 
+function positionButtonsForMeasurement() {
+    console.log('Positioning buttons for measurement...');
+    
+    const navContainer = document.getElementById('navButtonsContainer');
+    if (navContainer) {
+        navContainer.style.display = 'block';
+        navContainer.style.pointerEvents = 'none'; 
+        
+        
+        const buttons = ['aboutButton', 'mappingButton', 'nervousButton'];
+        buttons.forEach(buttonId => {
+            const button = document.getElementById(buttonId);
+            if (button) {
+                button.style.opacity = '0';
+                button.style.transform = button.style.transform || 'scale(0.8)';
+                button.style.visibility = 'visible';
+                button.style.pointerEvents = 'none';
+            }
+        });
+    }
+}
+
 function showNavigationElements() {
-    console.log('Showing navigation elements...');
+    console.log('Animating navigation elements into view...');
     
     const navContainer = document.getElementById('navButtonsContainer');
     const artistLink = document.getElementById('artistResidencyLink');
     
     if (navContainer) {
-        navContainer.style.display = 'block';
         navContainer.style.pointerEvents = 'auto';
         
         
@@ -191,14 +212,14 @@ function showNavigationElements() {
         buttons.forEach((button, index) => {
             if (button) {
                 
-                button.style.opacity = '0';
-                
                 button.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-                button.style.pointerEvents = 'none';
                 
                 setTimeout(() => {
                     button.style.opacity = '1';
                     
+                    const currentTransform = button.style.transform || '';
+                    const newTransform = currentTransform.replace(/translateY\([^)]*\)/g, '').trim();
+                    button.style.transform = newTransform || 'scale(1)';
                     button.style.pointerEvents = 'auto';
                     console.log(`Button ${index + 1} animated in`);
                 }, delays[index]);
@@ -232,28 +253,21 @@ function navigateToPage(url) {
 }
 
 
-function viewportToScreen(vpX, vpY) {
-    return {
-        x: (vpX / 100) * window.innerWidth,
-        y: (vpY / 100) * window.innerHeight
-    };
-}
-
-
-function getTargetPositions() {
-    return [
-        viewportToScreen(BUTTON_POSITIONS.about.x, BUTTON_POSITIONS.about.y),
-        viewportToScreen(BUTTON_POSITIONS.mapping.x, BUTTON_POSITIONS.mapping.y),
-        viewportToScreen(BUTTON_POSITIONS.nervous.x, BUTTON_POSITIONS.nervous.y)
-    ];
-}
-
-
 window.addEventListener('click', function(e) {
     if (e.target === document.getElementById('centralButton')) {
         e.stopPropagation();
     }
 });
+
+
+window.debugButtonPositions = function() {
+    if (window.buttonPositionDebug) {
+        console.table(window.buttonPositionDebug.positions);
+        return window.buttonPositionDebug;
+    } else {
+        console.log('No position debug data available yet. Try after network has grown.');
+    }
+};
 </script>
 
     

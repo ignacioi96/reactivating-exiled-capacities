@@ -66,10 +66,6 @@
   --button-backdrop-filter: blur(10px);
   --button-shadow-base: 0 8px 32px var(--color-shadow);
   --button-shadow-hover: 0 12px 40px var(--color-shadow-hover);
-  
-  /* Navigation sizing */
-  --nav-toggle-size: 64px;
-  --nav-core-size: 24px;
 }
 
 /* ============================================
@@ -308,19 +304,19 @@ p {
 .nav-button-about {
   top: 10vh;
   left: 50vw;
-  transform: translateX(-50%) scale(0.8) translateY(20px);
+  transform: translateX(-50%) scale(0.8) translateY(-30px);
 }
 
 .nav-button-mapping {
   top: 75vh;
   left: 12vw;
-  transform: scale(0.8) translateY(20px);
+  transform: scale(0.8) translateY(-30px);
 }
 
 .nav-button-nervous {
   top: 75vh;
   left: 88vw;
-  transform: translateX(-80%) scale(0.8) translateY(20px);
+  transform: translateX(-80%) scale(0.8) translateY(-30px);
 }
 
 /* Generic Button Styles */
@@ -364,7 +360,7 @@ p {
 }
 
 /* ============================================
-   ORGANIC NAVIGATION SYSTEM - SIMPLIFIED
+   SIMPLIFIED NAVIGATION SYSTEM
    ============================================ */
 
 .nav-buttons-container {
@@ -387,217 +383,45 @@ p {
   z-index: var(--z-modal-advanced);
 }
 
-/* Organic Navigation Toggle - Single Definition */
+/* Simplified Navigation Toggle */
 .nav-toggle {
-  width: var(--nav-toggle-size);
-  height: var(--nav-toggle-size);
-  border-radius: 50%;
-  background: transparent;
-  border: none;
+  padding: 12px 20px;
+  background: var(--color-background-alt);
+  border: 2px solid var(--color-accent);
+  color: var(--color-accent);
+  border-radius: 25px;
+  font-family: var(--font-primary);
+  font-style: italic;
+  font-size: 14px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--transition-organic);
-  position: relative;
-  overflow: visible;
-  padding: 0;
+  transition: var(--transition-base);
+  backdrop-filter: var(--button-backdrop-filter);
+  box-shadow: 0 4px 20px var(--color-shadow);
 }
 
-/* Central core */
-.nav-core {
-  position: absolute;
-  width: var(--nav-core-size);
-  height: var(--nav-core-size);
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 35% 30%,
-    rgba(244, 239, 229, 0.95) 0%,
-    rgba(232, 221, 208, 0.9) 25%,
-    rgba(212, 199, 176, 0.85) 50%,
-    rgba(199, 178, 153, 0.8) 75%,
-    rgba(184, 160, 130, 0.75) 100%
-  );
-  box-shadow: 
-    0 0 0 1px rgba(139, 115, 85, 0.1),
-    0 0 0 3px rgba(139, 115, 85, 0.05),
-    0 2px 8px rgba(139, 115, 85, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    inset 0 -1px 0 rgba(139, 115, 85, 0.1);
-  transition: var(--transition-organic);
-  z-index: 3;
+.nav-toggle:hover {
+  background: var(--color-background);
+  color: var(--color-text);
+  border-color: var(--color-text);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--color-shadow-hover);
 }
-
-.nav-core::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 40% 35%,
-    rgba(255, 255, 255, 0.3) 0%,
-    rgba(212, 199, 176, 0.2) 50%,
-    transparent 70%
-  );
-  opacity: 0.8;
-  transition: var(--transition-organic);
-}
-
-/* Organic tendrils - Consolidated from old nav-lines */
-.nav-tendrils {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.nav-tendril {
-  position: absolute;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(212, 199, 176, 0.3) 15%,
-    rgba(199, 178, 153, 0.5) 30%,
-    rgba(184, 160, 130, 0.7) 50%,
-    rgba(199, 178, 153, 0.5) 70%,
-    rgba(212, 199, 176, 0.3) 85%,
-    transparent 100%
-  );
-  border-radius: 3px;
-  opacity: 0.6;
-  transition: var(--transition-organic);
-  transform-origin: 15% center;
-  top: 50%;
-  left: 50%;
-  height: 1.5px;
-  filter: blur(0.3px);
-}
-
-/* Individual tendril positioning with organic spacing */
-.nav-tendril:nth-child(1) {
-  width: 24px;
-  transform: translate(-15%, -50%) rotate(-30deg);
-  animation: tendrilFlow1 8s ease-in-out infinite;
-}
-
-.nav-tendril:nth-child(2) {
-  width: 28px;
-  height: 1.2px;
-  transform: translate(-15%, -50%) rotate(25deg);
-  animation: tendrilFlow2 9s ease-in-out infinite 1s;
-}
-
-.nav-tendril:nth-child(3) {
-  width: 22px;
-  height: 1.8px;
-  transform: translate(-15%, -50%) rotate(-85deg);
-  animation: tendrilFlow3 7s ease-in-out infinite 2s;
-}
-
-.nav-tendril:nth-child(4) {
-  width: 26px;
-  height: 1.3px;
-  transform: translate(-15%, -50%) rotate(70deg);
-  animation: tendrilFlow4 10s ease-in-out infinite 0.5s;
-}
-
-.nav-tendril:nth-child(5) {
-  width: 20px;
-  height: 1.4px;
-  transform: translate(-15%, -50%) rotate(-125deg);
-  animation: tendrilFlow5 8s ease-in-out infinite 2.5s;
-}
-
-.nav-tendril:nth-child(6) {
-  width: 25px;
-  height: 1.6px;
-  transform: translate(-15%, -50%) rotate(120deg);
-  animation: tendrilFlow6 9s ease-in-out infinite 1.5s;
-}
-
-.nav-tendril:nth-child(7) {
-  width: 18px;
-  height: 1.1px;
-  transform: translate(-15%, -50%) rotate(160deg);
-  animation: tendrilFlow7 11s ease-in-out infinite 3s;
-}
-
-.nav-tendril:nth-child(8) {
-  width: 23px;
-  height: 1.7px;
-  transform: translate(-15%, -50%) rotate(-160deg);
-  animation: tendrilFlow8 7s ease-in-out infinite 0.8s;
-}
-
-/* Hover and active states - Single definition */
-.nav-toggle:hover .nav-core {
-  transform: scale(1.15);
-  box-shadow: 
-    0 0 0 2px rgba(139, 115, 85, 0.15),
-    0 0 0 6px rgba(139, 115, 85, 0.08),
-    0 0 0 12px rgba(139, 115, 85, 0.04),
-    0 4px 16px rgba(139, 115, 85, 0.15),
-    inset 0 2px 0 rgba(255, 255, 255, 0.25),
-    inset 0 -2px 0 rgba(139, 115, 85, 0.15);
-}
-
-.nav-toggle:hover .nav-core::before {
-  transform: translate(-50%, -50%) scale(1.2);
-  opacity: 1;
-}
-
-.nav-toggle:hover .nav-tendril {
-  opacity: 0.9;
-  filter: blur(0px);
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(184, 160, 130, 0.4) 10%,
-    rgba(164, 144, 115, 0.7) 25%,
-    rgba(139, 115, 85, 0.9) 50%,
-    rgba(164, 144, 115, 0.7) 75%,
-    rgba(184, 160, 130, 0.4) 90%,
-    transparent 100%
-  );
-}
-
-.nav-toggle:hover .nav-tendril:nth-child(1) { width: 32px; height: 2px; }
-.nav-toggle:hover .nav-tendril:nth-child(2) { width: 36px; height: 1.6px; }
-.nav-toggle:hover .nav-tendril:nth-child(3) { width: 28px; height: 2.2px; }
-.nav-toggle:hover .nav-tendril:nth-child(4) { width: 34px; height: 1.8px; }
-.nav-toggle:hover .nav-tendril:nth-child(5) { width: 26px; height: 1.9px; }
-.nav-toggle:hover .nav-tendril:nth-child(6) { width: 31px; height: 2.1px; }
-.nav-toggle:hover .nav-tendril:nth-child(7) { width: 24px; height: 1.5px; }
-.nav-toggle:hover .nav-tendril:nth-child(8) { width: 29px; height: 2.3px; }
 
 .nav-toggle:active,
 .nav-toggle.active {
   transform: scale(0.95);
+  background: rgba(139, 115, 85, 0.1);
 }
 
-.nav-toggle:active .nav-core,
-.nav-toggle.active .nav-core {
-  transform: scale(1.25);
-  background: radial-gradient(
-    circle at 35% 30%,
-    rgba(244, 239, 229, 1) 0%,
-    rgba(212, 199, 176, 0.95) 30%,
-    rgba(184, 160, 130, 0.9) 70%,
-    rgba(139, 115, 85, 0.85) 100%
-  );
+.nav-toggle:focus {
+  outline: 2px solid rgba(139, 115, 85, 0.5);
+  outline-offset: 2px;
 }
 
-/* Navigation dropdown - Single definition */
+/* Navigation dropdown */
 .nav-dropdown {
   position: absolute;
-  top: 75px;
+  top: 60px;
   right: 0;
   background: rgba(244, 239, 229, 0.98);
   border: 1px solid rgba(139, 115, 85, 0.2);
@@ -663,18 +487,18 @@ p {
 .nav-dropdown a::before {
   content: '';
   position: absolute;
-  left: 50%;
+  left: 20%;
   bottom: 0;
   width: 0;
   height: 1px;
   background: var(--color-text);
   transition: all 0.3s ease;
-  transform: translateX(-50%);
 }
 
 .nav-dropdown a:hover {
   color: var(--color-text); /* Better contrast on hover */
   transform: translateY(-1px);
+;
 }
 
 .nav-dropdown a:hover::before {
@@ -683,20 +507,6 @@ p {
 
 .nav-dropdown a:last-child {
   border-bottom: none;
-}
-
-.nav-toggle:focus {
-  outline: none;
-}
-
-.nav-toggle:focus .nav-core {
-  box-shadow: 
-    0 0 0 2px var(--color-accent),
-    0 0 0 4px rgba(139, 115, 85, 0.2),
-    0 0 0 6px rgba(139, 115, 85, 0.1),
-    0 4px 16px rgba(139, 115, 85, 0.15),
-    inset 0 2px 0 rgba(255, 255, 255, 0.25),
-    inset 0 -2px 0 rgba(139, 115, 85, 0.15);
 }
 
 /* Artist residency link */
@@ -720,7 +530,7 @@ p {
 }
 
 .artist-residency-link:hover {
-  color: var(--color-background);
+  color: var(--color-text);
   transform: translateY(-2px);
 }
 
@@ -1092,116 +902,8 @@ body:not(.splash-layout):not(.home-layout) .page-container {
 }
 
 /* ============================================
-   ANIMATIONS & KEYFRAMES - CONSOLIDATED
+   ANIMATIONS & KEYFRAMES - SIMPLIFIED
    ============================================ */
-
-@keyframes tendrilFlow1 {
-  0%, 100% { 
-    transform: translate(-15%, -50%) rotate(-30deg) scale(1);
-    opacity: 0.6;
-  }
-  33% { 
-    transform: translate(-15%, -50%) rotate(-25deg) scale(1.05);
-    opacity: 0.8;
-  }
-  66% { 
-    transform: translate(-15%, -50%) rotate(-35deg) scale(0.95);
-    opacity: 0.5;
-  }
-}
-
-@keyframes tendrilFlow2 {
-  0%, 100% { 
-    transform: translate(-15%, -50%) rotate(25deg) scale(1);
-    opacity: 0.6;
-  }
-  40% { 
-    transform: translate(-15%, -50%) rotate(30deg) scale(1.08);
-    opacity: 0.75;
-  }
-  80% { 
-    transform: translate(-15%, -50%) rotate(20deg) scale(0.92);
-    opacity: 0.55;
-  }
-}
-
-@keyframes tendrilFlow3 {
-  0%, 100% { 
-    transform: translate(-15%, -50%) rotate(-85deg) scale(1);
-    opacity: 0.5;
-  }
-  50% { 
-    transform: translate(-15%, -50%) rotate(-80deg) scale(1.1);
-    opacity: 0.7;
-  }
-}
-
-@keyframes tendrilFlow4 {
-  0%, 100% { 
-    transform: translate(-15%, -50%) rotate(70deg) scale(1);
-    opacity: 0.6;
-  }
-  25% { 
-    transform: translate(-15%, -50%) rotate(75deg) scale(1.03);
-    opacity: 0.8;
-  }
-  75% { 
-    transform: translate(-15%, -50%) rotate(65deg) scale(0.97);
-    opacity: 0.4;
-  }
-}
-
-@keyframes tendrilFlow5 {
-  0%, 100% { 
-    transform: translate(-15%, -50%) rotate(-125deg) scale(1);
-    opacity: 0.5;
-  }
-  60% { 
-    transform: translate(-15%, -50%) rotate(-120deg) scale(1.06);
-    opacity: 0.7;
-  }
-}
-
-@keyframes tendrilFlow6 {
-  0%, 100% { 
-    transform: translate(-15%, -50%) rotate(120deg) scale(1);
-    opacity: 0.6;
-  }
-  35% { 
-    transform: translate(-15%, -50%) rotate(125deg) scale(1.04);
-    opacity: 0.75;
-  }
-  70% { 
-    transform: translate(-15%, -50%) rotate(115deg) scale(0.96);
-    opacity: 0.45;
-  }
-}
-
-@keyframes tendrilFlow7 {
-  0%, 100% { 
-    transform: translate(-15%, -50%) rotate(160deg) scale(1);
-    opacity: 0.4;
-  }
-  45% { 
-    transform: translate(-15%, -50%) rotate(165deg) scale(1.07);
-    opacity: 0.65;
-  }
-}
-
-@keyframes tendrilFlow8 {
-  0%, 100% { 
-    transform: translate(-15%, -50%) rotate(-160deg) scale(1);
-    opacity: 0.5;
-  }
-  30% { 
-    transform: translate(-15%, -50%) rotate(-155deg) scale(1.05);
-    opacity: 0.7;
-  }
-  85% { 
-    transform: translate(-15%, -50%) rotate(-165deg) scale(0.95);
-    opacity: 0.4;
-  }
-}
 
 @keyframes organicBreathing {
   0%, 100% {
@@ -1330,11 +1032,6 @@ body:not(.splash-layout):not(.home-layout) .page-container {
    ============================================ */
 
 @media (max-width: 1024px) {
-  :root {
-    --nav-toggle-size: 60px;
-    --nav-core-size: 22px;
-  }
-  
   .central-button {
     padding: 22px 45px;
     font-size: 20px;
@@ -1368,8 +1065,6 @@ body:not(.splash-layout):not(.home-layout) .page-container {
     --spacing-xl: 1.5rem;
     --spacing-2xl: 2rem;
     --font-size-base: 1rem;
-    --nav-toggle-size: 56px;
-    --nav-core-size: 20px;
   }
 
   .background-container {
@@ -1409,19 +1104,19 @@ body:not(.splash-layout):not(.home-layout) .page-container {
   .nav-button-about {
     top: 12vh;
     left: 50vw;
-    transform: translateX(-50%) scale(0.8) translateY(20px);
+    transform: translateX(-50%) scale(0.8) translateY(-30px);
   }
   
   .nav-button-mapping {
     top: 76vh;
     left: 20vw;
-    transform: translateX(-50%) scale(0.8) translateY(20px);
+    transform: translateX(-50%) scale(0.8) translateY(-30px);
   }
   
   .nav-button-nervous {
     top: 76vh;
     left: 80vw;
-    transform: translateX(-50%) scale(0.8) translateY(20px);
+    transform: translateX(-50%) scale(0.8) translateY(-30px);
   }
   
   .instructions {
@@ -1451,19 +1146,10 @@ body:not(.splash-layout):not(.home-layout) .page-container {
     right: 25px;
   }
 
-  .nav-tendril:nth-child(1) { width: 24px; }
-  .nav-tendril:nth-child(2) { width: 28px; }
-  .nav-tendril:nth-child(3) { width: 22px; }
-  .nav-tendril:nth-child(4) { width: 26px; }
-  .nav-tendril:nth-child(5) { width: 20px; }
-  .nav-tendril:nth-child(6) { width: 24px; }
-  
-  .nav-toggle:hover .nav-tendril:nth-child(1) { width: 30px; }
-  .nav-toggle:hover .nav-tendril:nth-child(2) { width: 34px; }
-  .nav-toggle:hover .nav-tendril:nth-child(3) { width: 28px; }
-  .nav-toggle:hover .nav-tendril:nth-child(4) { width: 32px; }
-  .nav-toggle:hover .nav-tendril:nth-child(5) { width: 26px; }
-  .nav-toggle:hover .nav-tendril:nth-child(6) { width: 30px; }
+  .nav-toggle {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
 
   .inline-next-link {
     min-width: 180px;
@@ -1528,8 +1214,6 @@ body:not(.splash-layout):not(.home-layout) .page-container {
     --spacing-lg: 1rem;
     --spacing-xl: 1.25rem;
     --font-size-base: 0.95rem;
-    --nav-toggle-size: 52px;
-    --nav-core-size: 18px;
   }
 
   .central-button {
@@ -1555,19 +1239,24 @@ body:not(.splash-layout):not(.home-layout) .page-container {
   .nav-button-about {
     top: 20vh;
     left: 50vw;
-    transform: translateX(-50%) scale(0.8) translateY(20px);
+    transform: translateX(-50%) scale(0.8) translateY(-30px);
   }
   
   .nav-button-mapping {
     top: 78vh;
     left: 30vw;
-    transform: translateX(-50%) scale(0.8) translateY(20px);
+    transform: translateX(-50%) scale(0.8) translateY(-30px);
   }
   
   .nav-button-nervous {
     top: 78vh;
     left: 70vw;
-    transform: translateX(-50%) scale(0.8) translateY(20px);
+    transform: translateX(-50%) scale(0.8) translateY(-30px);
+  }
+
+  .nav-toggle {
+    padding: 8px 14px;
+    font-size: 12px;
   }
 
   .inline-next-page {
@@ -1599,12 +1288,6 @@ body:not(.splash-layout):not(.home-layout) .page-container {
     width: 40px;
     height: 24px;
     margin-top: -2px;
-  }
-
-  /* Simplified tendrils on very small screens */
-  .nav-tendril:nth-child(7),
-  .nav-tendril:nth-child(8) {
-    display: none;
   }
 
   h1 {
@@ -1646,19 +1329,19 @@ body:not(.splash-layout):not(.home-layout) .page-container {
   .nav-button-about {
     top: 25vh;
     left: 50vw;
-    transform: translateX(-50%) scale(0.8) translateY(20px);
+    transform: translateX(-50%) scale(0.8) translateY(-30px);
   }
   
   .nav-button-mapping {
     top: 75vh;
     left: 30vw;
-    transform: translateX(-50%) scale(0.8) translateY(20px);
+    transform: translateX(-50%) scale(0.8) translateY(-30px);
   }
   
   .nav-button-nervous {
     top: 75vh;
     left: 70vw;
-    transform: translateX(-50%) scale(0.8) translateY(20px);
+    transform: translateX(-50%) scale(0.8) translateY(-30px);
   }
   
   .artist-residency-link {
@@ -1674,6 +1357,11 @@ body:not(.splash-layout):not(.home-layout) .page-container {
     font-size: 11px;
     padding: 8px 12px;
     bottom: 15px;
+  }
+
+  .nav-toggle {
+    padding: 6px 12px;
+    font-size: 11px;
   }
 
   body:not(.splash-layout):not(.home-layout) .page-container {
@@ -1701,7 +1389,8 @@ body:not(.splash-layout):not(.home-layout) .page-container {
   .nav-button,
   .central-button,
   .cluster-btn,
-  .inline-next-link {
+  .inline-next-link,
+  .nav-toggle {
     min-height: 44px;
   }
   
@@ -1721,10 +1410,15 @@ body:not(.splash-layout):not(.home-layout) .page-container {
     padding: 18px 24px;
   }
   
+  .nav-toggle {
+    padding: 14px 20px;
+  }
+  
   .nav-button:hover,
   .central-button:hover,
   .cluster-btn:hover,
-  .inline-next-link:hover {
+  .inline-next-link:hover,
+  .nav-toggle:hover {
     transform: none;
   }
   
@@ -1735,6 +1429,11 @@ body:not(.splash-layout):not(.home-layout) .page-container {
   
   .central-button:active {
     transform: scale(0.98);
+  }
+
+  .nav-toggle:active {
+    transform: scale(0.95);
+    background: rgba(139, 115, 85, 0.15);
   }
 
   .inline-next-link:active {
@@ -1800,7 +1499,8 @@ body:not(.splash-layout):not(.home-layout) .page-container {
 
   .inline-next-link,
   .central-button,
-  .nav-button {
+  .nav-button,
+  .nav-toggle {
     border-width: 2px;
   }
 }
@@ -1813,36 +1513,6 @@ body:not(.splash-layout):not(.home-layout) .page-container {
     --color-text: #f4efe5;
     --color-text-light: rgba(244, 239, 229, 0.95);
     --color-background-overlay: rgba(26, 26, 26, 0.15);
-  }
-
-  .nav-core {
-    background: radial-gradient(
-      circle at 35% 30%,
-      rgba(42, 37, 29, 0.95) 0%,
-      rgba(61, 53, 41, 0.9) 25%,
-      rgba(74, 63, 50, 0.85) 50%,
-      rgba(87, 73, 59, 0.8) 75%,
-      rgba(100, 96, 68, 0.75) 100%
-    );
-    box-shadow: 
-      0 0 0 1px rgba(100, 96, 68, 0.2),
-      0 0 0 3px rgba(87, 73, 59, 0.1),
-      0 2px 8px rgba(42, 37, 29, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1),
-      inset 0 -1px 0 rgba(42, 37, 29, 0.2);
-  }
-  
-  .nav-tendril {
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(100, 96, 68, 0.3) 15%,
-      rgba(87, 73, 59, 0.5) 30%,
-      rgba(74, 63, 50, 0.7) 50%,
-      rgba(87, 73, 59, 0.5) 70%,
-      rgba(100, 96, 68, 0.3) 85%,
-      transparent 100%
-    );
   }
   
   .nav-dropdown {
@@ -1886,17 +1556,11 @@ body:not(.splash-layout):not(.home-layout) .page-container {
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-  .nav-tendril {
-    animation: none !important;
-  }
-  
   .organic-arrow-svg {
     animation: none !important;
   }
   
   .nav-toggle,
-  .nav-core,
-  .nav-tendril,
   .nav-dropdown,
   .organic-arrow-shaft,
   .organic-arrow-head-top,

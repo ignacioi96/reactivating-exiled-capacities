@@ -54,13 +54,6 @@ let isHomeMode = false;
 let transformationInProgress = false;
 let hasBeenTransformed = false;
 
-// Predetermined button positions (viewport percentages)
-const BUTTON_POSITIONS = {
-    about: { x: 50, y: 15 },     // Top center
-    mapping: { x: 15, y: 80 },   // Bottom left  
-    nervous: { x: 85, y: 80 }    // Bottom right
-};
-
 function handleButtonClick() {
     console.log('Button clicked, isHomeMode:', isHomeMode, 'transformationInProgress:', transformationInProgress);
     
@@ -73,15 +66,15 @@ function handleButtonClick() {
         console.log('Transforming via button click');
         transformToHomeMode();
     } else if (isHomeMode) {
-        // In home mode, regenerate network
+        // In home mode, regenerate network with dynamic targeting
         console.log('Regenerating network to buttons');
         if (typeof growNetworkToButtons === 'function') {
-            growNetworkToButtons();
+            growNetworkToButtons(); // Now async, handles its own timing
         }
     }
 }
 
-function transformToHomeMode() {
+async function transformToHomeMode() {
     if (transformationInProgress || hasBeenTransformed) return;
     
     console.log('Starting transformation to home mode...');
@@ -103,18 +96,25 @@ function transformToHomeMode() {
         instructions.style.pointerEvents = 'none';
     }
     
-    // Start network growth immediately to predetermined positions
-    setTimeout(() => {
-        console.log('Starting network growth to buttons...');
+    // Position buttons invisibly first for measurement
+    positionButtonsForMeasurement();
+    
+    // Start dynamic network growth - it will handle timing internally
+    setTimeout(async () => {
+        console.log('Starting dynamic network growth...');
         if (typeof growNetworkToButtons === 'function') {
-            growNetworkToButtons();
+            try {
+                await growNetworkToButtons();
+            } catch (error) {
+                console.error('Error in network growth:', error);
+            }
         }
     }, 100);
     
     // Show navigation buttons with staggered timing
     setTimeout(() => {
         showNavigationElements();
-    }, 800); // Delay to let mycelium start growing first
+    }, 600); // Start buttons slightly before network completes
     
     // Mark transformation complete
     setTimeout(() => {
@@ -122,14 +122,35 @@ function transformToHomeMode() {
     }, 2000);
 }
 
+function positionButtonsForMeasurement() {
+    console.log('Positioning buttons for measurement...');
+    
+    const navContainer = document.getElementById('navButtonsContainer');
+    if (navContainer) {
+        navContainer.style.display = 'block';
+        navContainer.style.pointerEvents = 'none'; // Keep non-interactive during measurement
+        
+        // Position buttons invisibly at their final locations
+        const buttons = ['aboutButton', 'mappingButton', 'nervousButton'];
+        buttons.forEach(buttonId => {
+            const button = document.getElementById(buttonId);
+            if (button) {
+                button.style.opacity = '0';
+                button.style.transform = button.style.transform || 'scale(0.8)';
+                button.style.visibility = 'visible';
+                button.style.pointerEvents = 'none';
+            }
+        });
+    }
+}
+
 function showNavigationElements() {
-    console.log('Showing navigation elements...');
+    console.log('Animating navigation elements into view...');
     
     const navContainer = document.getElementById('navButtonsContainer');
     const artistLink = document.getElementById('artistResidencyLink');
     
     if (navContainer) {
-        navContainer.style.display = 'block';
         navContainer.style.pointerEvents = 'auto';
         
         // Get individual buttons
@@ -143,15 +164,15 @@ function showNavigationElements() {
         
         buttons.forEach((button, index) => {
             if (button) {
-                // Reset initial state
-                button.style.opacity = '0';
-                {{/*  button.style.transform = `scale(0.8) translateX(-${document.getElementById(button.id).offsetWidth}/2) -translateY(40px)`;  */}}
+                // Set transition for smooth animation
                 button.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-                button.style.pointerEvents = 'none';
                 
                 setTimeout(() => {
                     button.style.opacity = '1';
-                    {{/*  button.style.transform = `scale(1) translateX(-${document.getElementById(button.id).offsetWidth}/2) -translateY(40px)`;  */}}
+                    // Remove any translateY offset while preserving other transforms
+                    const currentTransform = button.style.transform || '';
+                    const newTransform = currentTransform.replace(/translateY\([^)]*\)/g, '').trim();
+                    button.style.transform = newTransform || 'scale(1)';
                     button.style.pointerEvents = 'auto';
                     console.log(`Button ${index + 1} animated in`);
                 }, delays[index]);
@@ -184,34 +205,27 @@ function navigateToPage(url) {
     }, 200);
 }
 
-// Convert viewport percentage to screen coordinates
-function viewportToScreen(vpX, vpY) {
-    return {
-        x: (vpX / 100) * window.innerWidth,
-        y: (vpY / 100) * window.innerHeight
-    };
-}
-
-// Get predetermined target positions for mycelium growth
-function getTargetPositions() {
-    return [
-        viewportToScreen(BUTTON_POSITIONS.about.x, BUTTON_POSITIONS.about.y),
-        viewportToScreen(BUTTON_POSITIONS.mapping.x, BUTTON_POSITIONS.mapping.y),
-        viewportToScreen(BUTTON_POSITIONS.nervous.x, BUTTON_POSITIONS.nervous.y)
-    ];
-}
-
 // Prevent double-transformation on accidental clicks
 window.addEventListener('click', function(e) {
     if (e.target === document.getElementById('centralButton')) {
         e.stopPropagation();
     }
 });
+
+// Debug function to inspect button positions
+window.debugButtonPositions = function() {
+    if (window.buttonPositionDebug) {
+        console.table(window.buttonPositionDebug.positions);
+        return window.buttonPositionDebug;
+    } else {
+        console.log('No position debug data available yet. Try after network has grown.');
+    }
+};
 </script>
 {{ end }}
 
 {{ define "scripts" }}
-<!-- Clean 2D Network System (No conflicts!) -->
+<!-- Dynamic Network System with Position Detection -->
 {{ $js := resources.Get "js/network.js" }}
 <script src="{{ $js.Permalink }}"></script>
 {{ end }}

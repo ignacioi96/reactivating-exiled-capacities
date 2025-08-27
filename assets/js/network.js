@@ -371,77 +371,101 @@ class OrganicNetwork {
 }
 
 // ============================================
-// MAIN SYSTEM INTEGRATION
+// DYNAMIC BUTTON POSITION MEASUREMENT SYSTEM
+// ============================================
+
+function measureActualButtonPositions() {
+    console.log('🎯 Measuring actual button positions...');
+    
+    const buttons = [
+        { id: 'aboutButton', name: 'about' },
+        { id: 'mappingButton', name: 'mapping' },
+        { id: 'nervousButton', name: 'nervous' }
+    ];
+    
+    const positions = [];
+    const debugInfo = [];
+    
+    buttons.forEach(({ id, name }) => {
+        const button = document.getElementById(id);
+        if (!button) {
+            console.warn(`❌ Button ${id} not found`);
+            return;
+        }
+        
+        // Get the computed position including all transforms
+        const rect = button.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
+        // Convert to viewport coordinates
+        const vpX = (centerX / window.innerWidth) * 100;
+        const vpY = (centerY / window.innerHeight) * 100;
+        
+        positions.push({
+            x: centerX,
+            y: centerY
+        });
+        
+        debugInfo.push({
+            name: name,
+            actualVpX: vpX.toFixed(1),
+            actualVpY: vpY.toFixed(1),
+            pixelX: centerX.toFixed(1),
+            pixelY: centerY.toFixed(1),
+            visible: button.style.opacity !== '0' && button.style.visibility !== 'hidden'
+        });
+        
+        console.log(`📍 ${name} button: ${vpX.toFixed(1)}%, ${vpY.toFixed(1)}% (${centerX.toFixed(1)}px, ${centerY.toFixed(1)}px)`);
+    });
+    
+    // Store debug info globally for inspection
+    window.buttonPositionDebug = {
+        screenSize: `${window.innerWidth}x${window.innerHeight}`,
+        positions: debugInfo,
+        timestamp: new Date().toLocaleTimeString()
+    };
+    
+    console.log('🔍 Position debug info available at: window.buttonPositionDebug');
+    
+    return positions;
+}
+
+function waitForButtonsToBePositioned() {
+    return new Promise((resolve) => {
+        let attempts = 0;
+        const maxAttempts = 20;
+        
+        function checkPositions() {
+            attempts++;
+            const positions = measureActualButtonPositions();
+            
+            // Check if we have valid positions (not all zero)
+            const hasValidPositions = positions.length === 3 && 
+                positions.some(pos => pos.x > 0 && pos.y > 0);
+            
+            if (hasValidPositions) {
+                console.log(`✅ Valid button positions found after ${attempts} attempts`);
+                resolve(positions);
+            } else if (attempts >= maxAttempts) {
+                console.warn(`⚠️ Max attempts reached (${maxAttempts}), using current positions`);
+                resolve(positions);
+            } else {
+                console.log(`⏳ Attempt ${attempts}: Buttons not yet positioned, retrying...`);
+                setTimeout(checkPositions, 50);
+            }
+        }
+        
+        checkPositions();
+    });
+}
+
+// ============================================
+// MAIN SYSTEM INTEGRATION WITH DYNAMIC TARGETING
 // ============================================
 
 let organicNetwork;
 let isNetworkInitialized = false;
-
-// ============================================
-// RESPONSIVE BUTTON POSITION CONFIGURATION
-// These positions match the CSS media query positions exactly!
-// ============================================
-
-const BUTTON_LAYOUT = {
-    // Desktop positions (>768px)
-    desktop: {
-        about: { x: 50, y: 12 },
-        mapping: { x: 12, y: 75 },
-        nervous: { x: 88, y: 75 }
-    },
-    
-    // Tablet positions (≤768px)
-    tablet: {
-        about: { x: 50, y: 12 },
-        mapping: { x: 20, y: 76 },
-        nervous: { x: 80, y: 76 }
-    },
-    
-    // Mobile landscape (≤667px and landscape)
-    mobileLandscape: {
-        about: { x: 50, y: 8 },
-        mapping: { x: 20, y: 70 },
-        nervous: { x: 80, y: 70 }
-    },
-    
-    // Mobile portrait (≤480px)
-    mobile: {
-        about: { x: 50, y: 20 },
-        mapping: { x: 30, y: 78 },
-        nervous: { x: 70, y: 78 }
-    },
-    
-    // Very small mobile (≤360px)
-    verySmall: {
-        about: { x: 50, y: 25 },
-        mapping: { x: 30, y: 75 },
-        nervous: { x: 70, y: 75 }
-    }
-};
-
-// Get positions based on screen size and orientation (matches CSS media queries exactly)
-function getCurrentButtonPositions() {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    const isLandscape = width > height;
-    
-    if (width <= 360) {
-        console.log('Using very small mobile layout (≤360px)');
-        return BUTTON_LAYOUT.verySmall;
-    } else if (width <= 480) {
-        console.log('Using mobile portrait layout (≤480px)');
-        return BUTTON_LAYOUT.mobile;
-    } else if (width <= 667 && isLandscape) {
-        console.log('Using mobile landscape layout (≤667px landscape)');
-        return BUTTON_LAYOUT.mobileLandscape;
-    } else if (width <= 768) {
-        console.log('Using tablet layout (≤768px)');
-        return BUTTON_LAYOUT.tablet;
-    } else {
-        console.log('Using desktop layout (>768px)');
-        return BUTTON_LAYOUT.desktop;
-    }
-}
 
 function initNetwork() {
     if (isNetworkInitialized) return;
@@ -466,17 +490,17 @@ function initNetwork() {
     }
 }
 
-function growNetworkToButtons() {
+async function growNetworkToButtons() {
     if (!isNetworkInitialized) {
-        console.error('Network not initialized');
+        console.error('❌ Network not initialized');
         return;
     }
     
-    console.log('Growing network to buttons...');
+    console.log('🌱 Starting dynamic network growth...');
     
     const button = document.getElementById('centralButton');
     if (!button) {
-        console.error('Central button not found');
+        console.error('❌ Central button not found');
         return;
     }
     
@@ -486,30 +510,38 @@ function growNetworkToButtons() {
         y: buttonRect.top + buttonRect.height / 2
     };
     
-    // Use responsive positions based on screen size and orientation
-    const positions = getCurrentButtonPositions();
-    const targets = [
-        viewportToScreenCoords(positions.about.x, positions.about.y),
-        viewportToScreenCoords(positions.mapping.x, positions.mapping.y),
-        viewportToScreenCoords(positions.nervous.x, positions.nervous.y)
-    ];
+    console.log('🎯 Central button position:', buttonCenter);
     
-    console.log('Screen size:', window.innerWidth + 'x' + window.innerHeight);
-    console.log('Button center:', buttonCenter);
-    console.log('Target coordinates:', targets);
-    
-    // Calculate distances to verify they make sense
-    targets.forEach((target, i) => {
-        const distance = Math.sqrt(
-            Math.pow(target.x - buttonCenter.x, 2) + 
-            Math.pow(target.y - buttonCenter.y, 2)
-        );
-        const names = ['about', 'mapping', 'nervous'];
-        console.log(`Distance to the "${names[i]}" button: ${distance.toFixed(1)}px`);
-    });
-    
-    organicNetwork.generateToTargets(buttonCenter, targets);
-    organicNetwork.animate();
+    try {
+        // Wait for buttons to be properly positioned
+        const targetPositions = await waitForButtonsToBePositioned();
+        
+        if (targetPositions.length !== 3) {
+            console.error('❌ Could not find all button positions');
+            return;
+        }
+        
+        console.log('🎯 Final target positions:', targetPositions);
+        
+        // Calculate distances for verification
+        targetPositions.forEach((target, i) => {
+            const distance = Math.sqrt(
+                Math.pow(target.x - buttonCenter.x, 2) + 
+                Math.pow(target.y - buttonCenter.y, 2)
+            );
+            const names = ['about', 'mapping', 'nervous'];
+            console.log(`📏 Distance to "${names[i]}" button: ${distance.toFixed(1)}px`);
+        });
+        
+        // Generate and animate the network
+        organicNetwork.generateToTargets(buttonCenter, targetPositions);
+        organicNetwork.animate();
+        
+        console.log('✅ Dynamic network generation complete');
+        
+    } catch (error) {
+        console.error('❌ Error in dynamic network growth:', error);
+    }
 }
 
 // Add a visual loading state during regeneration
@@ -525,14 +557,7 @@ function showRegenerationIndicator() {
     }
 }
 
-function viewportToScreenCoords(vpX, vpY) {
-    return {
-        x: (vpX / 100) * window.innerWidth,
-        y: (vpY / 100) * window.innerHeight
-    };
-}
-
-function handleNetworkResize() {
+async function handleNetworkResize() {
     if (!isNetworkInitialized || !organicNetwork) return;
     
     console.log('🔄 Window resized - updating network...');
@@ -543,7 +568,7 @@ function handleNetworkResize() {
     
     // If we're in home mode (buttons are visible), regrow the network
     if (window.isHomeMode) {
-        console.log('🏠 Home mode active - regenerating network to new button positions');
+        console.log('🏠 Home mode active - regenerating network with dynamic targeting');
         
         // Show visual indicator
         showRegenerationIndicator();
@@ -552,30 +577,13 @@ function handleNetworkResize() {
         organicNetwork.clear();
         
         // Small delay to ensure layout has settled after resize
-        setTimeout(() => {
-            // Check if buttons are actually visible and positioned
-            const aboutButton = document.getElementById('aboutButton');
-            const mappingButton = document.getElementById('mappingButton');
-            const nervousButton = document.getElementById('nervousButton');
-            
-            const buttonsVisible = aboutButton && aboutButton.style.opacity !== '0' && 
-                                 mappingButton && mappingButton.style.opacity !== '0' &&
-                                 nervousButton && nervousButton.style.opacity !== '0';
-            
-            if (buttonsVisible) {
-                console.log('✅ Buttons are visible - regrowing network');
-                growNetworkToButtons();
-            } else {
-                console.log('⏳ Buttons not visible yet - waiting for animation to complete');
-                // If buttons aren't visible yet, wait a bit longer
-                setTimeout(() => {
-                    if (window.isHomeMode) {
-                        console.log('🔄 Delayed regrowth attempt');
-                        growNetworkToButtons();
-                    }
-                }, 700);
+        setTimeout(async () => {
+            try {
+                await growNetworkToButtons();
+            } catch (error) {
+                console.error('❌ Error during resize regeneration:', error);
             }
-        }, 400); // Increased delay to let CSS media queries apply and animations complete
+        }, 400);
     }
 }
 
@@ -607,7 +615,7 @@ function debouncedResize() {
         } else {
             console.log('📏 Minor size change - skipping regeneration');
         }
-    }, 250); // Slightly longer debounce for better stability on mobile
+    }, 250);
 }
 
 window.addEventListener('resize', debouncedResize);
