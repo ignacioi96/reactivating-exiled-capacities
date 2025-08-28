@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-	<meta name="generator" content="Hugo 0.148.2"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+	<meta name="generator" content="Hugo 0.149.0"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>reactivating exiled capacities</title>
@@ -104,8 +104,9 @@ let hasBeenTransformed = false;
 function handleButtonClick() {
     console.log('Button clicked, isHomeMode:', isHomeMode, 'transformationInProgress:', transformationInProgress);
     
-    if (transformationInProgress) {
-        console.log('Transformation already in progress, ignoring click');
+    
+    if (transformationInProgress && !hasBeenTransformed) {
+        console.log('Initial transformation in progress, ignoring click');
         return;
     }
     
@@ -116,7 +117,12 @@ function handleButtonClick() {
         
         console.log('Regenerating network to buttons');
         if (typeof growNetworkToButtons === 'function') {
-            growNetworkToButtons(); 
+            
+            if (window.organicNetwork) {
+                window.organicNetwork.clear();
+                window.organicNetwork.isAnimating = false;
+            }
+            growNetworkToButtons();
         }
     }
 }
@@ -198,8 +204,7 @@ function showNavigationElements() {
     const artistLink = document.getElementById('artistResidencyLink');
     
     if (navContainer) {
-        navContainer.style.pointerEvents = 'auto';
-        
+        navContainer.style.display = 'block';
         
         const aboutButton = document.getElementById('aboutButton');
         const mappingButton = document.getElementById('mappingButton');
@@ -279,11 +284,13 @@ window.debugButtonPositions = function() {
     
     
     
+    
+    
+    
 
 
 <script src="http://localhost:1313/js/network.js"></script>
 
-    
     
     
     
@@ -311,5 +318,62 @@ window.debugButtonPositions = function() {
         });
       }
     </script>
+
+    
+    <script>
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const organicArrow = document.querySelector('.next-page-arrow');
+        if (organicArrow) {
+            
+            setTimeout(() => {
+                organicArrow.classList.add('initial-grow');
+            }, 1000);
+            
+            
+            setTimeout(() => {
+                organicArrow.classList.remove('initial-grow');
+            }, 3000);
+        }
+        
+        
+        if (document.querySelector('.page-container') && !document.querySelector('.splash-layout, .home-layout')) {
+            console.log('Content page detected - in-page mycelium will auto-initialize');
+            
+            
+            setTimeout(() => {
+                const myceliumContainer = document.getElementById('inPageMyceliumContainer');
+                if (myceliumContainer) {
+                    console.log('In-page mycelium container found - initialization successful');
+                    
+                    
+                    const pathCount = document.querySelectorAll('#inPageMyceliumCanvas path').length;
+                    console.log(`In-page mycelium generated ${pathCount} paths`);
+                } else {
+                    console.warn('In-page mycelium container not found - check script loading');
+                }
+            }, 2000);
+        }
+
+        setTimeout(() => {
+        if (window.setMyceliumStrokeWidth) {
+            setMyceliumStrokeWidth(30); 
+        }
+    }, 2000);
+    });
+    </script>
+
+    
+    <style>
+    .next-page-arrow.initial-grow .organic-arrow-shaft {
+        animation: growArrowShaft 1.2s ease-out forwards;
+    }
+    .next-page-arrow.initial-grow .organic-arrow-head-top {
+        animation: growArrowHeadTop 0.8s ease-out 0.4s forwards;
+    }
+    .next-page-arrow.initial-grow .organic-arrow-head-bottom {
+        animation: growArrowHeadBottom 0.8s ease-out 0.6s forwards;
+    }
+    </style>
 </body>
 </html>

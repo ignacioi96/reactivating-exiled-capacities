@@ -57,8 +57,9 @@ let hasBeenTransformed = false;
 function handleButtonClick() {
     console.log('Button clicked, isHomeMode:', isHomeMode, 'transformationInProgress:', transformationInProgress);
     
-    if (transformationInProgress) {
-        console.log('Transformation already in progress, ignoring click');
+    // Only block clicks during the initial UI transformation, not during mycelium growth
+    if (transformationInProgress && !hasBeenTransformed) {
+        console.log('Initial transformation in progress, ignoring click');
         return;
     }
     
@@ -66,10 +67,15 @@ function handleButtonClick() {
         console.log('Transforming via button click');
         transformToHomeMode();
     } else if (isHomeMode) {
-        // In home mode, regenerate network with dynamic targeting
+        // In home mode, always allow regenerating network
         console.log('Regenerating network to buttons');
         if (typeof growNetworkToButtons === 'function') {
-            growNetworkToButtons(); // Now async, handles its own timing
+            // Force clear existing network and reset flags
+            if (window.organicNetwork) {
+                window.organicNetwork.clear();
+                window.organicNetwork.isAnimating = false;
+            }
+            growNetworkToButtons();
         }
     }
 }
@@ -151,8 +157,7 @@ function showNavigationElements() {
     const artistLink = document.getElementById('artistResidencyLink');
     
     if (navContainer) {
-        navContainer.style.pointerEvents = 'auto';
-        
+        navContainer.style.display = 'block';
         // Get individual buttons
         const aboutButton = document.getElementById('aboutButton');
         const mappingButton = document.getElementById('mappingButton');

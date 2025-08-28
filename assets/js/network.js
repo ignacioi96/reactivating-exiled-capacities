@@ -215,6 +215,7 @@ class OrganicNetwork {
         this.container = container;
         this.svg = null;
         this.branches = [];
+        this.animationTimeout = null;
         this.isAnimating = false;
         this.rng = new NetworkRNG(Date.now());
         window.networkRNG = this.rng;
@@ -313,7 +314,15 @@ class OrganicNetwork {
     }
     
     animate() {
-        if (this.isAnimating) return;
+        if (this.animationTimeout) {
+            clearTimeout(this.animationTimeout);
+            this.animationTimeout = null;
+        }
+        
+        if (this.isAnimating) {
+            console.log('Animation in progress, forcing reset...');
+            this.isAnimating = false;  // Force reset
+        }
         
         console.log('Starting network animation...');
         this.isAnimating = true;
@@ -331,9 +340,10 @@ class OrganicNetwork {
         if (loadingEl) loadingEl.classList.add('active');
         
         const maxDelay = Math.max(...allBranches.map(b => b.animationDelay));
-        setTimeout(() => {
+        this.animationTimeout = setTimeout(() => {  // <-- Store the timeout
             this.isAnimating = false;
             if (loadingEl) loadingEl.classList.remove('active');
+            this.animationTimeout = null;
         }, maxDelay + 2500);
     }
     
@@ -357,7 +367,15 @@ class OrganicNetwork {
     }
     
     clear() {
+    // Clear animation timeout
+    if (this.animationTimeout) {
+            clearTimeout(this.animationTimeout);
+            this.animationTimeout = null;
+        }
+        
+        this.isAnimating = false;  // Reset flag
         this.branches = [];
+        
         if (this.svg) {
             this.svg.innerHTML = '';
         }

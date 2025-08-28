@@ -5,8 +5,6 @@ next_page:
     title: "mapping capacities"
     url: "/mapping-capacities"
 ---
-## The Nervous System as Relational Fabric
-
 ### Polyvagal Theory and the Nervous System: A Thread of Connection
 
 Within REC we are inviting an understanding of the nervous system as a continuous network of communication between what we conceptualize as the human body, mind, and the rest of nature. While modern frameworks often treat these domains as separate, we see them as deeply intertwined, forming a dynamic whole. Our nervous system reflects and interacts with relational and ecological systems, serving as a thread that weaves together the personal, collective, and planetary dimensions of our existence.

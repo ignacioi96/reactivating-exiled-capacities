@@ -303,7 +303,7 @@ p {
 /* Button Positioning - Desktop (>768px) */
 .nav-button-about {
   top: 10vh;
-  left: 50vw;
+  left: 20vw;
   transform: translateX(-50%) scale(0.8) translateY(-30px);
 }
 
@@ -315,7 +315,7 @@ p {
 
 .nav-button-nervous {
   top: 75vh;
-  left: 88vw;
+  left: 70vw;
   transform: translateX(-80%) scale(0.8) translateY(-30px);
 }
 
@@ -527,6 +527,10 @@ p {
   pointer-events: none;
   display: none;
   visibility: hidden;
+    padding: 8px 12px;
+    border-radius: 20px;
+    background: rgba(44, 44, 44, 0.8);
+    backdrop-filter: blur(5px);
 }
 
 .artist-residency-link:hover {
@@ -705,7 +709,7 @@ body:not(.splash-layout):not(.home-layout) .page-container {
   margin-bottom: 0;
   transition: color var(--transition-base);
   word-wrap: break-word;
-  hyphens: auto;
+  hyphens: none;
 }
 
 .inline-next-arrow-icon {
@@ -1086,7 +1090,6 @@ body:not(.splash-layout):not(.home-layout) .page-container {
     padding: 18px 36px;
     font-size: 17px;
     max-width: 80vw;
-    word-wrap: break-word;
     line-height: 1.3;
   }
   
@@ -1098,12 +1101,12 @@ body:not(.splash-layout):not(.home-layout) .page-container {
     line-height: 1.2;
     white-space: normal;
     word-wrap: break-word;
-    hyphens: auto;
+    hyphens: none;
   }
   
   .nav-button-about {
     top: 12vh;
-    left: 50vw;
+    left: 20vw;
     transform: translateX(-50%) scale(0.8) translateY(-30px);
   }
   
@@ -1114,9 +1117,9 @@ body:not(.splash-layout):not(.home-layout) .page-container {
   }
   
   .nav-button-nervous {
-    top: 76vh;
-    left: 80vw;
-    transform: translateX(-50%) scale(0.8) translateY(-30px);
+    top: 65vh;
+    left: 70vw;
+    transform: translateX(-50%) scale(0.8) translateY(-70px);
   }
   
   .instructions {
@@ -1135,8 +1138,7 @@ body:not(.splash-layout):not(.home-layout) .page-container {
     border-radius: 20px;
     background: rgba(44, 44, 44, 0.8);
     backdrop-filter: blur(5px);
-    max-width: 30vw;
-    word-wrap: break-word;
+    max-width: 60vw;
     text-align: center;
     line-height: 1.3;
   }
@@ -1222,7 +1224,6 @@ body:not(.splash-layout):not(.home-layout) .page-container {
     max-width: 85vw;
     min-height: 44px;
     line-height: 1.4;
-    word-break: break-word;
   }
   
   .nav-button {
@@ -1232,13 +1233,13 @@ body:not(.splash-layout):not(.home-layout) .page-container {
     max-width: 35vw;
     line-height: 1.3;
     word-wrap: break-word;
-    hyphens: auto;
+    hyphens: none;
     text-align: center;
   }
   
   .nav-button-about {
     top: 20vh;
-    left: 50vw;
+    left: 20vw;
     transform: translateX(-50%) scale(0.8) translateY(-30px);
   }
   
@@ -1249,7 +1250,7 @@ body:not(.splash-layout):not(.home-layout) .page-container {
   }
   
   .nav-button-nervous {
-    top: 78vh;
+    top: 65vh;
     left: 70vw;
     transform: translateX(-50%) scale(0.8) translateY(-30px);
   }
@@ -1322,33 +1323,32 @@ body:not(.splash-layout):not(.home-layout) .page-container {
   .nav-button {
     padding: 10px 14px;
     font-size: 12px;
-    max-width: 32vw;
+    max-width: 55vw;
     line-height: 1.3;
   }
   
   .nav-button-about {
     top: 25vh;
-    left: 50vw;
+    left: 40vw;
     transform: translateX(-50%) scale(0.8) translateY(-30px);
   }
   
   .nav-button-mapping {
-    top: 75vh;
-    left: 30vw;
+    top: 60vh;
+    left: 20vw;
     transform: translateX(-50%) scale(0.8) translateY(-30px);
   }
   
   .nav-button-nervous {
     top: 75vh;
-    left: 70vw;
+    left: 55vw;
     transform: translateX(-50%) scale(0.8) translateY(-30px);
   }
   
   .artist-residency-link {
     font-size: 10px;
     padding: 6px 8px;
-    max-width: 35vw;
-    word-break: break-word;
+    max-width: 60vw;
     bottom: 15px;
     right: 15px;
   }
@@ -1398,7 +1398,7 @@ body:not(.splash-layout):not(.home-layout) .page-container {
     padding: 14px 20px;
     white-space: normal;
     word-wrap: break-word;
-    hyphens: auto;
+    hyphens: none;
   }
   
   .central-button {
@@ -1451,7 +1451,7 @@ body:not(.splash-layout):not(.home-layout) .page-container {
 /* Better text handling for very long titles */
 @supports (hyphens: auto) {
   .inline-next-title {
-    hyphens: auto;
+    hyphens: none;
     overflow-wrap: break-word;
   }
 }
@@ -1573,5 +1573,252 @@ body:not(.splash-layout):not(.home-layout) .page-container {
   .inline-next-link:focus .organic-arrow-svg {
     transform: translateX(2px);
     animation: none;
+  }
+}
+body:not(.splash-layout):not(.home-layout) .page-container {
+  background: rgba(244, 239, 229, 0.95); /* Keep original background opacity */
+  backdrop-filter: blur(10px);
+  border-radius: var(--border-radius);
+  margin: var(--spacing-lg);
+  box-shadow: 0 8px 32px var(--color-shadow);
+  position: relative; /* Important for absolute positioning inside */
+  overflow: hidden; /* Keep mycelium contained */
+}
+
+/* In-page mycelium container - positioned inside page container */
+.in-page-mycelium-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1; /* Behind text content */
+  opacity: 0;
+  transition: opacity 3s ease-out;
+  
+  /* CSS Custom Properties for JavaScript control */
+  --mycelium-width-0: 2.5;
+  --mycelium-width-1: 1.75;
+  --mycelium-width-2: 1.225;
+  --mycelium-width-3: 0.858;
+}
+
+.in-page-mycelium-container.loaded {
+  opacity: 1;
+}
+
+/* In-page mycelium SVG */
+.in-page-mycelium-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Text content positioning - ensure it's above mycelium */
+.content-wrapper,
+.page-content,
+.page-container h1,
+.page-container h2,
+.page-container h3,
+.page-container h4,
+.page-container p {
+  position: relative;
+  z-index: 2; /* Above mycelium */
+}
+
+/* In-page mycelium path styles - USE CSS VARIABLES FOR WIDTH */
+.in-page-mycelium-path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  stroke-dasharray: 1500;
+  stroke-dashoffset: 1500;
+  animation: inPageMyceliumGrow 4s ease-out forwards;
+}
+
+.in-page-mycelium-branch {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  stroke-dasharray: 1500;
+  stroke-dashoffset: 1500;
+  animation: inPageMyceliumGrow 3.5s ease-out forwards;
+}
+
+.in-page-mycelium-accent {
+  stroke: #6b5540; /* Even darker */
+  stroke-width: var(--mycelium-width-2, 1.225);
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  stroke-dasharray: 1500;
+  stroke-dashoffset: 1500;
+  animation: inPageMyceliumGrow 3s ease-out forwards;
+}
+
+.in-page-mycelium-subtle {
+  stroke: #9d8c75; /* Lighter but still visible */
+  stroke-width: var(--mycelium-width-3, 0.858);
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  stroke-dasharray: 1500;
+  stroke-dashoffset: 1500;
+  animation: inPageMyceliumGrow 2.5s ease-out forwards;
+}
+
+/* In-page growth animation - more visible on cream background */
+@keyframes inPageMyceliumGrow {
+  0% {
+    stroke-dashoffset: 1500;
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0.6; /* Visible but not overwhelming */
+  }
+}
+
+/* Subtle pulsing animation */
+@keyframes inPageMyceliumPulse {
+  0%, 100% {
+    opacity: 0.6;
+    filter: brightness(1);
+  }
+  50% {
+    opacity: 0.7;
+    filter: brightness(1.05);
+  }
+}
+
+/* Apply pulsing with different timings */
+.in-page-mycelium-path {
+  animation: inPageMyceliumGrow 4s ease-out forwards, inPageMyceliumPulse 15s ease-in-out infinite 4s;
+}
+
+.in-page-mycelium-branch {
+  animation: inPageMyceliumGrow 3.5s ease-out forwards, inPageMyceliumPulse 18s ease-in-out infinite 3.5s;
+}
+
+.in-page-mycelium-accent {
+  animation: inPageMyceliumGrow 3s ease-out forwards, inPageMyceliumPulse 22s ease-in-out infinite 3s;
+}
+
+.in-page-mycelium-subtle {
+  animation: inPageMyceliumGrow 2.5s ease-out forwards, inPageMyceliumPulse 25s ease-in-out infinite 2.5s;
+}
+
+/* Content-specific adjustments */
+.page-container.long-content .in-page-mycelium-container {
+  opacity: 0.8; /* Less prominent for long content */
+}
+
+.page-container.long-content .in-page-mycelium-path,
+.page-container.long-content .in-page-mycelium-branch {
+  /* Width controlled by CSS variables now */
+  opacity: 0.5; /* Make more subtle for long content */
+}
+
+.page-container.short-content .in-page-mycelium-container {
+  opacity: 1.0; /* More prominent for short content */
+}
+
+.page-container.form-page .in-page-mycelium-container {
+  opacity: 0.4; /* Less distracting on forms */
+  filter: blur(0.5px);
+}
+
+/* Enhanced responsive adjustments */
+@media (max-width: 768px) {
+  .in-page-mycelium-container {
+    --mycelium-width-0: 2.0;
+    --mycelium-width-1: 1.4;
+    --mycelium-width-2: 0.98;
+    --mycelium-width-3: 0.686;
+  }
+  
+  .in-page-mycelium-container.loaded {
+    opacity: 0.8;
+  }
+}
+
+@media (max-width: 480px) {
+  .in-page-mycelium-container {
+    --mycelium-width-0: 1.5;
+    --mycelium-width-1: 1.05;
+    --mycelium-width-2: 0.735;
+    --mycelium-width-3: 0.515;
+  }
+  
+  .in-page-mycelium-container.loaded {
+    opacity: 0.7;
+  }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .in-page-mycelium-path {
+    stroke: #d4c7b0;
+  }
+  
+  .in-page-mycelium-branch {
+    stroke: #d4c7b0;
+  }
+  
+  .in-page-mycelium-accent {
+    stroke: #d4c7b0;
+  }
+  
+  .in-page-mycelium-subtle {
+    stroke: #d4c7b0;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .in-page-mycelium-container {
+    --mycelium-width-0: calc(var(--mycelium-width-0) * 1.5);
+    --mycelium-width-1: calc(var(--mycelium-width-1) * 1.5);
+    --mycelium-width-2: calc(var(--mycelium-width-2) * 1.5);
+    --mycelium-width-3: calc(var(--mycelium-width-3) * 1.5);
+  }
+  
+  .in-page-mycelium-path,
+  .in-page-mycelium-branch,
+  .in-page-mycelium-accent,
+  .in-page-mycelium-subtle {
+    opacity: 0.8 !important;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .in-page-mycelium-path,
+  .in-page-mycelium-branch,
+  .in-page-mycelium-accent,
+  .in-page-mycelium-subtle {
+    animation: none !important;
+    opacity: 0.5 !important;
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+  
+  .in-page-mycelium-container {
+    transition: none;
+    opacity: 0.6 !important;
   }
 }

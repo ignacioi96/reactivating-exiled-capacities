@@ -45,7 +45,7 @@
         
 <div class="floating-nav">
     <button class="nav-toggle" onclick="toggleNavDropdown()" role="button" tabindex="0" aria-label="Open navigation menu" aria-expanded="false">
-        rec home
+        rec pages
     </button>
     <div class="nav-dropdown" id="nav-dropdown" role="menu" aria-hidden="true">
         <h3>reactivating exiled capacities</h3>
@@ -54,7 +54,7 @@
         
             <a href="/about/" role="menuitem">About the Inquiry</a>
         
-            <a href="/nervous-system/" role="menuitem">The Nervous System as Relational Fabric</a>
+            <a href="/nervous-system/" role="menuitem">the nervous system as relational fabric</a>
         
             <a href="/mapping-capacities/" role="menuitem">Mapping Exiled Capacities</a>
         
@@ -239,9 +239,11 @@ What have you been conditioned to avoid? What would it ask of you to stay presen
     
     
     
+    
+    
         
         
-            <script src="http://localhost:1313/js/background-mycelium.js" defer></script>
+            <script src="http://localhost:1313/js/in-page-mycelium.js" defer></script>
         
     
     
@@ -260,5 +262,62 @@ What have you been conditioned to avoid? What would it ask of you to stay presen
         });
       }
     </script>
+
+    
+    <script>
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const organicArrow = document.querySelector('.next-page-arrow');
+        if (organicArrow) {
+            
+            setTimeout(() => {
+                organicArrow.classList.add('initial-grow');
+            }, 1000);
+            
+            
+            setTimeout(() => {
+                organicArrow.classList.remove('initial-grow');
+            }, 3000);
+        }
+        
+        
+        if (document.querySelector('.page-container') && !document.querySelector('.splash-layout, .home-layout')) {
+            console.log('Content page detected - in-page mycelium will auto-initialize');
+            
+            
+            setTimeout(() => {
+                const myceliumContainer = document.getElementById('inPageMyceliumContainer');
+                if (myceliumContainer) {
+                    console.log('In-page mycelium container found - initialization successful');
+                    
+                    
+                    const pathCount = document.querySelectorAll('#inPageMyceliumCanvas path').length;
+                    console.log(`In-page mycelium generated ${pathCount} paths`);
+                } else {
+                    console.warn('In-page mycelium container not found - check script loading');
+                }
+            }, 2000);
+        }
+
+        setTimeout(() => {
+        if (window.setMyceliumStrokeWidth) {
+            setMyceliumStrokeWidth(30); 
+        }
+    }, 2000);
+    });
+    </script>
+
+    
+    <style>
+    .next-page-arrow.initial-grow .organic-arrow-shaft {
+        animation: growArrowShaft 1.2s ease-out forwards;
+    }
+    .next-page-arrow.initial-grow .organic-arrow-head-top {
+        animation: growArrowHeadTop 0.8s ease-out 0.4s forwards;
+    }
+    .next-page-arrow.initial-grow .organic-arrow-head-bottom {
+        animation: growArrowHeadBottom 0.8s ease-out 0.6s forwards;
+    }
+    </style>
 </body>
 </html>

@@ -45,7 +45,7 @@
         
 <div class="floating-nav">
     <button class="nav-toggle" onclick="toggleNavDropdown()" role="button" tabindex="0" aria-label="Open navigation menu" aria-expanded="false">
-        rec home
+        rec pages
     </button>
     <div class="nav-dropdown" id="nav-dropdown" role="menu" aria-hidden="true">
         <h3>reactivating exiled capacities</h3>
@@ -54,7 +54,7 @@
         
             <a href="/about/" role="menuitem">About the Inquiry</a>
         
-            <a href="/nervous-system/" role="menuitem">The Nervous System as Relational Fabric</a>
+            <a href="/nervous-system/" role="menuitem">the nervous system as relational fabric</a>
         
             <a href="/mapping-capacities/" role="menuitem">Mapping Exiled Capacities</a>
         
@@ -145,7 +145,7 @@ console.log('Simplified navigation loaded successfully');
         
         
             <div class="page-navigation">
-                <a href="/clusters/" class="back-link">← Back to Clusters</a>
+                <a href="/clusters/" class="back-link">â† Back to Clusters</a>
             </div>
         
 
@@ -217,12 +217,54 @@ console.log('Simplified navigation loaded successfully');
     
     
     
+    <a href="http://localhost:1313/clusters/poly-rhythmic-knowing/" class="next-page-arrow" id="floatingNextArrow">
+      <div class="next-page-arrow-content">
+        <div class="next-page-arrow-label">next page:</div>
+        <div class="next-page-arrow-title">Poly-Rhythmic Knowing</div>
+      </div>
+      <div class="next-page-arrow-icon">
+        <svg class="organic-arrow-svg" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+          
+          <path class="organic-arrow-shaft" 
+                d="M 8 20 Q 15 18 25 19 Q 35 20 45 19" 
+                stroke-linecap="round" 
+                stroke-linejoin="round"/>
+          
+          
+          <path class="organic-arrow-head-top" 
+                d="M 37 13 Q 42 16 45 19 Q 47 20 49 21" 
+                stroke-linecap="round" 
+                stroke-linejoin="round"/>
+          
+          
+          <path class="organic-arrow-head-bottom" 
+                d="M 37 26 Q 42 23 45 19 Q 47 18 49 17" 
+                stroke-linecap="round" 
+                stroke-linejoin="round"/>
+          
+          
+          <path class="organic-arrow-texture" 
+                d="M 20 17 Q 22 19 24 18" 
+                stroke-width="1" 
+                opacity="0.4"
+                stroke-linecap="round"/>
+          <path class="organic-arrow-texture" 
+                d="M 30 21 Q 32 19 34 20" 
+                stroke-width="1" 
+                opacity="0.4"
+                stroke-linecap="round"/>
+        </svg>
+      </div>
+    </a>
+    
+    
+    
     
     
     
         
         
-            <script src="http://localhost:1313/js/background-mycelium.js" defer></script>
+            <script src="http://localhost:1313/js/in-page-mycelium.js" defer></script>
         
     
     
@@ -241,5 +283,62 @@ console.log('Simplified navigation loaded successfully');
         });
       }
     </script>
+
+    
+    <script>
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const organicArrow = document.querySelector('.next-page-arrow');
+        if (organicArrow) {
+            
+            setTimeout(() => {
+                organicArrow.classList.add('initial-grow');
+            }, 1000);
+            
+            
+            setTimeout(() => {
+                organicArrow.classList.remove('initial-grow');
+            }, 3000);
+        }
+        
+        
+        if (document.querySelector('.page-container') && !document.querySelector('.splash-layout, .home-layout')) {
+            console.log('Content page detected - in-page mycelium will auto-initialize');
+            
+            
+            setTimeout(() => {
+                const myceliumContainer = document.getElementById('inPageMyceliumContainer');
+                if (myceliumContainer) {
+                    console.log('In-page mycelium container found - initialization successful');
+                    
+                    
+                    const pathCount = document.querySelectorAll('#inPageMyceliumCanvas path').length;
+                    console.log(`In-page mycelium generated ${pathCount} paths`);
+                } else {
+                    console.warn('In-page mycelium container not found - check script loading');
+                }
+            }, 2000);
+        }
+
+        setTimeout(() => {
+        if (window.setMyceliumStrokeWidth) {
+            setMyceliumStrokeWidth(30); 
+        }
+    }, 2000);
+    });
+    </script>
+
+    
+    <style>
+    .next-page-arrow.initial-grow .organic-arrow-shaft {
+        animation: growArrowShaft 1.2s ease-out forwards;
+    }
+    .next-page-arrow.initial-grow .organic-arrow-head-top {
+        animation: growArrowHeadTop 0.8s ease-out 0.4s forwards;
+    }
+    .next-page-arrow.initial-grow .organic-arrow-head-bottom {
+        animation: growArrowHeadBottom 0.8s ease-out 0.6s forwards;
+    }
+    </style>
 </body>
 </html>

@@ -18,14 +18,59 @@
         <div class="background-overlay"></div>
     </div>
     
+    <!-- Floating next page arrow for desktop with organic SVG -->
+    {{ if and .NextInSection (not .IsHome) }}
+    <a href="{{ .NextInSection.Permalink }}" class="next-page-arrow" id="floatingNextArrow">
+      <div class="next-page-arrow-content">
+        <div class="next-page-arrow-label">next page:</div>
+        <div class="next-page-arrow-title">{{ .NextInSection.Title }}</div>
+      </div>
+      <div class="next-page-arrow-icon">
+        <svg class="organic-arrow-svg" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+          <!-- Main arrow shaft with organic curve -->
+          <path class="organic-arrow-shaft" 
+                d="M 8 20 Q 15 18 25 19 Q 35 20 45 19" 
+                stroke-linecap="round" 
+                stroke-linejoin="round"/>
+          
+          <!-- Top arrowhead barb with organic curve -->
+          <path class="organic-arrow-head-top" 
+                d="M 37 13 Q 42 16 45 19 Q 47 20 49 21" 
+                stroke-linecap="round" 
+                stroke-linejoin="round"/>
+          
+          <!-- Bottom arrowhead barb with organic curve -->
+          <path class="organic-arrow-head-bottom" 
+                d="M 37 26 Q 42 23 45 19 Q 47 18 49 17" 
+                stroke-linecap="round" 
+                stroke-linejoin="round"/>
+          
+          <!-- Optional: Add some organic texture lines -->
+          <path class="organic-arrow-texture" 
+                d="M 20 17 Q 22 19 24 18" 
+                stroke-width="1" 
+                opacity="0.4"
+                stroke-linecap="round"/>
+          <path class="organic-arrow-texture" 
+                d="M 30 21 Q 32 19 34 20" 
+                stroke-width="1" 
+                opacity="0.4"
+                stroke-linecap="round"/>
+        </svg>
+      </div>
+    </a>
+    {{ end }}
+    
     <!-- Scripts at end of body -->
     {{ block "scripts" . }}{{ end }}
     
-    <!-- Only load background mycelium on content pages -->
-    {{ if not (or (.IsHome) (eq .Layout "splash")) }}
-        {{ $bgMyceliumJS := resources.Get "js/background-mycelium.js" }}
-        {{ if $bgMyceliumJS }}
-            <script src="{{ $bgMyceliumJS.Permalink }}" defer></script>
+    {{ if not .IsHome }}
+        {{ $inPageMyceliumJS := resources.Get "js/in-page-mycelium.js" }}
+        {{ if $inPageMyceliumJS }}
+            <script src="{{ $inPageMyceliumJS.Permalink }}" defer></script>
+        {{ else }}
+            <!-- Debug: In-page mycelium script not found -->
+            <script>console.log('In-page mycelium script not found at js/in-page-mycelium.js');</script>
         {{ end }}
     {{ end }}
     
@@ -56,5 +101,62 @@
         });
       }
     </script>
+
+    <!-- Initialize organic arrow animations -->
+    <script>
+    // Enhanced organic arrow behavior
+    document.addEventListener('DOMContentLoaded', function() {
+        const organicArrow = document.querySelector('.next-page-arrow');
+        if (organicArrow) {
+            // Add initial growing animation on page load
+            setTimeout(() => {
+                organicArrow.classList.add('initial-grow');
+            }, 1000);
+            
+            // Remove initial class after animation
+            setTimeout(() => {
+                organicArrow.classList.remove('initial-grow');
+            }, 3000);
+        }
+        
+        // Content page detection for debugging (simplified)
+        if (document.querySelector('.page-container') && !document.querySelector('.splash-layout, .home-layout')) {
+            console.log('Content page detected - in-page mycelium will auto-initialize');
+            
+            // Check if mycelium loaded successfully after a delay
+            setTimeout(() => {
+                const myceliumContainer = document.getElementById('inPageMyceliumContainer');
+                if (myceliumContainer) {
+                    console.log('In-page mycelium container found - initialization successful');
+                    
+                    // Check if paths were generated
+                    const pathCount = document.querySelectorAll('#inPageMyceliumCanvas path').length;
+                    console.log(`In-page mycelium generated ${pathCount} paths`);
+                } else {
+                    console.warn('In-page mycelium container not found - check script loading');
+                }
+            }, 2000);
+        }
+
+        setTimeout(() => {
+        if (window.setMyceliumStrokeWidth) {
+            setMyceliumStrokeWidth(30); // Or whatever thickness you want
+        }
+    }, 2000);
+    });
+    </script>
+
+    <!-- Add initial grow animation CSS -->
+    <style>
+    .next-page-arrow.initial-grow .organic-arrow-shaft {
+        animation: growArrowShaft 1.2s ease-out forwards;
+    }
+    .next-page-arrow.initial-grow .organic-arrow-head-top {
+        animation: growArrowHeadTop 0.8s ease-out 0.4s forwards;
+    }
+    .next-page-arrow.initial-grow .organic-arrow-head-bottom {
+        animation: growArrowHeadBottom 0.8s ease-out 0.6s forwards;
+    }
+    </style>
 </body>
 </html>
