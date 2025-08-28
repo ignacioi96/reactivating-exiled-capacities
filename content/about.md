@@ -1,5 +1,5 @@
 ---
-title: "About the Inquiry"
+title: "about the inquiry"
 date: 2024-01-01
 next_page:
     title: "the nervous system as relational fabric"

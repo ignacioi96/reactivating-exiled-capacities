@@ -1,5 +1,5 @@
 ---
-title: "mapping capacities"
+title: "mapping exiled capacities"
 description: "A comprehensive overview of all capacity clusters and their individual capacities"
 type: "page"
 # layout: "mapping-capacities"

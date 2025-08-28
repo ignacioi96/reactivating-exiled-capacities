@@ -86,30 +86,98 @@ class InPageBranch {
         // Generate the branch path
         this.generatePath();
     }
+
+    createTaperedPath(branch, index) {
+    const mainPoints = branch.points.filter(p => !p.isTaper);
+    const taperPoints = branch.points.filter(p => p.isTaper);
     
+    if (taperPoints.length === 0) {
+        // No taper, use regular path
+        return this.createAnimatedPath(branch, index);
+    }
+    
+    // Create main body path (everything except taper)
+    const mainPath = this.createMainBodyPath(branch, mainPoints);
+    this.svg.appendChild(mainPath);
+    
+    // Create ultra-thin taper path
+    if (taperPoints.length > 0) {
+        const taperPath = this.createTaperPath(branch, [...mainPoints.slice(-1), ...taperPoints]);
+        this.svg.appendChild(taperPath);
+    }
+}
+    
+    generateTaperPoints() {
+    if (this.points.length < 2) return [];
+    
+    const lastPoint = this.points[this.points.length - 1];
+    const secondLastPoint = this.points[this.points.length - 2];
+    
+    const direction = lastPoint.position.subtract(secondLastPoint.position).normalize();
+    
+    const taperPoints = [];
+    const numTaperPoints = 4;
+    const taperLength = 10 + this.rng.random() * 8;
+    
+    for (let i = 1; i <= numTaperPoints; i++) {
+        const progress = i / numTaperPoints;
+        const stepLength = (taperLength / numTaperPoints) * (1 - progress * 0.2);
+        
+        const curvature = (this.rng.random() - 0.5) * 0.2;
+        const curvedDirection = new Vec2D(
+            direction.x + curvature * direction.y,
+            direction.y - curvature * direction.x
+        ).normalize();
+        
+        const newPosition = lastPoint.position.clone().add(
+            curvedDirection.clone().multiply(stepLength * i)
+        );
+        
+        // ULTRA-THIN TAPER: Goes from last point width to nearly zero
+        const startWidth = lastPoint.width;
+        const taperWidth = startWidth * (1 - Math.pow(progress, 2.2)); // Aggressive taper curve
+        
+        taperPoints.push({
+            position: newPosition,
+            width: Math.max(0.05, taperWidth), // Nearly invisible at the tip
+            progress: 1 + progress * 0.1,
+            isTaper: true
+        });
+    }
+    
+    return taperPoints;
+}
+
     // Simple path generation like working 2D example
     generatePath() {
-        this.points = [];
-        let currentPos = this.start.clone();
-        let currentDirection = this.target ? 
-            this.target.subtract(this.start).normalize() :
-            new Vec2D(this.rng.random(-1, 1), this.rng.random(-1, 1)).normalize();
+    this.points = [];
+    let currentPos = this.start.clone();
+    let currentDirection = this.target ? 
+        this.target.subtract(this.start).normalize() :
+        new Vec2D(this.rng.random(-1, 1), this.rng.random(-1, 1)).normalize();
+    
+    const stepLength = this.maxLength / this.segments;
+    
+    for (let i = 0; i <= this.segments; i++) {
+        const progress = i / this.segments;
         
-        const stepLength = this.maxLength / this.segments;
+        // NATURAL ORGANIC TAPERING: Variable thickness with organic fluctuations
+        let baseThickness = this.startWidth * (1 - progress * 0.7); // Gradual taper
         
-        for (let i = 0; i <= this.segments; i++) {
-            const progress = i / this.segments;
-            
-            // Simple linear tapering
-            const currentWidth = this.startWidth + (this.endWidth - this.startWidth) * progress;
-            
-            this.points.push({
-                position: currentPos.clone(),
-                width: currentWidth,
-                progress: progress
-            });
-            
-            if (i === this.segments) break;
+        // Add organic thickness variation (roots aren't perfectly smooth)
+        const organicVariation = (this.rng.random() - 0.5) * 0.3 * this.startWidth * (1 - progress);
+        baseThickness += organicVariation;
+        
+        // Natural thinning toward tip (no forced minimum)
+        const finalThickness = Math.max(0.1, baseThickness * (0.3 + progress * 0.7));
+        
+        this.points.push({
+            position: currentPos.clone(),
+            width: Math.max(0.1, finalThickness),
+            progress: progress
+        });
+        
+        if (i === this.segments) break;
             
             // Target-seeking behavior like working example
             if (this.target) {
@@ -330,37 +398,30 @@ class InPageBranch {
     
     // Clean SVG path generation like working example
     toSVGPath() {
-        if (this.points.length < 2) return '';
+    if (this.points.length < 2) return '';
+    
+    // Skip taper points for now - let natural tapering handle it
+    let path = `M ${this.points[0].position.x.toFixed(1)} ${this.points[0].position.y.toFixed(1)}`;
+    
+    // Create more organic curves
+    for (let i = 1; i < this.points.length; i++) {
+        const current = this.points[i];
         
-        let path = `M ${this.points[0].position.x.toFixed(1)} ${this.points[0].position.y.toFixed(1)}`;
-        
-        // Create smooth curves using quadratic bezier curves
-        for (let i = 1; i < this.points.length; i++) {
-            const current = this.points[i];
+        if (i === this.points.length - 1) {
+            // Natural tip - just draw to end point
+            path += ` L ${current.position.x.toFixed(1)} ${current.position.y.toFixed(1)}`;
+        } else {
+            // Smoother, more organic curves
+            const next = this.points[i + 1];
+            const midX = (current.position.x + next.position.x) / 2;
+            const midY = (current.position.y + next.position.y) / 2;
             
-            if (i === this.points.length - 1) {
-                // Last point - draw line to end
-                path += ` L ${current.position.x.toFixed(1)} ${current.position.y.toFixed(1)}`;
-            } else {
-                // Create smooth curve to next point
-                const next = this.points[i + 1];
-                const controlX = current.position.x;
-                const controlY = current.position.y;
-                const endX = (current.position.x + next.position.x) / 2;
-                const endY = (current.position.y + next.position.y) / 2;
-                
-                if (i === 1) {
-                    // First curve
-                    path += ` Q ${controlX.toFixed(1)} ${controlY.toFixed(1)} ${endX.toFixed(1)} ${endY.toFixed(1)}`;
-                } else {
-                    // Smooth continuation
-                    path += ` T ${endX.toFixed(1)} ${endY.toFixed(1)}`;
-                }
-            }
+            path += ` Q ${current.position.x.toFixed(1)} ${current.position.y.toFixed(1)} ${midX.toFixed(1)} ${midY.toFixed(1)}`;
         }
-        
-        return path;
     }
+    
+    return path;
+}
 }
 
 class InPageMyceliumGenerator {
@@ -481,21 +542,41 @@ class InPageMyceliumGenerator {
     }
     
     detectContentType() {
-        const content = this.pageContainer.querySelector('.page-content, .content-wrapper');
-        if (!content) return;
-        
-        const contentHeight = content.scrollHeight;
-        const containerHeight = this.pageContainer.offsetHeight;
-        const ratio = contentHeight / containerHeight;
-        
-        if (ratio > 2) {
-            this.pageContainer.classList.add('long-content');
-            this.config.complexity *= 0.8;
-        } else if (ratio < 1.2) {
-            this.pageContainer.classList.add('short-content');
-            this.config.complexity *= 1.1;
-        }
+    const content = this.pageContainer.querySelector('.page-content, .content-wrapper');
+    if (!content) return;
+    
+    const contentHeight = content.scrollHeight;
+    const containerHeight = this.pageContainer.offsetHeight;
+    const ratio = contentHeight / containerHeight;
+    
+    // Scale network count based on content length
+    if (ratio > 3) {
+        // Very long content - 4-5 networks
+        this.config.maxBranches = Math.floor(4 + this.rng.random() * 2);
+        this.pageContainer.classList.add('very-long-content');
+        this.config.complexity *= 0.7; // Less complex but more networks
+    } else if (ratio > 2) {
+        // Long content - 3-4 networks  
+        this.config.maxBranches = Math.floor(3 + this.rng.random() * 2);
+        this.pageContainer.classList.add('long-content');
+        this.config.complexity *= 0.8;
+    } else if (ratio > 1.5) {
+        // Medium content - 2-3 networks
+        this.config.maxBranches = Math.floor(2 + this.rng.random() * 2);
+        this.pageContainer.classList.add('medium-content');
+    } else if (ratio < 1.2) {
+        // Short content - 2 networks
+        this.config.maxBranches = 2;
+        this.pageContainer.classList.add('short-content');
+        this.config.complexity *= 1.1;
+    } else {
+        // Default content - 2-3 networks
+        this.config.maxBranches = Math.floor(2 + this.rng.random() * 2);
     }
+    
+    console.log(`Content ratio: ${ratio.toFixed(2)}, Networks: ${this.config.maxBranches}`);
+}
+
     
     generateNetworks() {
         const rect = this.pageContainer.getBoundingClientRect();
@@ -518,62 +599,86 @@ class InPageMyceliumGenerator {
             console.log('All edge-to-inward networks generated');
         }, numNetworks * this.config.animations.stagger + 2000);
     }
+
     
     // Generate edge starting points that grow inward with good distribution
     generateEdgeToInwardPoints(count, width, height) {
-        const points = [];
-        const margin = 40;
-        
-        // Distribute around perimeter systematically
+    const points = [];
+    const margin = 40;
+    
+    // Force distribution across all 4 edges for better coverage
+    const edgeAssignments = [];
+    
+    // Ensure each edge gets at least one network if we have 4+ networks
+    if (count >= 4) {
+        edgeAssignments.push(0, 1, 2, 3); // Force one per edge
+        // Fill remaining with random distribution
+        for (let i = 4; i < count; i++) {
+            edgeAssignments.push(Math.floor(this.rng.random() * 4));
+        }
+    } else {
+        // For fewer networks, random distribution
         for (let i = 0; i < count; i++) {
-            const angle = (i / count) * Math.PI * 2 + this.rng.random(-0.4, 0.4);
-            let startX, startY, targetX, targetY;
-            
-            // Determine which edge based on angle
-            const normalizedAngle = ((angle % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
-            
-            if (normalizedAngle < Math.PI / 4 || normalizedAngle > 7 * Math.PI / 4) {
-                // Right edge
+            edgeAssignments.push(Math.floor(this.rng.random() * 4));
+        }
+    }
+    
+    // Shuffle for organic distribution
+    for (let i = edgeAssignments.length - 1; i > 0; i--) {
+        const j = Math.floor(this.rng.random() * (i + 1));
+        [edgeAssignments[i], edgeAssignments[j]] = [edgeAssignments[j], edgeAssignments[i]];
+    }
+    
+    for (let i = 0; i < count; i++) {
+        const edge = edgeAssignments[i];
+        let startX, startY, targetX, targetY;
+        
+        // Position based on assigned edge (0=right, 1=bottom, 2=left, 3=top)
+        switch (edge) {
+            case 0: // Right edge
                 startX = width + margin + this.rng.random() * 20;
-                startY = (0.3 + (i / count) * 0.4) * height;
+                startY = this.rng.random(0.2 * height, 0.8 * height);
                 targetX = width * (0.4 + this.rng.random() * 0.4);
                 targetY = startY + (this.rng.random() - 0.5) * 100;
+                break;
                 
-            } else if (normalizedAngle < 3 * Math.PI / 4) {
-                // Bottom edge  
-                startX = (0.3 + (i / count) * 0.4) * width;
+            case 1: // Bottom edge
+                startX = this.rng.random(0.2 * width, 0.8 * width);
                 startY = height + margin + this.rng.random() * 20;
                 targetX = startX + (this.rng.random() - 0.5) * 100;
                 targetY = height * (0.4 + this.rng.random() * 0.4);
+                break;
                 
-            } else if (normalizedAngle < 5 * Math.PI / 4) {
-                // Left edge
+            case 2: // Left edge
                 startX = -margin - this.rng.random() * 20;
-                startY = (0.3 + (i / count) * 0.4) * height;
+                startY = this.rng.random(0.2 * height, 0.8 * height);
                 targetX = width * (0.2 + this.rng.random() * 0.4);
                 targetY = startY + (this.rng.random() - 0.5) * 100;
+                break;
                 
-            } else {
-                // Top edge
-                startX = (0.3 + (i / count) * 0.4) * width;
+            case 3: // Top edge
+                startX = this.rng.random(0.2 * width, 0.8 * width);
                 startY = -margin - this.rng.random() * 20;
                 targetX = startX + (this.rng.random() - 0.5) * 100;
                 targetY = height * (0.2 + this.rng.random() * 0.4);
-            }
-            
-            // Keep targets within bounds
-            targetX = Math.max(30, Math.min(width - 30, targetX));
-            targetY = Math.max(30, Math.min(height - 30, targetY));
-            
-            points.push({
-                start: new Vec2D(startX, startY),
-                target: new Vec2D(targetX, targetY),
-                angle: normalizedAngle
-            });
+                break;
         }
         
-        return points;
+        // Keep targets within bounds
+        targetX = Math.max(30, Math.min(width - 30, targetX));
+        targetY = Math.max(30, Math.min(height - 30, targetY));
+        
+        points.push({
+            start: new Vec2D(startX, startY),
+            target: new Vec2D(targetX, targetY),
+            edge: edge
+        });
+        
+        console.log(`Network ${i}: ${['right', 'bottom', 'left', 'top'][edge]} edge`);
     }
+    
+    return points;
+}
     
     createEdgeToInwardNetwork(index, point, containerRect) {
         const distance = point.start.distanceTo(point.target);
@@ -618,13 +723,17 @@ class InPageMyceliumGenerator {
     }
     
     createAnimatedPath(branch, index) {
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', branch.toSVGPath());
-    path.setAttribute('fill', 'none');
-    path.setAttribute('stroke-linecap', 'round');
-    path.setAttribute('stroke-linejoin', 'round');
+    // Check if this branch has taper points
+    const hasTaper = branch.points.some(p => p.isTaper);
     
-    // Color and width based on level
+    // Create main path (body of the branch)
+    const mainPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    mainPath.setAttribute('d', branch.toSVGPath());
+    mainPath.setAttribute('fill', 'none');
+    mainPath.setAttribute('stroke-linecap', 'round'); // Keep round for main body
+    mainPath.setAttribute('stroke-linejoin', 'round');
+    
+    // Color and width based on level (main body width)
     let strokeColor, strokeWidth;
     switch (branch.level) {
         case 0:
@@ -644,22 +753,18 @@ class InPageMyceliumGenerator {
             strokeWidth = branch.getAverageWidth();
     }
     
-    // ✅ Keep your original approach, just ensure JS width takes precedence
-    path.setAttribute('stroke', strokeColor);
-    path.setAttribute('stroke-width', Math.max(0.5, strokeWidth).toFixed(1));
-    path.setAttribute('opacity', Math.max(0.6, 1 - branch.level * 0.15));
+    mainPath.setAttribute('stroke', strokeColor);
+    mainPath.setAttribute('stroke-width', Math.max(0.5, strokeWidth).toFixed(1));
+    mainPath.setAttribute('opacity', Math.max(0.6, 1 - branch.level * 0.15));
     
-    // ✅ Keep your original smooth animation - this was working fine!
-    const pathLength = path.getTotalLength();
-    path.style.strokeDasharray = `${pathLength}`;
-    path.style.strokeDashoffset = `${pathLength}`;
-    path.style.animation = `drawNetworkPath 2s ease-out forwards`;
-    path.style.animationDelay = `${branch.animationDelay}ms`;
+    // Animation for main path
+    const pathLength = mainPath.getTotalLength();
+    mainPath.style.strokeDasharray = `${pathLength}`;
+    mainPath.style.strokeDashoffset = `${pathLength}`;
+    mainPath.style.animation = `drawNetworkPath 2s ease-out forwards`;
+    mainPath.style.animationDelay = `${branch.animationDelay}ms`;
     
-    // ✅ Don't add CSS classes that override stroke-width
-    // path.className.baseVal = className; ← Remove this line if it exists
-    
-    this.svg.appendChild(path);
+    this.svg.appendChild(mainPath);
 }
     
     bindEvents() {

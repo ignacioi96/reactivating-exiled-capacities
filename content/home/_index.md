@@ -1,5 +1,5 @@
 ---
-title: "Home"
+title: "home"
 description: "Navigate the inquiry through exiled capacities"
 type: "home"
 layout: "single"

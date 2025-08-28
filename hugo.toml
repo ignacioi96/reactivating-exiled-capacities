@@ -21,12 +21,12 @@ title = 'reactivating exiled capacities'
 
 # Menu configuration for internal navigation
 [[menu.main]]
-  name = "Home"
+  name = "home"
   url = "/"
   weight = 10
 
 [[menu.main]]
-  name = "About the Inquiry"
+  name = "about the inquiry"
   url = "/about/"
   weight = 20
 
@@ -36,17 +36,17 @@ title = 'reactivating exiled capacities'
   weight = 30
 
 [[menu.main]]
-  name = "Mapping Exiled Capacities"
+  name = "mapping exiled capacities"
   url = "/mapping-capacities/"
   weight = 40
 
 [[menu.main]]
-  name = "Artist Residency 2024"
+  name = "artist residency 2024"
   url = "/residency/"
   weight = 50
 
 [[menu.main]]
-  name = "Contact"
+  name = "contact"
   url = "/contact/"
   weight = 60
 

@@ -2,7 +2,7 @@
 title: "the nervous system as relational fabric"
 date: 2024-01-01
 next_page:
-    title: "mapping capacities"
+    title: "mapping exiled capacities"
     url: "/mapping-capacities"
 ---
 ### Polyvagal Theory and the Nervous System: A Thread of Connection

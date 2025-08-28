@@ -1,12 +1,12 @@
 
 ---
-title: "residency"
+title: "artist residency"
 date: 2024-01-01
 next_page:
     title: "contact"
     url: "/contact"
 ---
-## REC's 2024 Art Residency
+
 
 In 2024, a digital art residency was hosted with several artists from diverse artistic practices, geographical locations, and ancestral heritages. It was a shared space to experiment with the reactivation of capacities that have been exiled through colonial modernity: sensibilities for relationality, care, accountability, and complexity.
 
