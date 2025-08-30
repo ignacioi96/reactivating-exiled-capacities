@@ -10,7 +10,7 @@ public_folder: "/images"
 publish_mode: editorial_workflow
 
 # Site URL for preview
-site_url: https://temp-rec.netlify.app
+site_url: https://exiled-capacities.com
 
 collections:
   - name: "clusters"
