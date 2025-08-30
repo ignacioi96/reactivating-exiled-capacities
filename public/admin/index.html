@@ -3,11 +3,107 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex" />
-  <title>Content Manager</title>
+  <title>Content Manager - Reactivating Exiled Capacities</title>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <style>
+    body {
+      font-family: 'Libre Baskerville', serif;
+      background: #f4efe5;
+      margin: 0;
+      padding: 0;
+    }
+    .auth-container {
+      text-align: center;
+      padding: 2rem;
+      max-width: 600px;
+      margin: 2rem auto;
+    }
+    .auth-button {
+      display: inline-block;
+      margin: 0.5rem;
+      padding: 12px 25px;
+      background: transparent;
+      border: 2px solid #8b7355;
+      color: #2c2c2c;
+      border-radius: 25px;
+      font-family: inherit;
+      font-style: italic;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .auth-button:hover {
+      background: rgba(139, 115, 85, 0.1);
+      transform: translateY(-1px);
+    }
+    #cms-loading {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-  <!-- Include the script that builds the page and powers Decap CMS -->
+  <div id="nc-root">
+    <div class="auth-container">
+      <h1 style="color: #8b7355;">Content Management</h1>
+      
+      <!-- Show before login -->
+      <div id="auth-options">
+        <p style="color: #2c2c2c; margin-bottom: 2rem;">
+          Access the content management system with your invited account.
+        </p>
+        
+        <div>
+          <button id="login-btn" class="auth-button">Login</button>
+          <button id="forgot-btn" class="auth-button">Forgot Password</button>
+        </div>
+        
+        <p style="color: #8b7355; font-size: 0.9rem; margin-top: 2rem; font-style: italic;">
+          Don't have an account? Contact an administrator for an invitation.
+        </p>
+      </div>
+      
+      <!-- Show during CMS loading -->
+      <div id="cms-loading" style="display: none;">
+        <h2 style="color: #8b7355;">Loading Content Manager...</h2>
+        <p style="color: #2c2c2c;">Please wait while we prepare your workspace.</p>
+      </div>
+    </div>
+  </div>
+  
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  
+  <script>
+    // Auth button handlers
+    document.getElementById('login-btn').addEventListener('click', () => {
+      netlifyIdentity.open('login');
+    });
+    
+    document.getElementById('forgot-btn').addEventListener('click', () => {
+      netlifyIdentity.open('recovery');
+    });
+    
+    // Handle Netlify Identity events
+    if (window.netlifyIdentity) {
+      netlifyIdentity.on('init', user => {
+        if (user) {
+          // User is logged in, show loading and initialize CMS
+          document.getElementById('auth-options').style.display = 'none';
+          document.getElementById('cms-loading').style.display = 'block';
+        }
+      });
+      
+      netlifyIdentity.on('login', user => {
+        // Hide auth options, show loading
+        document.getElementById('auth-options').style.display = 'none';
+        document.getElementById('cms-loading').style.display = 'block';
+      });
+      
+      netlifyIdentity.on('logout', () => {
+        // Show auth options again
+        document.getElementById('auth-options').style.display = 'block';
+        document.getElementById('cms-loading').style.display = 'none';
+      });
+    }
+  </script>
 </body>
 </html>
