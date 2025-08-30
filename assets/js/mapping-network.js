@@ -1,5 +1,5 @@
 // ============================================
-// MAPPING NETWORK SYSTEM
+// MAPPING NETWORK SYSTEM - FIXED FOR MOBILE
 // Adapted from network.js for mapping capacities page
 // ============================================
 
@@ -218,6 +218,7 @@ class MappingNetwork {
         this.animationTimeout = null;
         this.rng = new MappingRNG(Date.now() + 7777);
         window.mappingRNG = this.rng;
+        this.visualPanel = null; // Track the visual panel
         
         console.log('MappingNetwork initialized');
     }
@@ -227,31 +228,37 @@ class MappingNetwork {
         const existing = document.querySelector('#mappingNetworkCanvas');
         if (existing) existing.remove();
         
+        // Find the visual panel container
+        this.visualPanel = document.querySelector('.mapping-visual-panel');
+        if (!this.visualPanel) {
+            console.error('Visual panel not found');
+            return null;
+        }
+        
         this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         this.svg.id = 'mappingNetworkCanvas';
         
-        // Fixed positioning with high z-index
+        // Position within the visual panel, not fixed to viewport
         this.svg.style.cssText = `
-            position: fixed !important;
+            position: absolute !important;
             top: 0 !important;
             left: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
+            width: 100% !important;
+            height: 100% !important;
             z-index: 3 !important;
             pointer-events: none !important;
             margin: 0 !important;
             padding: 0 !important;
         `;
         
-        const viewportWidth = window.visualViewport ? window.visualViewport.width : window.innerWidth;
-        const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        // Use visual panel dimensions for viewBox
+        const panelRect = this.visualPanel.getBoundingClientRect();
+        this.svg.setAttribute('viewBox', `0 0 ${panelRect.width} ${panelRect.height}`);
         
-        this.svg.setAttribute('viewBox', `0 0 ${viewportWidth} ${viewportHeight}`);
+        // Append to visual panel, not body
+        this.visualPanel.appendChild(this.svg);
         
-        // Append to body for fixed positioning
-        document.body.appendChild(this.svg);
-        
-        console.log('Mapping SVG created and appended');
+        console.log(`Mapping SVG created within visual panel (${panelRect.width}x${panelRect.height})`);
         return this.svg;
     }
     
@@ -261,31 +268,53 @@ class MappingNetwork {
         
         console.log(`Found ${clusterButtons.length} cluster buttons`);
         
+        // Get visual panel bounds for relative positioning
+        const visualPanel = document.querySelector('.mapping-visual-panel');
+        if (!visualPanel) {
+            console.error('Visual panel not found for measuring positions');
+            return positions;
+        }
+        
+        const panelRect = visualPanel.getBoundingClientRect();
+        
         clusterButtons.forEach((button, index) => {
-            const rect = button.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
+            const buttonRect = button.getBoundingClientRect();
+            
+            // Convert button position to be relative to visual panel
+            const relativeX = buttonRect.left + buttonRect.width / 2 - panelRect.left;
+            const relativeY = buttonRect.top + buttonRect.height / 2 - panelRect.top;
+            
             const clusterName = button.dataset.cluster || `cluster-${index}`;
             
             positions.push({
-                x: centerX,
-                y: centerY,
+                x: relativeX,
+                y: relativeY,
                 name: clusterName,
                 element: button
             });
             
-            console.log(`Cluster "${clusterName}": ${centerX.toFixed(1)}px, ${centerY.toFixed(1)}px`);
+            console.log(`Cluster "${clusterName}": ${relativeX.toFixed(1)}px, ${relativeY.toFixed(1)}px (relative to panel)`);
         });
         
         return positions;
     }
     
-    findPageCenter() {
-        // Use center of viewport for mapping page
-        const centerX = window.innerWidth / 2;
-        const centerY = window.innerHeight / 2;
+    findPanelCenter() {
+        // Use center of visual panel, not viewport
+        if (!this.visualPanel) {
+            this.visualPanel = document.querySelector('.mapping-visual-panel');
+        }
         
-        console.log(`Page center: ${centerX}px, ${centerY}px`);
+        if (!this.visualPanel) {
+            console.error('Visual panel not found');
+            return new MappingVector(300, 200); // Fallback
+        }
+        
+        const rect = this.visualPanel.getBoundingClientRect();
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        console.log(`Panel center: ${centerX}px, ${centerY}px (within panel)`);
         return new MappingVector(centerX, centerY);
     }
     
@@ -301,7 +330,12 @@ class MappingNetwork {
             this.createSVG();
         }
         
-        const centerPos = this.findPageCenter();
+        if (!this.svg) {
+            console.error('Failed to create SVG');
+            return;
+        }
+        
+        const centerPos = this.findPanelCenter();
         const clusterPositions = this.measureClusterPositions();
         
         if (clusterPositions.length === 0) {
@@ -309,7 +343,7 @@ class MappingNetwork {
             return;
         }
         
-        console.log(`Generating network from center to ${clusterPositions.length} clusters`);
+        console.log(`Generating network from panel center to ${clusterPositions.length} clusters`);
         
         // Create main branches to each cluster
         clusterPositions.forEach((cluster, index) => {
@@ -446,10 +480,12 @@ class MappingNetwork {
     }
     
     resize() {
-        if (this.svg) {
-            const viewportWidth = window.visualViewport ? window.visualViewport.width : window.innerWidth;
-            const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-            this.svg.setAttribute('viewBox', `0 0 ${viewportWidth} ${viewportHeight}`);
+        // Update visual panel reference
+        this.visualPanel = document.querySelector('.mapping-visual-panel');
+        
+        if (this.svg && this.visualPanel) {
+            const rect = this.visualPanel.getBoundingClientRect();
+            this.svg.setAttribute('viewBox', `0 0 ${rect.width} ${rect.height}`);
         }
         
         // Regenerate on significant size changes
@@ -492,12 +528,12 @@ function initMappingNetwork() {
         document.head.appendChild(styles);
     }
     
-    // Wait for cluster buttons to be positioned
+    // Wait for layout to settle and buttons to be positioned
     setTimeout(() => {
         if (mappingNetwork) {
             mappingNetwork.generateAndAnimate();
         }
-    }, 800);
+    }, 1200);
     
     // Handle resize with debouncing
     let resizeTimeout;
@@ -508,6 +544,15 @@ function initMappingNetwork() {
                 mappingNetwork.resize();
             }
         }, 300);
+    });
+    
+    // Add orientation change handler for mobile
+    window.addEventListener('orientationchange', () => {
+        setTimeout(() => {
+            if (mappingNetwork) {
+                mappingNetwork.resize();
+            }
+        }, 500);
     });
 }
 
@@ -525,4 +570,4 @@ function regenerateMappingNetwork() {
 window.initMappingNetwork = initMappingNetwork;
 window.regenerateMappingNetwork = regenerateMappingNetwork;
 
-console.log('Mapping network system loaded');
+console.log('Fixed mapping network system loaded');

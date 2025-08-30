@@ -129,15 +129,16 @@ console.log('Simplified navigation loaded successfully');
     
     
     
+
+<script>document.body.classList.add('mapping-page');</script>
+
 <div class="mapping-layout" id="mappingLayout">
     
     
-    <div class="background-container" style="--bg-image: url('/images/soil-background.jpg');">
+    <div class="background-container" style="--bg-image: url('/images/soil-background.jpg'); position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1;">
         <div class="background-overlay"></div>
     </div>
 
-    
-    
     
     <div class="mapping-split-container">
         
@@ -155,9 +156,21 @@ console.log('Simplified navigation loaded successfully');
                     </div>
                 
                 
-                <div class="mapping-instructions">
-                    <p><strong>Click any capacity cluster to explore its individual capacities.</strong></p>
-                    <p><em>The organic network shows relationships between different clusters of exiled capacities.</em></p>
+                
+                <div class="mapping-additional-info" style="margin-top: var(--spacing-xl); padding-top: var(--spacing-xl); border-top: 1px solid rgba(139, 115, 85, 0.2);">
+                    <h3 style="color: var(--color-accent); font-size: 1.1rem; margin-bottom: var(--spacing-md);">Navigation Tips</h3>
+                    <p style="color: var(--color-text); font-size: 0.9rem; line-height: 1.5; margin-bottom: var(--spacing-sm);">
+                        • <strong>Desktop:</strong> This page fits your entire screen - no page scrolling needed
+                    </p>
+                    <p style="color: var(--color-text); font-size: 0.9rem; line-height: 1.5; margin-bottom: var(--spacing-sm);">
+                        • <strong>Text Panel:</strong> Scroll within this left panel to read all content
+                    </p>
+                    <p style="color: var(--color-text); font-size: 0.9rem; line-height: 1.5; margin-bottom: var(--spacing-sm);">
+                        • <strong>Visual Panel:</strong> The diagram area always stays visible on the right
+                    </p>
+                    <p style="color: var(--color-text); font-size: 0.9rem; line-height: 1.5; margin-bottom: 0;">
+                        • <strong>Mobile:</strong> Layout stacks vertically with normal page scrolling
+                    </p>
                 </div>
             </div>
         </div>
@@ -165,62 +178,60 @@ console.log('Simplified navigation loaded successfully');
         
         <div class="mapping-visual-panel">
             
+            <div class="cluster-buttons-container" id="clusterButtonsContainer"><a href="http://localhost:1313/clusters/liminal-capacities/" 
+                           class="cluster-button" 
+                           id="cluster-liminal-capacities"
+                           data-cluster="liminal-capacities"
+                           data-position-x="0.25"
+                           data-position-y="0.8">
+                            Liminal Capacities
+                        </a><a href="http://localhost:1313/clusters/poly-rhythmic-knowing/" 
+                           class="cluster-button" 
+                           id="cluster-poly-rhythmic-knowing"
+                           data-cluster="poly-rhythmic-knowing"
+                           data-position-x="0.85"
+                           data-position-y="0.65">
+                            Poly-Rhythmic Knowing
+                        </a><a href="http://localhost:1313/clusters/regenerative-regulation/" 
+                           class="cluster-button" 
+                           id="cluster-regenerative-regulation"
+                           data-cluster="regenerative-regulation"
+                           data-position-x="0.15"
+                           data-position-y="0.25">
+                            Regenerative Regulation
+                        </a><a href="http://localhost:1313/clusters/relational-integrity-accountability/" 
+                           class="cluster-button" 
+                           id="cluster-relational-integrity-accountability"
+                           data-cluster="relational-integrity-accountability"
+                           data-position-x="0.65"
+                           data-position-y="0.9">
+                            Relational Integrity and Accountability
+                        </a><a href="http://localhost:1313/clusters/somatic-relationality/" 
+                           class="cluster-button" 
+                           id="cluster-somatic-relationality"
+                           data-cluster="somatic-relationality"
+                           data-position-x="0.75"
+                           data-position-y="0.15">
+                            Somatic Relationality
+                        </a>
+            </div>
         </div>
     </div>
 
     
-    <div class="cluster-buttons-container" id="clusterButtonsContainer"><a href="http://localhost:1313/clusters/liminal-capacities/" 
-                   class="cluster-button" 
-                   id="cluster-liminal-capacities"
-                   data-cluster="liminal-capacities"
-                   data-position-x="0.25"
-                   data-position-y="0.8">
-                    Liminal Capacities
-                </a><a href="http://localhost:1313/clusters/poly-rhythmic-knowing/" 
-                   class="cluster-button" 
-                   id="cluster-poly-rhythmic-knowing"
-                   data-cluster="poly-rhythmic-knowing"
-                   data-position-x="0.85"
-                   data-position-y="0.65">
-                    Poly-Rhythmic Knowing
-                </a><a href="http://localhost:1313/clusters/regenerative-regulation/" 
-                   class="cluster-button" 
-                   id="cluster-regenerative-regulation"
-                   data-cluster="regenerative-regulation"
-                   data-position-x="0.15"
-                   data-position-y="0.25">
-                    Regenerative Regulation
-                </a><a href="http://localhost:1313/clusters/relational-integrity-accountability/" 
-                   class="cluster-button" 
-                   id="cluster-relational-integrity-accountability"
-                   data-cluster="relational-integrity-accountability"
-                   data-position-x="0.65"
-                   data-position-y="0.9">
-                    Relational Integrity and Accountability
-                </a><a href="http://localhost:1313/clusters/somatic-relationality/" 
-                   class="cluster-button" 
-                   id="cluster-somatic-relationality"
-                   data-cluster="somatic-relationality"
-                   data-position-x="0.75"
-                   data-position-y="0.15">
-                    Somatic Relationality
-                </a>
-    </div>
-
     
-    <div class="instructions mapping-page-instructions" id="mappingInstructions">
-        Explore the relationships between capacity clusters.
-    </div>
-
-    
-    <div class="loading" id="mappingLoading">Growing network connections...</div>
 </div>
 
 
 <script>
-
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Mapping page loaded - initializing network system');
+    console.log('Fixed viewport mapping page loaded - initializing network system');
+    
+    
+    const textContent = document.querySelector('.mapping-text-content');
+    if (textContent) {
+        textContent.style.scrollBehavior = 'smooth';
+    }
     
     
     setTimeout(() => {
@@ -230,6 +241,47 @@ document.addEventListener('DOMContentLoaded', function() {
             console.warn('Mapping network function not found');
         }
     }, 800);
+    
+    
+    document.addEventListener('keydown', function(e) {
+        if (!textContent) return;
+        
+        
+        const isTextPanelFocused = document.querySelector('.mapping-text-panel').contains(document.activeElement) ||
+                                  document.activeElement === document.body;
+        
+        if (isTextPanelFocused) {
+            switch(e.key) {
+                case 'ArrowDown':
+                case 'PageDown':
+                    e.preventDefault();
+                    textContent.scrollTop += e.key === 'PageDown' ? textContent.clientHeight * 0.8 : 40;
+                    break;
+                case 'ArrowUp':
+                case 'PageUp':
+                    e.preventDefault();
+                    textContent.scrollTop -= e.key === 'PageUp' ? textContent.clientHeight * 0.8 : 40;
+                    break;
+                case 'Home':
+                    if (e.ctrlKey) {
+                        e.preventDefault();
+                        textContent.scrollTop = 0;
+                    }
+                    break;
+                case 'End':
+                    if (e.ctrlKey) {
+                        e.preventDefault();
+                        textContent.scrollTop = textContent.scrollHeight;
+                    }
+                    break;
+            }
+        }
+    });
+});
+
+
+window.addEventListener('beforeunload', function() {
+    document.body.classList.remove('mapping-page');
 });
 </script>
 
