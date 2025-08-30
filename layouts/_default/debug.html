@@ -1,0 +1,40 @@
+{{ define "main" }}
+<div class="page-container">
+    <div class="content-wrapper">
+        <h1>Debug: Hugo Pages</h1>
+        
+        <h2>All Pages</h2>
+        <ul>
+        {{ range .Site.Pages }}
+            <li><strong>{{ .Title }}</strong> - Section: {{ .Section }} - Type: {{ .Type }} - Kind: {{ .Kind }}
+                {{ if .File }} - File: {{ .File.Path }}{{ end }}
+            </li>
+        {{ end }}
+        </ul>
+        
+        <h2>Cluster Pages (by Section)</h2>
+        {{ $clusters := where .Site.RegularPages "Section" "clusters" }}
+        <p>Found {{ len $clusters }} cluster pages</p>
+        <ul>
+        {{ range $clusters }}
+            <li><strong>{{ .Title }}</strong>
+                {{ if .File }} - File: {{ .File.TranslationBaseName }}{{ end }}
+                - Position X: {{ .Params.position_x }}
+                - Position Y: {{ .Params.position_y }}
+            </li>
+        {{ end }}
+        </ul>
+        
+        <h2>Cluster Pages (by Type)</h2>
+        {{ $clustersByType := where .Site.Pages "Type" "clusters" }}
+        <p>Found {{ len $clustersByType }} cluster pages by type</p>
+        <ul>
+        {{ range $clustersByType }}
+            <li><strong>{{ .Title }}</strong>
+                {{ if .File }} - File: {{ .File.TranslationBaseName }}{{ end }}
+            </li>
+        {{ end }}
+        </ul>
+    </div>
+</div>
+{{ end }}

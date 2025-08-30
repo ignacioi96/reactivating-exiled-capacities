@@ -64,7 +64,7 @@
     <!-- Scripts at end of body -->
     {{ block "scripts" . }}{{ end }}
     
-    {{ if not .IsHome }}
+       {{ if not .IsHome }}
         {{ $inPageMyceliumJS := resources.Get "js/in-page-mycelium.js" }}
         {{ if $inPageMyceliumJS }}
             <script src="{{ $inPageMyceliumJS.Permalink }}" defer></script>

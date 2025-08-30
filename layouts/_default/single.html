@@ -1,86 +1,228 @@
 {{ define "main" }}
-<div class="page-container">
-    <div class="content-wrapper">
-        <h1>{{ .Title }}</h1>
-        
-        {{ if .Params.description }}
-            <div class="page-description">
-                <p><em>{{ .Params.description }}</em></p>
+{{ if eq .Type "clusters" }}
+    <!-- CLUSTER PAGE LAYOUT -->
+    <div class="page-container cluster-page">
+        <div class="content-wrapper">
+            <!-- Cluster Header -->
+            <div class="cluster-header">
+                <h1 class="cluster-title">{{ .Title }}</h1>
+                
+                {{ if .Params.description }}
+                    <p class="cluster-description">{{ .Params.description }}</p>
+                {{ end }}
+                
+                {{ if .Params.why_matters }}
+                    <div class="cluster-why-matters">
+                        <h3>Why This Cluster Matters</h3>
+                        <p>{{ .Params.why_matters | markdownify }}</p>
+                    </div>
+                {{ end }}
             </div>
-        {{ end }}
-        
-        <div class="page-content">
-            {{ .Content }}
-        </div>
-        
-        {{ if .Section }}
-            <div class="page-navigation">
-                <a href="{{ "/" | relURL }}{{ .Section }}/" class="back-link">â† Back to {{ .Section | humanize }}</a>
-            </div>
-        {{ end }}
 
-        <!-- Inline next page link - uses custom frontmatter first, falls back to 
-            extInSection -->
-        {{ $nextPage := false }}
-        {{ $nextTitle := "" }}
-        {{ $nextURL := "" }}
-        
-        <!-- Priority 1: Custom next_page from frontmatter -->
-        {{ if .Params.next_page }}
-            {{ $nextPage = true }}
-            {{ $nextTitle = .Params.next_page.title }}
-            {{ $nextURL = .Params.next_page.url }}
-        <!-- Priority 2: Hugo's automatic NextInSection -->
-        {{ else if .NextInSection }}
-            {{ $nextPage = true }}
-            {{ $nextTitle = .NextInSection.Title }}
-            {{ $nextURL = .NextInSection.Permalink }}
-        {{ end }}
-        
-        {{ if $nextPage }}
-        <div class="inline-next-page">
-          <a href="{{ $nextURL }}" class="inline-next-link">
-            <div class="inline-next-content">
-              <span class="inline-next-label">next page:</span>
-              <span class="inline-next-title">{{ $nextTitle }}</span>
+            <!-- Individual Capacities -->
+            {{ if .Params.capacities }}
+                <div class="capacities-container">
+                    {{ range $index, $capacity := .Params.capacities }}
+                        <article class="capacity-card" id="capacity-{{ $index }}">
+                            <header class="capacity-header">
+                                <h2 class="capacity-title">{{ $capacity.title }}</h2>
+                                {{ if $capacity.subtitle }}
+                                    <p class="capacity-subtitle">{{ $capacity.subtitle }}</p>
+                                {{ end }}
+                            </header>
+
+                            <div class="capacity-content">
+                                {{ if $capacity.what_it_is }}
+                                    <div class="capacity-section">
+                                        <h4>What it is</h4>
+                                        <div class="capacity-text">{{ $capacity.what_it_is | markdownify }}</div>
+                                    </div>
+                                {{ end }}
+
+                                {{ if $capacity.why_exiled }}
+                                    <div class="capacity-section">
+                                        <h4>Why it's been exiled</h4>
+                                        <div class="capacity-text">{{ $capacity.why_exiled | markdownify }}</div>
+                                    </div>
+                                {{ end }}
+
+                                {{ if $capacity.what_possible }}
+                                    <div class="capacity-section">
+                                        <h4>What it makes possible</h4>
+                                        <div class="capacity-text">{{ $capacity.what_possible | markdownify }}</div>
+                                    </div>
+                                {{ end }}
+
+                                {{ if $capacity.distortions }}
+                                    <div class="capacity-section">
+                                        <h4>Distortions</h4>
+                                        <ul class="distortions-list">
+                                            {{ range $capacity.distortions }}
+                                                <li class="distortion-item">
+                                                    <strong class="distortion-name">{{ .name }}</strong>
+                                                    {{ if .description }}
+                                                        <p class="distortion-description">{{ .description }}</p>
+                                                    {{ end }}
+                                                </li>
+                                            {{ end }}
+                                        </ul>
+                                    </div>
+                                {{ end }}
+                            </div>
+                        </article>
+                    {{ end }}
+                </div>
+            {{ end }}
+
+            <!-- Cluster Navigation -->
+            {{- $allClusters := where .Site.RegularPages "Section" "clusters" -}}
+            {{- $allClusters = $allClusters.ByTitle -}}
+            {{- $currentCluster := .File.TranslationBaseName -}}
+            {{- $nextCluster := "" -}}
+            
+            {{- range $index, $cluster := $allClusters -}}
+                {{- if and $cluster.File (eq $cluster.File.TranslationBaseName $currentCluster) -}}
+                    {{- $nextIndex := add $index 1 -}}
+                    {{- if lt $nextIndex (len $allClusters) -}}
+                        {{- $nextCluster = index $allClusters $nextIndex -}}
+                    {{- else -}}
+                        {{- $nextCluster = .Site.GetPage "/mapping-capacities" -}}
+                    {{- end -}}
+                {{- end -}}
+            {{- end -}}
+            
+            {{ if $nextCluster }}
+                <div class="inline-next-page">
+                    <a href="{{ $nextCluster.Permalink }}" class="inline-next-link">
+                        <div class="inline-next-content">
+                            <span class="inline-next-label">
+                                {{ if eq $nextCluster.Type "page" }}
+                                    next: return to overview
+                                {{ else }}
+                                    next cluster:
+                                {{ end }}
+                            </span>
+                            <span class="inline-next-title">{{ $nextCluster.Title }}</span>
+                        </div>
+                        <div class="inline-next-arrow-icon">
+                            <svg class="organic-arrow-svg" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+                                <path class="organic-arrow-shaft" 
+                                      d="M 8 20 Q 15 18 25 19 Q 35 20 45 19" 
+                                      stroke-linecap="round" 
+                                      stroke-linejoin="round"/>
+                                <path class="organic-arrow-head-top" 
+                                      d="M 37 13 Q 42 16 45 19 Q 47 20 49 21" 
+                                      stroke-linecap="round" 
+                                      stroke-linejoin="round"/>
+                                <path class="organic-arrow-head-bottom" 
+                                      d="M 37 26 Q 42 23 45 19 Q 47 18 49 17" 
+                                      stroke-linecap="round" 
+                                      stroke-linejoin="round"/>
+                                <path class="organic-arrow-texture" 
+                                      d="M 20 17 Q 22 19 24 18" 
+                                      stroke-width="1" 
+                                      opacity="0.4"
+                                      stroke-linecap="round"/>
+                                <path class="organic-arrow-texture" 
+                                      d="M 30 21 Q 32 19 34 20" 
+                                      stroke-width="1" 
+                                      opacity="0.4"
+                                      stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                    </a>
+                </div>
+            {{ end }}
+
+            <!-- Back to overview link -->
+            <div class="page-navigation" style="margin-top: var(--spacing-xl); text-align: center;">
+                <a href="/mapping-capacities/" class="back-link" style="color: var(--color-accent); text-decoration: none; font-style: italic; padding: 12px 25px; border: 1px solid var(--color-accent); border-radius: 25px; transition: var(--transition-base);">
+                    ← Back to Capacity Overview
+                </a>
             </div>
-            <div class="inline-next-arrow-icon">
-              <svg class="organic-arrow-svg" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
-                <!-- Main arrow shaft with organic curve -->
-                <path class="organic-arrow-shaft" 
-                      d="M 8 20 Q 15 18 25 19 Q 35 20 45 19" 
-                      stroke-linecap="round" 
-                      stroke-linejoin="round"/>
-                
-                <!-- Top arrowhead barb with organic curve -->
-                <path class="organic-arrow-head-top" 
-                      d="M 37 13 Q 42 16 45 19 Q 47 20 49 21" 
-                      stroke-linecap="round" 
-                      stroke-linejoin="round"/>
-                
-                <!-- Bottom arrowhead barb with organic curve -->
-                <path class="organic-arrow-head-bottom" 
-                      d="M 37 26 Q 42 23 45 19 Q 47 18 49 17" 
-                      stroke-linecap="round" 
-                      stroke-linejoin="round"/>
-                
-                <!-- Optional: Add some organic texture lines -->
-                <path class="organic-arrow-texture" 
-                      d="M 20 17 Q 22 19 24 18" 
-                      stroke-width="1" 
-                      opacity="0.4"
-                      stroke-linecap="round"/>
-                <path class="organic-arrow-texture" 
-                      d="M 30 21 Q 32 19 34 20" 
-                      stroke-width="1" 
-                      opacity="0.4"
-                      stroke-linecap="round"/>
-              </svg>
-            </div>
-          </a>
         </div>
-        {{ end }}
     </div>
-</div>
 
+{{ else }}
+    <!-- REGULAR PAGE LAYOUT -->
+    <div class="page-container">
+        <div class="content-wrapper">
+            <h1>{{ .Title }}</h1>
+            
+            {{ if .Params.description }}
+                <div class="page-description">
+                    <p><em>{{ .Params.description }}</em></p>
+                </div>
+            {{ end }}
+            
+            <div class="page-content">
+                <!-- Wrap tables in scrollable containers -->
+                {{ $content := .Content }}
+                {{ $content = replaceRE "(<table[^>]*>)" "<div class=\"table-container\">$1" $content }}
+                {{ $content = replaceRE "(</table>)" "$1</div>" $content }}
+                {{ $content | safeHTML }}
+            </div>
+            
+            {{ if .Section }}
+                <div class="page-navigation">
+                    <a href="{{ "/" | relURL }}{{ .Section }}/" class="back-link">← Back to {{ .Section | humanize }}</a>
+                </div>
+            {{ end }}
+
+            <!-- Regular next page link -->
+            {{ $nextPage := false }}
+            {{ $nextTitle := "" }}
+            {{ $nextURL := "" }}
+            
+            <!-- Priority 1: Custom next_page from frontmatter -->
+            {{ if .Params.next_page }}
+                {{ $nextPage = true }}
+                {{ $nextTitle = .Params.next_page.title }}
+                {{ $nextURL = .Params.next_page.url }}
+            <!-- Priority 2: Hugo's automatic NextInSection -->
+            {{ else if .NextInSection }}
+                {{ $nextPage = true }}
+                {{ $nextTitle = .NextInSection.Title }}
+                {{ $nextURL = .NextInSection.Permalink }}
+            {{ end }}
+            
+            {{ if $nextPage }}
+                <div class="inline-next-page">
+                    <a href="{{ $nextURL }}" class="inline-next-link">
+                        <div class="inline-next-content">
+                            <span class="inline-next-label">next page:</span>
+                            <span class="inline-next-title">{{ $nextTitle }}</span>
+                        </div>
+                        <div class="inline-next-arrow-icon">
+                            <svg class="organic-arrow-svg" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+                                <path class="organic-arrow-shaft" 
+                                      d="M 8 20 Q 15 18 25 19 Q 35 20 45 19" 
+                                      stroke-linecap="round" 
+                                      stroke-linejoin="round"/>
+                                <path class="organic-arrow-head-top" 
+                                      d="M 37 13 Q 42 16 45 19 Q 47 20 49 21" 
+                                      stroke-linecap="round" 
+                                      stroke-linejoin="round"/>
+                                <path class="organic-arrow-head-bottom" 
+                                      d="M 37 26 Q 42 23 45 19 Q 47 18 49 17" 
+                                      stroke-linecap="round" 
+                                      stroke-linejoin="round"/>
+                                <path class="organic-arrow-texture" 
+                                      d="M 20 17 Q 22 19 24 18" 
+                                      stroke-width="1" 
+                                      opacity="0.4"
+                                      stroke-linecap="round"/>
+                                <path class="organic-arrow-texture" 
+                                      d="M 30 21 Q 32 19 34 20" 
+                                      stroke-width="1" 
+                                      opacity="0.4"
+                                      stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                    </a>
+                </div>
+            {{ end }}
+        </div>
+    </div>
+{{ end }}
 {{ end }}

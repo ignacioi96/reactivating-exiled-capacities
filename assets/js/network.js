@@ -221,27 +221,40 @@ class OrganicNetwork {
         window.networkRNG = this.rng;
         
         this.createSVG();
-        console.log('OrganicNetwork initialized');
+        console.log('OrganicNetwork initialized with fixed positioning');
     }
     
+
     createSVG() {
-        const existing = this.container.querySelector('#network-svg');
+        const existing = document.querySelector('#network-svg'); // Check entire document, not just container
         if (existing) existing.remove();
         
         this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         this.svg.id = 'network-svg';
-        this.svg.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 3;
-            pointer-events: none;
-        `;
-        this.svg.setAttribute('viewBox', `0 0 ${window.innerWidth} ${window.innerHeight}`);
         
-        this.container.appendChild(this.svg);
+        // FORCE fixed positioning with !important inline styles
+        this.svg.style.cssText = `
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 3 !important;
+            pointer-events: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        `;
+        
+        // Use visual viewport dimensions if available (mobile)
+        const viewportWidth = window.visualViewport ? window.visualViewport.width : window.innerWidth;
+        const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        
+        this.svg.setAttribute('viewBox', `0 0 ${viewportWidth} ${viewportHeight}`);
+        
+        // CRITICAL: Append directly to document.body, not to this.container
+        document.body.appendChild(this.svg);
+        
+        console.log('SVG created and appended to body with fixed positioning');
     }
     
     generateToTargets(buttonCenter, targetPositions, options = {}) {
@@ -485,15 +498,30 @@ function waitForButtonsToBePositioned() {
 let organicNetwork;
 let isNetworkInitialized = false;
 
+function cleanupNetworkSVGs() {
+    // Remove any existing network SVGs from anywhere in the document
+    const existingSVGs = document.querySelectorAll('#network-svg, [id*="network"], [id*="mycelium"]');
+    existingSVGs.forEach(svg => {
+        if (svg && svg.parentNode) {
+            svg.parentNode.removeChild(svg);
+            console.log('Removed leftover SVG:', svg.id);
+        }
+    });
+}
+
+// Call cleanup before creating new network
 function initNetwork() {
     if (isNetworkInitialized) return;
     
     console.log('Initializing organic network system...');
     
+    // Clean up any leftover SVGs first
+    cleanupNetworkSVGs();
+    
     organicNetwork = new OrganicNetwork(document.body);
     isNetworkInitialized = true;
     
-    // Add CSS animation
+    // Add CSS animation if not already present
     if (!document.getElementById('network-styles')) {
         const styles = document.createElement('style');
         styles.id = 'network-styles';

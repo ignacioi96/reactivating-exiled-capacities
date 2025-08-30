@@ -129,82 +129,109 @@ console.log('Simplified navigation loaded successfully');
     
     
     
-<div class="page-container">
-    <div class="content-wrapper">
-        <h1>mapping exiled capacities</h1>
-        
-        
-            <div class="page-description">
-                <p><em>A comprehensive overview of all capacity clusters and their individual capacities</em></p>
-            </div>
-        
-        
-        <div class="page-content">
-            <h2 id="subtitle-1">Subtitle 1</h2>
-
-        </div>
-        
-        
-
-        
-        
-        
-        
-        
-        
-        
-            
-            
-            
-        
-        
-        
-        
-        <div class="inline-next-page">
-          <a href="/residency" class="inline-next-link">
-            <div class="inline-next-content">
-              <span class="inline-next-label">next page:</span>
-              <span class="inline-next-title">residency</span>
-            </div>
-            <div class="inline-next-arrow-icon">
-              <svg class="organic-arrow-svg" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
-                
-                <path class="organic-arrow-shaft" 
-                      d="M 8 20 Q 15 18 25 19 Q 35 20 45 19" 
-                      stroke-linecap="round" 
-                      stroke-linejoin="round"/>
-                
-                
-                <path class="organic-arrow-head-top" 
-                      d="M 37 13 Q 42 16 45 19 Q 47 20 49 21" 
-                      stroke-linecap="round" 
-                      stroke-linejoin="round"/>
-                
-                
-                <path class="organic-arrow-head-bottom" 
-                      d="M 37 26 Q 42 23 45 19 Q 47 18 49 17" 
-                      stroke-linecap="round" 
-                      stroke-linejoin="round"/>
-                
-                
-                <path class="organic-arrow-texture" 
-                      d="M 20 17 Q 22 19 24 18" 
-                      stroke-width="1" 
-                      opacity="0.4"
-                      stroke-linecap="round"/>
-                <path class="organic-arrow-texture" 
-                      d="M 30 21 Q 32 19 34 20" 
-                      stroke-width="1" 
-                      opacity="0.4"
-                      stroke-linecap="round"/>
-              </svg>
-            </div>
-          </a>
-        </div>
-        
+<div class="mapping-layout" id="mappingLayout">
+    
+    
+    <div class="background-container" style="--bg-image: url('/images/soil-background.jpg');">
+        <div class="background-overlay"></div>
     </div>
+
+    
+    
+    
+    <div class="mapping-split-container">
+        
+        <div class="mapping-text-panel">
+            <div class="mapping-text-content">
+                <h1 class="mapping-title">mapping exiled capacities</h1>
+                
+                
+                    <div class="mapping-description">
+                        <p>What you&rsquo;ll find here is a living map of some of the exiled capacities that have surfaced while working alongside artists, facilitators, and communities in collective inquiry.</p>
+<p>This map emerged from practice, not theory alone. Each cluster is a braid of patterns we&rsquo;ve noticed while sensing into what modernity has trained out of our bodies, our relationships, and our collective metabolism. Some capacities were named in multiple artistic invitations. Others appeared only once but landed like a stone in the water, rippling through everything else.</p>
+<p>The clusters are not fixed categories—they&rsquo;re invitations to notice.</p>
+<p>You might see overlaps, contradictions, or gaps. That&rsquo;s the point. These are porous groupings, not containers. Engage these clusters as you would a conversation in motion—unfinished, relational, and shaped by the conditions you bring to it. They are here to be questioned, re-named, composted, and re-grown.</p>
+
+                    </div>
+                
+                
+                <div class="mapping-instructions">
+                    <p><strong>Click any capacity cluster to explore its individual capacities.</strong></p>
+                    <p><em>The organic network shows relationships between different clusters of exiled capacities.</em></p>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="mapping-visual-panel">
+            
+        </div>
+    </div>
+
+    
+    <div class="cluster-buttons-container" id="clusterButtonsContainer"><a href="http://localhost:1313/clusters/liminal-capacities/" 
+                   class="cluster-button" 
+                   id="cluster-liminal-capacities"
+                   data-cluster="liminal-capacities"
+                   data-position-x="0.25"
+                   data-position-y="0.8">
+                    Liminal Capacities
+                </a><a href="http://localhost:1313/clusters/poly-rhythmic-knowing/" 
+                   class="cluster-button" 
+                   id="cluster-poly-rhythmic-knowing"
+                   data-cluster="poly-rhythmic-knowing"
+                   data-position-x="0.85"
+                   data-position-y="0.65">
+                    Poly-Rhythmic Knowing
+                </a><a href="http://localhost:1313/clusters/regenerative-regulation/" 
+                   class="cluster-button" 
+                   id="cluster-regenerative-regulation"
+                   data-cluster="regenerative-regulation"
+                   data-position-x="0.15"
+                   data-position-y="0.25">
+                    Regenerative Regulation
+                </a><a href="http://localhost:1313/clusters/relational-integrity-accountability/" 
+                   class="cluster-button" 
+                   id="cluster-relational-integrity-accountability"
+                   data-cluster="relational-integrity-accountability"
+                   data-position-x="0.65"
+                   data-position-y="0.9">
+                    Relational Integrity and Accountability
+                </a><a href="http://localhost:1313/clusters/somatic-relationality/" 
+                   class="cluster-button" 
+                   id="cluster-somatic-relationality"
+                   data-cluster="somatic-relationality"
+                   data-position-x="0.75"
+                   data-position-y="0.15">
+                    Somatic Relationality
+                </a>
+    </div>
+
+    
+    <div class="instructions mapping-page-instructions" id="mappingInstructions">
+        Explore the relationships between capacity clusters.
+    </div>
+
+    
+    <div class="loading" id="mappingLoading">Growing network connections...</div>
 </div>
 
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Mapping page loaded - initializing network system');
+    
+    
+    setTimeout(() => {
+        if (typeof initMappingNetwork === 'function') {
+            initMappingNetwork();
+        } else {
+            console.warn('Mapping network function not found');
+        }
+    }, 800);
+});
+</script>
 
     
     
@@ -215,10 +242,10 @@ console.log('Simplified navigation loaded successfully');
     
     
     
-    <a href="http://localhost:1313/contact/" class="next-page-arrow" id="floatingNextArrow">
+    <a href="http://localhost:1313/debug/" class="next-page-arrow" id="floatingNextArrow">
       <div class="next-page-arrow-content">
         <div class="next-page-arrow-label">next page:</div>
-        <div class="next-page-arrow-title"></div>
+        <div class="next-page-arrow-title">Debug Page</div>
       </div>
       <div class="next-page-arrow-icon">
         <svg class="organic-arrow-svg" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
@@ -258,8 +285,15 @@ console.log('Simplified navigation loaded successfully');
     
     
     
+
+
+
     
+    <script src="http://localhost:1313/js/mapping-network.min.js"></script>
+
+
     
+       
         
         
             <script src="http://localhost:1313/js/in-page-mycelium.js" defer></script>

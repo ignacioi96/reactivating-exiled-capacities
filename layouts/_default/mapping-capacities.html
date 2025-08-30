@@ -1,121 +1,96 @@
 {{ define "main" }}
-<div class="mapping-capacities-page">
-    <div class="page-header">
-        <h1>{{ .Title }}</h1>
-        {{ if .Description }}
-        <p class="page-description">{{ .Description }}</p>
-        {{ end }}
-        {{ .Content }}
+<div class="mapping-layout" id="mappingLayout">
+    <!-- Background container -->
+    {{ $backgroundImage := .Site.Params.backgroundImage | default "/images/soil-background.jpg" | relURL }}
+    <div class="background-container" style="--bg-image: url('{{ $backgroundImage }}');">
+        <div class="background-overlay"></div>
     </div>
 
-    {{- $clusters := where .Site.Pages "Type" "clusters" -}}
-    {{- $clusters := where $clusters "Kind" "!=" "section" -}}
-
-    <!-- TOC Navigation -->
-    <nav class="inline-toc">
-        <h3>Clusters in this guide:</h3>
-        <div class="toc-chips">
-            {{ range $clusterIndex, $cluster := $clusters }}
-            <a href="#cluster-{{ $clusterIndex }}" class="toc-chip">{{ $cluster.Title }}</a>
-            {{ end }}
-        </div>
-    </nav>
-
-    <div class="clusters-overview">
-        {{ range $clusterIndex, $cluster := $clusters }}
-        <section class="cluster-section" id="cluster-{{ $clusterIndex }}">
-            <div class="cluster-header">
-                <h2 class="cluster-title">{{ $cluster.Title }}</h2>
-                {{ if $cluster.Params.description }}
-                <p class="cluster-description">{{ $cluster.Params.description }}</p>
+    <!-- Network canvas (will be created by JavaScript) -->
+    
+    <!-- Split layout container -->
+    <div class="mapping-split-container">
+        <!-- Left side: Text content -->
+        <div class="mapping-text-panel">
+            <div class="mapping-text-content">
+                <h1 class="mapping-title">{{ .Title }}</h1>
+                
+                {{ if .Content }}
+                    <div class="mapping-description">
+                        {{ .Content }}
+                    </div>
                 {{ end }}
                 
-                {{ if $cluster.Params.why_matters }}
-                <div class="why-matters">
-                    <h3>Why This Cluster Matters</h3>
-                    <p>{{ $cluster.Params.why_matters }}</p>
+                <div class="mapping-instructions">
+                    <p><strong>Click any capacity cluster to explore its individual capacities.</strong></p>
+                    <p><em>The organic network shows relationships between different clusters of exiled capacities.</em></p>
                 </div>
-                {{ end }}
             </div>
+        </div>
+        
+        <!-- Right side: Visual diagram area -->
+        <div class="mapping-visual-panel">
+            <!-- This is where the cluster buttons will be positioned -->
+        </div>
+    </div>
 
-            {{ if $cluster.Params.capacities }}
-            <div class="capacities-grid">
-                {{ range $capacityIndex, $capacity := $cluster.Params.capacities }}
-                <article class="capacity-card">
-                    <header class="capacity-header">
-                        <h3 class="capacity-title">{{ $capacity.title }}</h3>
-                        {{ if $capacity.subtitle }}
-                        <p class="capacity-subtitle">{{ $capacity.subtitle }}</p>
-                        {{ end }}
-                    </header>
-
-                    <div class="capacity-content">
-                        {{ if $capacity.what_it_is }}
-                        <div class="capacity-section">
-                            <h4>What it is</h4>
-                            <div class="capacity-text">{{ $capacity.what_it_is | markdownify }}</div>
-                        </div>
-                        {{ end }}
-
-                        {{ if $capacity.why_exiled }}
-                        <div class="capacity-section">
-                            <h4>Why it's been exiled</h4>
-                            <div class="capacity-text">{{ $capacity.why_exiled | markdownify }}</div>
-                        </div>
-                        {{ end }}
-
-                        {{ if $capacity.what_possible }}
-                        <div class="capacity-section">
-                            <h4>What it makes possible</h4>
-                            <div class="capacity-text">{{ $capacity.what_possible | markdownify }}</div>
-                        </div>
-                        {{ end }}
-
-                        {{ if $capacity.distortions }}
-                        <div class="capacity-section">
-                            <h4>Distortions</h4>
-                            <ul class="distortions-list">
-                                {{ range $capacity.distortions }}
-                                <li class="distortion-item">
-                                    <strong class="distortion-name">{{ .name }}</strong>
-                                    {{ if .description }}
-                                    <p class="distortion-description">{{ .description }}</p>
-                                    {{ end }}
-                                </li>
-                                {{ end }}
-                            </ul>
-                        </div>
-                        {{ end }}
-                    </div>
-                </article>
-                {{ end }}
-            </div>
-            {{ end }}
-        </section>
+    <!-- Cluster buttons positioned within the visual panel -->
+    <div class="cluster-buttons-container" id="clusterButtonsContainer">
+        {{- $clusters := where .Site.RegularPages "Section" "clusters" -}}
+        {{- $clusters = $clusters.ByTitle -}}
+        
+        {{ range $clusters }}
+            {{- if .File -}}
+                {{- $clusterName := .File.TranslationBaseName -}}
+                {{- $positionX := .Params.position_x | default 0.5 -}}
+                {{- $positionY := .Params.position_y | default 0.5 -}}
+                
+                <a href="{{ .Permalink }}" 
+                   class="cluster-button" 
+                   id="cluster-{{ $clusterName }}"
+                   data-cluster="{{ $clusterName }}"
+                   data-position-x="{{ $positionX }}"
+                   data-position-y="{{ $positionY }}">
+                    {{ .Title }}
+                </a>
+            {{- end -}}
         {{ end }}
     </div>
-    <a href="#" class="back-to-top" id="backToTop">
-        <span>↑</span>
-    </a>
-</div>
-<script>
-// Show/hide back to top button based on scroll position
-window.addEventListener('scroll', function() {
-    const backToTop = document.getElementById('backToTop');
-    if (window.pageYOffset > 300) {
-        backToTop.classList.add('visible');
-    } else {
-        backToTop.classList.remove('visible');
-    }
-});
 
-// Smooth scroll to top
-document.getElementById('backToTop').addEventListener('click', function(e) {
-    e.preventDefault();
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
+    <!-- Instructions -->
+    <div class="instructions mapping-page-instructions" id="mappingInstructions">
+        Explore the relationships between capacity clusters.
+    </div>
+
+    <!-- Loading indicator -->
+    <div class="loading" id="mappingLoading">Growing network connections...</div>
+</div>
+
+<!-- Include mapping network JavaScript -->
+<script>
+// Initialize mapping network when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Mapping page loaded - initializing network system');
+    
+    // Small delay to ensure layout is settled
+    setTimeout(() => {
+        if (typeof initMappingNetwork === 'function') {
+            initMappingNetwork();
+        } else {
+            console.warn('Mapping network function not found');
+        }
+    }, 800);
 });
 </script>
+{{ end }}
+
+{{ define "scripts" }}
+<!-- Mapping Network JavaScript -->
+{{ $mappingJS := resources.Get "js/mapping-network.js" }}
+{{ if $mappingJS }}
+    {{ $mappingMinified := $mappingJS | resources.Minify }}
+    <script src="{{ $mappingMinified.Permalink }}"></script>
+{{ else }}
+    <script>console.warn('Mapping network script not found at js/mapping-network.js');</script>
+{{ end }}
 {{ end }}

@@ -20,6 +20,8 @@
   </url><url>
     <loc>http://localhost:1313/clusters/</loc>
   </url><url>
+    <loc>http://localhost:1313/debug/</loc>
+  </url><url>
     <loc>http://localhost:1313/home/</loc>
   </url><url>
     <loc>http://localhost:1313/clusters/liminal-capacities/</loc>

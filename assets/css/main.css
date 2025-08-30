@@ -15,6 +15,8 @@
   --color-border: #8b7355;
   --color-shadow: rgba(44, 44, 44, 0.1);
   --color-shadow-hover: rgba(44, 44, 44, 0.15);
+  --color-link: #8b7355;
+  --color-link-hover: #2c2c2c;
 
   /* Typography */
   --font-primary: 'Libre Baskerville', 'Georgia', serif;
@@ -103,6 +105,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: var(--font-weight-normal);
   font-style: italic;
   margin-bottom: var(--spacing-md);
+  color: var(--color-text);
 }
 
 h1 {
@@ -124,6 +127,16 @@ h3 {
 p {
   margin-bottom: var(--spacing-lg);
   font-size: var(--font-size-base);
+}
+
+a {
+  color: var(--color-link);
+  transition: color var(--transition-base);
+}
+
+a:hover,
+a:focus {
+  color: var(--color-link-hover);
 }
 
 /* ============================================
@@ -160,16 +173,17 @@ p {
 
 #myceliumCanvas,
 #network-svg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: var(--z-canvas);
-  pointer-events: none;
-  display: block;
-  margin: 0;
-  padding: 0;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 3 !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  contain: layout !important;
 }
 
 .content-container {
@@ -204,28 +218,18 @@ p {
   padding: var(--spacing-xl) 0;
 }
 
-.page-container.centered {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.page-container.centered .content-wrapper {
-  text-align: center;
-}
-
 /* ============================================
    BUTTON COMPONENTS - CONSOLIDATED
    ============================================ */
 
-/* Base button properties - shared by all buttons */
 .central-button,
 .nav-button,
 .next-page-btn,
 .generate-btn,
 .animate-btn,
 .wireframe-btn,
-.inline-next-link {
+.inline-next-link,
+.cluster-button {
   font-family: var(--button-font-family);
   font-style: var(--button-font-style);
   font-weight: var(--button-font-weight);
@@ -260,7 +264,6 @@ p {
   background: var(--color-background);
   transform: translateY(-2px);
   box-shadow: var(--button-shadow-hover);
-  color: var(--color-text); /* Ensure good contrast on hover */
 }
 
 .central-button:active,
@@ -292,15 +295,14 @@ p {
 .nav-button:hover {
   background: var(--color-background);
   box-shadow: var(--button-shadow-hover);
-  color: var(--color-text); /* Ensure good contrast */
 }
 
 .nav-button:focus {
-  outline: 2px solid rgba(139, 115, 85, 0.5);
+  outline: 2px solid var(--color-border);
   outline-offset: 2px;
 }
 
-/* Button Positioning - Desktop (>768px) */
+/* Button Positioning */
 .nav-button-about {
   top: 10vh;
   left: 20vw;
@@ -335,9 +337,8 @@ p {
 .generate-btn:hover,
 .animate-btn:hover,
 .wireframe-btn:hover {
-  background: rgba(44, 44, 44, 0.05);
+  background: var(--color-background);
   transform: translateY(-1px);
-  color: var(--color-primary);
 }
 
 .next-page-btn {
@@ -346,7 +347,7 @@ p {
 }
 
 .generate-btn {
-  background: rgba(139, 115, 85, 0.2);
+  background: var(--color-background-alt)
 }
 
 .animate-btn {
@@ -383,7 +384,6 @@ p {
   z-index: var(--z-modal-advanced);
 }
 
-/* Simplified Navigation Toggle */
 .nav-toggle {
   padding: 12px 20px;
   background: var(--color-background-alt);
@@ -496,9 +496,8 @@ p {
 }
 
 .nav-dropdown a:hover {
-  color: var(--color-text); /* Better contrast on hover */
+  color: var(--color-text);
   transform: translateY(-1px);
-;
 }
 
 .nav-dropdown a:hover::before {
@@ -509,7 +508,6 @@ p {
   border-bottom: none;
 }
 
-/* Artist residency link */
 .artist-residency-link {
   position: fixed;
   bottom: 30px;
@@ -527,10 +525,10 @@ p {
   pointer-events: none;
   display: none;
   visibility: hidden;
-    padding: 8px 12px;
-    border-radius: 20px;
-    background: rgba(44, 44, 44, 0.8);
-    backdrop-filter: blur(5px);
+  padding: 8px 12px;
+  border-radius: 20px;
+  background: rgba(44, 44, 44, 0.8);
+  backdrop-filter: blur(5px);
 }
 
 .artist-residency-link:hover {
@@ -607,17 +605,20 @@ body:not(.splash-layout):not(.home-layout) {
 }
 
 body:not(.splash-layout):not(.home-layout) .page-container {
-  background: rgba(244, 239, 229, 0.95);
+  background: var(--color-background);
   backdrop-filter: blur(10px);
   border-radius: var(--border-radius);
   margin: var(--spacing-lg);
   box-shadow: 0 8px 32px var(--color-shadow);
+  position: relative;
+  overflow: hidden;
 }
 
 .page-content {
   text-align: left;
   margin-bottom: var(--spacing-xl);
   line-height: var(--line-height-base);
+  color: var(--color-text);
 }
 
 .page-content h1,
@@ -634,10 +635,9 @@ body:not(.splash-layout):not(.home-layout) .page-container {
 }
 
 /* ============================================
-   NEXT PAGE NAVIGATION - CONSOLIDATED
+   NEXT PAGE NAVIGATION
    ============================================ */
 
-/* Inline next page navigation */
 .inline-next-page {
   display: block;
   text-align: right;
@@ -724,7 +724,6 @@ body:not(.splash-layout):not(.home-layout) .page-container {
   margin-top: -4px;
 }
 
-/* Hover state improvements - ensure good contrast */
 .inline-next-link:hover .inline-next-label,
 .inline-next-link:focus .inline-next-label {
   color: var(--color-primary);
@@ -736,7 +735,7 @@ body:not(.splash-layout):not(.home-layout) .page-container {
 }
 
 /* ============================================
-   ORGANIC ARROW COMPONENT - SINGLE DEFINITION
+   ORGANIC ARROW COMPONENT
    ============================================ */
 
 .organic-arrow-svg {
@@ -771,7 +770,6 @@ body:not(.splash-layout):not(.home-layout) .page-container {
   stroke-dasharray: 0;
 }
 
-/* Enhanced hover effects */
 .inline-next-link:hover .organic-arrow-svg,
 .inline-next-link:focus .organic-arrow-svg {
   animation: none;
@@ -902,11 +900,634 @@ body:not(.splash-layout):not(.home-layout) .page-container {
 .cluster-link:hover {
   background: rgba(139, 115, 85, 0.1);
   transform: translateY(-1px);
-  color: var(--color-primary); /* Ensure good contrast */
 }
 
 /* ============================================
-   ANIMATIONS & KEYFRAMES - SIMPLIFIED
+   MYCELIUM SYSTEM
+   ============================================ */
+
+.in-page-mycelium-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 3s ease-out;
+  --mycelium-width-0: 2.5;
+  --mycelium-width-1: 1.75;
+  --mycelium-width-2: 1.225;
+  --mycelium-width-3: 0.858;
+}
+
+.in-page-mycelium-container.loaded {
+  opacity: 1;
+}
+
+.in-page-mycelium-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.content-wrapper,
+.page-content,
+.page-container h1,
+.page-container h2,
+.page-container h3,
+.page-container h4,
+.page-container p {
+  position: relative;
+  z-index: 2;
+}
+
+.in-page-mycelium-path,
+.in-page-mycelium-branch {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  stroke-dasharray: 1500;
+  stroke-dashoffset: 1500;
+  animation: inPageMyceliumGrow 4s ease-out forwards;
+}
+
+.in-page-mycelium-branch {
+  animation-duration: 3.5s;
+}
+
+.in-page-mycelium-accent {
+  stroke: #6b5540;
+  stroke-width: var(--mycelium-width-2, 1.225);
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  stroke-dasharray: 1500;
+  stroke-dashoffset: 1500;
+  animation: inPageMyceliumGrow 3s ease-out forwards;
+}
+
+.in-page-mycelium-subtle {
+  stroke: #9d8c75;
+  stroke-width: var(--mycelium-width-3, 0.858);
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  stroke-dasharray: 1500;
+  stroke-dashoffset: 1500;
+  animation: inPageMyceliumGrow 2.5s ease-out forwards;
+}
+
+/* ============================================
+   TABLE STYLES
+   ============================================ */
+
+.table-container {
+  overflow-x: auto;
+  overflow-y: visible;
+  margin: var(--spacing-xl) 0;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 20px var(--color-shadow);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 115, 85, 0.3) transparent;
+}
+
+.table-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: rgba(139, 115, 85, 0.1);
+  border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: rgba(139, 115, 85, 0.3);
+  border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 115, 85, 0.5);
+}
+
+.page-content table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 0;
+  background: var(--color-background);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: none;
+  font-size: var(--font-size-base);
+  min-width: 600px;
+}
+
+.page-content th,
+.page-content td {
+  padding: var(--spacing-md) var(--spacing-lg);
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--color-border);
+  line-height: var(--line-height-base);
+  white-space: nowrap;
+  min-width: 120px;
+}
+
+.page-content th {
+  background: var(--color-background);
+  color: var(--color-text);
+  font-weight: var(--font-weight-bold);
+  font-style: italic;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.page-content td:last-child,
+.page-content th:last-child {
+  white-space: normal;
+  min-width: 200px;
+}
+
+.page-content td {
+  color: var(--color-text);
+  font-size: 0.95rem;
+}
+
+.page-content tr:last-child td {
+  border-bottom: none;
+}
+
+.page-content tr:hover {
+  background: rgba(139, 115, 85, 0.05);
+}
+
+/* ============================================
+   CLUSTER PAGE STYLES
+   ============================================ */
+
+.cluster-page {
+  position: relative;
+}
+
+.cluster-header {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+  padding: var(--spacing-xl) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cluster-title {
+  color: var(--color-text);
+  font-size: var(--font-size-xl);
+  font-style: italic;
+  margin-bottom: var(--spacing-lg);
+  text-transform: lowercase;
+  letter-spacing: 1px;
+}
+
+.cluster-description {
+  color: var(--color-accent);
+  font-size: var(--font-size-large);
+  font-style: italic;
+  line-height: 1.4;
+  max-width: 800px;
+  margin: 0 auto var(--spacing-lg);
+}
+
+.cluster-why-matters {
+  background: var(--color-background);
+  padding: var(--spacing-xl);
+  border-radius: var(--border-radius-large);
+  margin: var(--spacing-xl) 0;
+  border-left: 4px solid var(--color-accent);
+}
+
+.cluster-why-matters h3 {
+  color: var(--color-text);
+  font-size: 1.3rem;
+  margin-bottom: var(--spacing-md);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: var(--font-weight-bold);
+}
+
+.cluster-why-matters p {
+  color: var(--color-text);
+  line-height: 1.6;
+  font-size: var(--font-size-base);
+  margin-bottom: 0;
+}
+
+.capacities-container {
+  margin-top: var(--spacing-2xl);
+}
+
+.capacity-card {
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-large);
+  padding: var(--spacing-xl);
+  margin-bottom: var(--spacing-2xl);
+  box-shadow: 0 6px 25px var(--color-shadow);
+  transition: var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.capacity-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--color-shadow-hover);
+  border-color: var(--color-accent);
+}
+
+.capacity-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--color-accent), rgba(139, 115, 85, 0.3));
+}
+
+.capacity-header {
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.capacity-title {
+  color: var(--color-text);
+  font-size: 1.5rem;
+  font-style: italic;
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.2;
+}
+
+.capacity-subtitle {
+  color: var(--color-accent);
+  font-size: 1rem;
+  font-style: italic;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.capacity-content {
+  line-height: var(--line-height-base);
+}
+
+.capacity-section {
+  margin-bottom: var(--spacing-lg);
+}
+
+.capacity-section:last-child {
+  margin-bottom: 0;
+}
+
+.capacity-section h4 {
+  color: var(--color-accent);
+  font-size: 1rem;
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--spacing-sm);
+  font-style: normal;
+}
+
+.capacity-text {
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+}
+
+.capacity-text p {
+  margin-bottom: var(--spacing-md);
+}
+
+.capacity-text p:last-child {
+  margin-bottom: 0;
+}
+
+.distortions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.distortion-item {
+  background: rgba(139, 115, 85, 0.05);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+  border-radius: var(--border-radius);
+  border-left: 3px solid rgba(139, 115, 85, 0.3);
+}
+
+.distortion-item:last-child {
+  margin-bottom: 0;
+}
+
+.distortion-name {
+  color: var(--color-text);
+  font-weight: var(--font-weight-bold);
+  font-style: italic;
+  display: block;
+  margin-bottom: var(--spacing-xs);
+}
+
+.distortion-description {
+  color: var(--color-text);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ============================================
+   MAPPING CAPACITIES PAGE STYLES
+   ============================================ */
+
+.mapping-layout {
+  position: relative;
+  min-height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+.mapping-layout .background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: var(--z-background);
+  pointer-events: none;
+}
+
+.mapping-split-container {
+  position: relative;
+  z-index: var(--z-content);
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  width: 100%;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+}
+
+.mapping-text-panel {
+  width: 45%;
+  min-width: 350px;
+  max-width: 500px;
+  padding: var(--spacing-3xl) var(--spacing-2xl);
+  background: var(--color-background-alt);
+  backdrop-filter: blur(15px);
+  border-right: 1px solid rgba(139, 115, 85, 0.2);
+  box-shadow: 2px 0 20px rgba(139, 115, 85, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow-y: auto;
+  flex-shrink: 0;
+  position: relative;
+  z-index: var(--z-content);
+}
+
+.mapping-text-content {
+  max-width: 100%;
+  width: 100%;
+}
+
+.mapping-title {
+  color: var(--color-text);
+  font-size: 2.5rem;
+  font-style: italic;
+  margin-bottom: var(--spacing-xl);
+  line-height: 1.2;
+  font-weight: var(--font-weight-normal);
+}
+
+.mapping-description {
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  margin-bottom: var(--spacing-xl);
+}
+
+.mapping-description p {
+  margin-bottom: var(--spacing-lg);
+}
+
+.mapping-instructions {
+  background: rgba(139, 115, 85, 0.1);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius);
+  border-left: 3px solid var(--color-accent);
+  margin-top: var(--spacing-xl);
+}
+
+.mapping-instructions p {
+  color: var(--color-text);
+  font-size: 0.95rem;
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.5;
+}
+
+.mapping-instructions p:last-child {
+  margin-bottom: 0;
+}
+
+.mapping-instructions strong {
+  color: var(--color-accent);
+}
+
+.mapping-instructions em {
+  color: var(--color-text-muted);
+}
+
+.mapping-visual-panel {
+  width: 55%;
+  min-height: 100vh;
+  position: relative;
+  background: rgba(244, 239, 229, 0.3);
+  backdrop-filter: blur(5px);
+  overflow: hidden;
+  flex-shrink: 0;
+  flex-grow: 1;
+  z-index: var(--z-content);
+}
+
+.mapping-visual-panel .in-page-mycelium-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 3s ease-out;
+}
+
+.mapping-visual-panel .in-page-mycelium-container.loaded {
+  opacity: 0.6;
+}
+
+.mapping-visual-panel .in-page-mycelium-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.cluster-buttons-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: var(--z-nav);
+}
+
+.cluster-button {
+  position: absolute;
+  background: var(--color-background-alt);
+  border: 2px solid var(--color-accent);
+  color: var(--color-text);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--border-radius-pill);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--button-transition);
+  backdrop-filter: var(--button-backdrop-filter);
+  box-shadow: var(--button-shadow-base);
+  pointer-events: auto;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 160px;
+  max-width: 220px;
+  text-align: center;
+  line-height: 1.3;
+  opacity: 0;
+  transform: scale(0.8) translateY(20px);
+  animation: clusterButtonFadeIn 0.8s ease-out forwards;
+  font-weight: var(--font-weight-normal);
+}
+
+.cluster-button.visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+.cluster-button:hover {
+  background: var(--color-background);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: var(--button-shadow-hover);
+  border-color: var(--color-text);
+  color: var(--color-text);
+}
+
+.cluster-button:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+#cluster-somatic-relationality {
+  top: 15%;
+  right: 10%;
+  transform: translate(0, -50%) scale(0.8) translateY(20px);
+  animation-delay: 0.2s;
+}
+
+#cluster-regenerative-regulation {
+  top: 35%;
+  left: 5%;
+  transform: translate(0, -50%) scale(0.8) translateY(20px);
+  animation-delay: 0.4s;
+}
+
+#cluster-liminal-capacities {
+  top: 55%;
+  left: 15%;
+  transform: translate(0, -50%) scale(0.8) translateY(20px);
+  animation-delay: 0.6s;
+}
+
+#cluster-poly-rhythmic-knowing {
+  top: 45%;
+  right: 15%;
+  transform: translate(0, -50%) scale(0.8) translateY(20px);
+  animation-delay: 0.8s;
+}
+
+#cluster-relational-integrity-accountability {
+  bottom: 15%;
+  left: 50%;
+  transform: translate(-50%, 0) scale(0.8) translateY(20px);
+  animation-delay: 1.0s;
+}
+
+#cluster-somatic-relationality.visible {
+  transform: translate(0, -50%) scale(1) translateY(0);
+}
+
+#cluster-regenerative-regulation.visible {
+  transform: translate(0, -50%) scale(1) translateY(0);
+}
+
+#cluster-liminal-capacities.visible {
+  transform: translate(0, -50%) scale(1) translateY(0);
+}
+
+#cluster-poly-rhythmic-knowing.visible {
+  transform: translate(0, -50%) scale(1) translateY(0);
+}
+
+#cluster-relational-integrity-accountability.visible {
+  transform: translate(-50%, 0) scale(1) translateY(0);
+}
+
+.mapping-page-instructions {
+  position: fixed;
+  bottom: var(--spacing-lg);
+  right: var(--spacing-lg);
+  background: var(--color-background-alt);
+  backdrop-filter: blur(10px);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--color-accent);
+  color: var(--color-text-muted);
+  font-style: italic;
+  font-size: 0.85rem;
+  opacity: 0;
+  animation: fadeInInstructions 1s ease-out 3s forwards;
+  z-index: var(--z-floating);
+}
+
+/* ============================================
+   ANIMATIONS & KEYFRAMES
    ============================================ */
 
 @keyframes organicBreathing {
@@ -928,72 +1549,6 @@ body:not(.splash-layout):not(.home-layout) .page-container {
   }
 }
 
-@keyframes growArrowShaft {
-  0% {
-    stroke-dashoffset: 100;
-    opacity: 0.4;
-    stroke-width: 1;
-  }
-  30% {
-    opacity: 0.7;
-    stroke-width: 2;
-  }
-  70% {
-    stroke-width: 3.5;
-  }
-  100% {
-    stroke-dashoffset: 0;
-    opacity: 1;
-    stroke-width: 3;
-  }
-}
-
-@keyframes growArrowHeadTop {
-  0% {
-    stroke-dashoffset: 100;
-    opacity: 0.4;
-    stroke-width: 1;
-  }
-  40% {
-    opacity: 0.8;
-    stroke-width: 2.5;
-  }
-  100% {
-    stroke-dashoffset: 0;
-    opacity: 1;
-    stroke-width: 3;
-  }
-}
-
-@keyframes growArrowHeadBottom {
-  0% {
-    stroke-dashoffset: 100;
-    opacity: 0.4;
-    stroke-width: 1;
-  }
-  40% {
-    opacity: 0.8;
-    stroke-width: 2.5;
-  }
-  100% {
-    stroke-dashoffset: 0;
-    opacity: 1;
-    stroke-width: 3;
-  }
-}
-
-@keyframes growTexture {
-  from {
-    stroke-dasharray: 10;
-    stroke-dashoffset: 10;
-    opacity: 0;
-  }
-  to {
-    stroke-dashoffset: 0;
-    opacity: 0.6;
-  }
-}
-
 @keyframes fadeInInstructions {
   from { 
     opacity: 0; 
@@ -1005,35 +1560,58 @@ body:not(.splash-layout):not(.home-layout) .page-container {
   }
 }
 
-@keyframes myceliumGrow {
-  from {
-    stroke-dasharray: 1000;
-    stroke-dashoffset: 1000;
+@keyframes inPageMyceliumGrow {
+  0% {
+    stroke-dashoffset: 1500;
+    opacity: 0;
   }
-  to {
+  20% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
     stroke-dashoffset: 0;
+    opacity: 0.6;
   }
 }
 
-.mycelium-path {
-  stroke: #d4d0c8;
-  stroke-width: 1;
-  fill: none;
-  opacity: 0.3;
-  animation: myceliumGrow 4s ease-out forwards;
-}
-
-.mycelium-branch {
-  stroke: #e5e0d8;
-  stroke-width: 0.8;
-  fill: none;
-  opacity: 0.25;
-  animation: myceliumGrow 3.5s ease-out forwards;
+@keyframes clusterButtonFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 /* ============================================
-   RESPONSIVE DESIGN - CONSOLIDATED
+   RESPONSIVE DESIGN
    ============================================ */
+
+@media (max-width: 1200px) {
+  .mapping-text-panel {
+    width: 42%;
+    padding: var(--spacing-2xl) var(--spacing-lg);
+  }
+  
+  .mapping-visual-panel {
+    width: 58%;
+  }
+  
+  .mapping-title {
+    font-size: 2.2rem;
+  }
+  
+  .cluster-button {
+    font-size: 0.85rem;
+    min-width: 140px;
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+}
 
 @media (max-width: 1024px) {
   .central-button {
@@ -1061,6 +1639,26 @@ body:not(.splash-layout):not(.home-layout) .page-container {
   .inline-next-link:hover .organic-arrow-head-top,
   .inline-next-link:hover .organic-arrow-head-bottom {
     stroke-width: 2.8;
+  }
+
+  .mapping-text-panel {
+    width: 40%;
+    min-width: 320px;
+    padding: var(--spacing-2xl) var(--spacing-lg);
+  }
+  
+  .mapping-visual-panel {
+    width: 60%;
+  }
+  
+  .mapping-title {
+    font-size: 2rem;
+  }
+  
+  .cluster-button {
+    font-size: 0.8rem;
+    min-width: 130px;
+    padding: var(--spacing-sm) var(--spacing-md);
   }
 }
 
@@ -1209,6 +1807,110 @@ body:not(.splash-layout):not(.home-layout) .page-container {
     grid-template-columns: 1fr;
     gap: 20px;
   }
+
+  .page-content table {
+    font-size: 0.85rem;
+    min-width: 700px;
+  }
+  
+  .page-content th,
+  .page-content td {
+    padding: var(--spacing-sm) var(--spacing-md);
+    min-width: 100px;
+  }
+  
+  .page-content th {
+    font-size: 0.8rem;
+  }
+  
+  .table-container {
+    margin: var(--spacing-lg) -var(--spacing-md);
+    border-radius: 0;
+  }
+  
+  .table-container table {
+    border-radius: 0;
+  }
+
+  .in-page-mycelium-container {
+    --mycelium-width-0: 2.0;
+    --mycelium-width-1: 1.4;
+    --mycelium-width-2: 0.98;
+    --mycelium-width-3: 0.686;
+  }
+  
+  .in-page-mycelium-container.loaded {
+    opacity: 0.8;
+  }
+
+  .mapping-split-container {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
+  
+  .mapping-text-panel {
+    width: 100%;
+    min-width: unset;
+    min-height: 40vh;
+    max-height: 50vh;
+    padding: var(--spacing-xl);
+    border-right: none;
+    border-bottom: 1px solid rgba(139, 115, 85, 0.2);
+    overflow-y: auto;
+  }
+  
+  .mapping-visual-panel {
+    width: 100%;
+    min-height: 60vh;
+    flex: 1;
+  }
+  
+  .mapping-title {
+    font-size: 1.8rem;
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .mapping-description {
+    font-size: 0.95rem;
+  }
+  
+  .mapping-instructions {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-md);
+  }
+  
+  .cluster-button {
+    font-size: 0.75rem;
+    min-width: 120px;
+    padding: var(--spacing-sm);
+    max-width: 160px;
+  }
+  
+  #cluster-somatic-relationality {
+    top: 20%;
+    right: 5%;
+  }
+  
+  #cluster-regenerative-regulation {
+    top: 35%;
+    left: 5%;
+  }
+  
+  #cluster-liminal-capacities {
+    top: 55%;
+    left: 10%;
+  }
+  
+  #cluster-poly-rhythmic-knowing {
+    top: 40%;
+    right: 10%;
+  }
+  
+  #cluster-relational-integrity-accountability {
+    bottom: 20%;
+    left: 50%;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1310,6 +2012,64 @@ body:not(.splash-layout):not(.home-layout) .page-container {
   .cluster-btn {
     padding: 20px;
   }
+
+  .page-content table {
+    min-width: 650px;
+  }
+  
+  .page-content th,
+  .page-content td {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.8rem;
+    min-width: 90px;
+  }
+  
+  .table-container {
+    margin: var(--spacing-md) -var(--spacing-sm);
+  }
+
+  .in-page-mycelium-container {
+    --mycelium-width-0: 1.5;
+    --mycelium-width-1: 1.05;
+    --mycelium-width-2: 0.735;
+    --mycelium-width-3: 0.515;
+  }
+  
+  .in-page-mycelium-container.loaded {
+    opacity: 0.7;
+  }
+
+  .mapping-text-panel {
+    padding: var(--spacing-lg);
+    min-height: 35vh;
+    max-height: 45vh;
+  }
+  
+  .mapping-visual-panel {
+    min-height: 65vh;
+  }
+  
+  .mapping-title {
+    font-size: 1.6rem;
+  }
+  
+  .mapping-description {
+    font-size: 0.9rem;
+  }
+  
+  .cluster-button {
+    font-size: 0.7rem;
+    min-width: 100px;
+    padding: 8px var(--spacing-sm);
+    max-width: 140px;
+  }
+  
+  .mapping-page-instructions {
+    bottom: var(--spacing-md);
+    right: var(--spacing-md);
+    font-size: 0.75rem;
+    padding: 6px var(--spacing-sm);
+  }
 }
 
 @media (max-width: 360px) {
@@ -1384,13 +2144,18 @@ body:not(.splash-layout):not(.home-layout) .page-container {
   }
 }
 
+/* ============================================
+   DEVICE & ACCESSIBILITY SUPPORT
+   ============================================ */
+
 /* Touch device optimizations */
 @media (hover: none) and (pointer: coarse) {
   .nav-button,
   .central-button,
   .cluster-btn,
   .inline-next-link,
-  .nav-toggle {
+  .nav-toggle,
+  .cluster-button {
     min-height: 44px;
   }
   
@@ -1414,11 +2179,16 @@ body:not(.splash-layout):not(.home-layout) .page-container {
     padding: 14px 20px;
   }
   
+  .cluster-button {
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+  
   .nav-button:hover,
   .central-button:hover,
   .cluster-btn:hover,
   .inline-next-link:hover,
-  .nav-toggle:hover {
+  .nav-toggle:hover,
+  .cluster-button:hover {
     transform: none;
   }
   
@@ -1440,37 +2210,15 @@ body:not(.splash-layout):not(.home-layout) .page-container {
     transform: scale(0.98);
     background: rgba(139, 115, 85, 0.15);
   }
+
+  .cluster-button:active {
+    transform: scale(0.95);
+    background: rgba(139, 115, 85, 0.1);
+  }
   
-  /* Touch feedback for text color change */
   .inline-next-link:active .inline-next-label,
   .inline-next-link:active .inline-next-title {
     color: var(--color-primary);
-  }
-}
-
-/* Better text handling for very long titles */
-@supports (hyphens: auto) {
-  .inline-next-title {
-    hyphens: none;
-    overflow-wrap: break-word;
-  }
-}
-
-/* Fallback for browsers without fit-content support */
-@supports not (width: fit-content) {
-  .inline-next-link {
-    width: auto;
-    display: inline-block;
-    text-align: center;
-  }
-  
-  .inline-next-content {
-    display: block;
-  }
-  
-  .inline-next-arrow-icon {
-    display: block;
-    margin: 8px auto 0;
   }
 }
 
@@ -1503,16 +2251,40 @@ body:not(.splash-layout):not(.home-layout) .page-container {
   .nav-toggle {
     border-width: 2px;
   }
+
+  .in-page-mycelium-container {
+    --mycelium-width-0: calc(var(--mycelium-width-0) * 1.5);
+    --mycelium-width-1: calc(var(--mycelium-width-1) * 1.5);
+    --mycelium-width-2: calc(var(--mycelium-width-2) * 1.5);
+    --mycelium-width-3: calc(var(--mycelium-width-3) * 1.5);
+  }
+  
+  .in-page-mycelium-path,
+  .in-page-mycelium-branch,
+  .in-page-mycelium-accent,
+  .in-page-mycelium-subtle {
+    opacity: 0.8 !important;
+  }
 }
 
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: #1a1a1a;
+    --color-background: #2c2c2c;
     --color-background-alt: rgba(26, 26, 26, 0.95);
     --color-text: #f4efe5;
     --color-text-light: rgba(244, 239, 229, 0.95);
     --color-background-overlay: rgba(26, 26, 26, 0.15);
+    --color-link: #e8dcc6;
+    --color-link-hover: #f4efe5;
+  }
+
+  .in-page-mycelium-path,
+  .in-page-mycelium-branch,
+  .in-page-mycelium-accent,
+  .in-page-mycelium-subtle {
+    stroke: #6b7280 !important;
+    opacity: 0.4 !important;
   }
   
   .nav-dropdown {
@@ -1552,6 +2324,44 @@ body:not(.splash-layout):not(.home-layout) .page-container {
     stroke: #f4efe5;
     opacity: 0.8;
   }
+
+  .mapping-text-panel {
+    background: rgba(26, 26, 26, 0.95);
+    border-right-color: rgba(212, 199, 176, 0.2);
+    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  .mapping-visual-panel {
+    background: rgba(26, 26, 26, 0.3);
+  }
+  
+  .mapping-visual-panel .in-page-mycelium-path,
+  .mapping-visual-panel .in-page-mycelium-branch,
+  .mapping-visual-panel .in-page-mycelium-accent,
+  .mapping-visual-panel .in-page-mycelium-subtle {
+    stroke: #6b7280 !important;
+  }
+  
+  .mapping-visual-panel .in-page-mycelium-container.loaded {
+    opacity: 0.4;
+  }
+  
+  .mapping-instructions {
+    background: rgba(212, 199, 176, 0.1);
+    border-left-color: var(--color-accent);
+  }
+  
+  .mapping-page-instructions {
+    background: rgba(26, 26, 26, 0.95);
+    border-color: var(--color-accent);
+  }
+  
+  @media (max-width: 768px) {
+    .mapping-text-panel {
+      border-right: none;
+      border-bottom: 1px solid rgba(212, 199, 176, 0.2);
+    }
+  }
 }
 
 /* Reduced motion support */
@@ -1574,239 +2384,7 @@ body:not(.splash-layout):not(.home-layout) .page-container {
     transform: translateX(2px);
     animation: none;
   }
-}
-body:not(.splash-layout):not(.home-layout) .page-container {
-  background: rgba(244, 239, 229, 0.95); /* Keep original background opacity */
-  backdrop-filter: blur(10px);
-  border-radius: var(--border-radius);
-  margin: var(--spacing-lg);
-  box-shadow: 0 8px 32px var(--color-shadow);
-  position: relative; /* Important for absolute positioning inside */
-  overflow: hidden; /* Keep mycelium contained */
-}
 
-/* In-page mycelium container - positioned inside page container */
-.in-page-mycelium-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1; /* Behind text content */
-  opacity: 0;
-  transition: opacity 3s ease-out;
-  
-  /* CSS Custom Properties for JavaScript control */
-  --mycelium-width-0: 2.5;
-  --mycelium-width-1: 1.75;
-  --mycelium-width-2: 1.225;
-  --mycelium-width-3: 0.858;
-}
-
-.in-page-mycelium-container.loaded {
-  opacity: 1;
-}
-
-/* In-page mycelium SVG */
-.in-page-mycelium-svg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-/* Text content positioning - ensure it's above mycelium */
-.content-wrapper,
-.page-content,
-.page-container h1,
-.page-container h2,
-.page-container h3,
-.page-container h4,
-.page-container p {
-  position: relative;
-  z-index: 2; /* Above mycelium */
-}
-
-/* In-page mycelium path styles - USE CSS VARIABLES FOR WIDTH */
-.in-page-mycelium-path {
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: 0;
-  stroke-dasharray: 1500;
-  stroke-dashoffset: 1500;
-  animation: inPageMyceliumGrow 4s ease-out forwards;
-}
-
-.in-page-mycelium-branch {
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: 0;
-  stroke-dasharray: 1500;
-  stroke-dashoffset: 1500;
-  animation: inPageMyceliumGrow 3.5s ease-out forwards;
-}
-
-.in-page-mycelium-accent {
-  stroke: #6b5540; /* Even darker */
-  stroke-width: var(--mycelium-width-2, 1.225);
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: 0;
-  stroke-dasharray: 1500;
-  stroke-dashoffset: 1500;
-  animation: inPageMyceliumGrow 3s ease-out forwards;
-}
-
-.in-page-mycelium-subtle {
-  stroke: #9d8c75; /* Lighter but still visible */
-  stroke-width: var(--mycelium-width-3, 0.858);
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: 0;
-  stroke-dasharray: 1500;
-  stroke-dashoffset: 1500;
-  animation: inPageMyceliumGrow 2.5s ease-out forwards;
-}
-
-/* In-page growth animation - more visible on cream background */
-@keyframes inPageMyceliumGrow {
-  0% {
-    stroke-dashoffset: 1500;
-    opacity: 0;
-  }
-  20% {
-    opacity: 0.2;
-  }
-  50% {
-    opacity: 0.4;
-  }
-  100% {
-    stroke-dashoffset: 0;
-    opacity: 0.6; /* Visible but not overwhelming */
-  }
-}
-
-/* Subtle pulsing animation */
-@keyframes inPageMyceliumPulse {
-  0%, 100% {
-    opacity: 0.6;
-    filter: brightness(1);
-  }
-  50% {
-    opacity: 0.7;
-    filter: brightness(1.05);
-  }
-}
-
-/* Apply pulsing with different timings */
-.in-page-mycelium-path {
-  animation: inPageMyceliumGrow 4s ease-out forwards, inPageMyceliumPulse 15s ease-in-out infinite 4s;
-}
-
-.in-page-mycelium-branch {
-  animation: inPageMyceliumGrow 3.5s ease-out forwards, inPageMyceliumPulse 18s ease-in-out infinite 3.5s;
-}
-
-.in-page-mycelium-accent {
-  animation: inPageMyceliumGrow 3s ease-out forwards, inPageMyceliumPulse 22s ease-in-out infinite 3s;
-}
-
-.in-page-mycelium-subtle {
-  animation: inPageMyceliumGrow 2.5s ease-out forwards, inPageMyceliumPulse 25s ease-in-out infinite 2.5s;
-}
-
-/* Content-specific adjustments */
-.page-container.long-content .in-page-mycelium-container {
-  opacity: 0.8; /* Less prominent for long content */
-}
-
-.page-container.long-content .in-page-mycelium-path,
-.page-container.long-content .in-page-mycelium-branch {
-  /* Width controlled by CSS variables now */
-  opacity: 0.5; /* Make more subtle for long content */
-}
-
-.page-container.short-content .in-page-mycelium-container {
-  opacity: 1.0; /* More prominent for short content */
-}
-
-.page-container.form-page .in-page-mycelium-container {
-  opacity: 0.4; /* Less distracting on forms */
-  filter: blur(0.5px);
-}
-
-/* Enhanced responsive adjustments */
-@media (max-width: 768px) {
-  .in-page-mycelium-container {
-    --mycelium-width-0: 2.0;
-    --mycelium-width-1: 1.4;
-    --mycelium-width-2: 0.98;
-    --mycelium-width-3: 0.686;
-  }
-  
-  .in-page-mycelium-container.loaded {
-    opacity: 0.8;
-  }
-}
-
-@media (max-width: 480px) {
-  .in-page-mycelium-container {
-    --mycelium-width-0: 1.5;
-    --mycelium-width-1: 1.05;
-    --mycelium-width-2: 0.735;
-    --mycelium-width-3: 0.515;
-  }
-  
-  .in-page-mycelium-container.loaded {
-    opacity: 0.7;
-  }
-}
-
-/* Dark mode adjustments */
-@media (prefers-color-scheme: dark) {
-  .in-page-mycelium-path {
-    stroke: #d4c7b0;
-  }
-  
-  .in-page-mycelium-branch {
-    stroke: #d4c7b0;
-  }
-  
-  .in-page-mycelium-accent {
-    stroke: #d4c7b0;
-  }
-  
-  .in-page-mycelium-subtle {
-    stroke: #d4c7b0;
-  }
-}
-
-/* High contrast mode */
-@media (prefers-contrast: high) {
-  .in-page-mycelium-container {
-    --mycelium-width-0: calc(var(--mycelium-width-0) * 1.5);
-    --mycelium-width-1: calc(var(--mycelium-width-1) * 1.5);
-    --mycelium-width-2: calc(var(--mycelium-width-2) * 1.5);
-    --mycelium-width-3: calc(var(--mycelium-width-3) * 1.5);
-  }
-  
-  .in-page-mycelium-path,
-  .in-page-mycelium-branch,
-  .in-page-mycelium-accent,
-  .in-page-mycelium-subtle {
-    opacity: 0.8 !important;
-  }
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
   .in-page-mycelium-path,
   .in-page-mycelium-branch,
   .in-page-mycelium-accent,

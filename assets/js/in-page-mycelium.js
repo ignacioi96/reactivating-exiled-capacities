@@ -500,19 +500,19 @@ class InPageMyceliumGenerator {
     }
     
     adaptToScreenSize() {
-        const screenWidth = window.innerWidth;
-        
-        if (screenWidth > 1200) {
-            this.config.maxBranches = 2; // Keep to 2 networks
-            this.config.baseStrokeWidth = 3.0;
-        } else if (screenWidth > 768) {
-            this.config.maxBranches = 2; // Keep to 2 networks
-            this.config.baseStrokeWidth = 2.5;
-        } else {
-            this.config.maxBranches = 2; // Keep to 2 networks
-            this.config.baseStrokeWidth = 2.0;
-        }
+    const screenWidth = window.innerWidth;
+    
+    if (screenWidth > 1200) {
+        // Remove this line: this.config.maxBranches = 2;
+        this.config.baseStrokeWidth = 3.0;
+    } else if (screenWidth > 768) {
+        // Remove this line: this.config.maxBranches = 2;
+        this.config.baseStrokeWidth = 2.5;
+    } else {
+        // Remove this line: this.config.maxBranches = 2;
+        this.config.baseStrokeWidth = 2.0;
     }
+}
     
     createMyceliumContainer() {
         this.myceliumContainer = document.createElement('div');
