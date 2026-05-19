@@ -881,7 +881,7 @@ body:not(.splash-layout):not(.home-layout) .page-container {
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  color: var(--color-text-muted);
+  color: var(--color-text);
   font-style: italic;
   z-index: var(--z-content);
   text-align: center;
